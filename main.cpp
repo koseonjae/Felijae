@@ -1,4 +1,5 @@
-#include <glad/glad.h>
+#include "OpenGL/OpenGLPipeline.h"
+
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
@@ -8,6 +9,8 @@
 #include <fstream>
 
 using namespace std;
+
+OpenGLPipeline pipeline{};
 
 struct Vertex {
   glm::vec3 pos;
@@ -19,43 +22,7 @@ struct Object {
 };
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
-  glViewport(0, 0, width, height);
-}
-
-std::string readFileToString(const std::filesystem::path &filePath) {
-  std::ifstream fileStream(filePath, std::ios::in | std::ios::binary);
-  if (!fileStream) {
-    throw std::runtime_error("Could not open file: " + filePath.string());
-  }
-
-  std::string content;
-  fileStream.seekg(0, std::ios::end);
-  content.resize(fileStream.tellg());
-  fileStream.seekg(0, std::ios::beg);
-  fileStream.read(&content[0], content.size());
-  fileStream.close();
-
-  return content;
-}
-
-void checkCompileErrors(GLuint shader, std::string type) {
-  GLint success;
-  GLchar infoLog[1024];
-  if (type != "PROGRAM") {
-    glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-    if (!success) {
-      glGetShaderInfoLog(shader, 1024, NULL, infoLog);
-      std::cout << "ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n" << infoLog
-                << "\n -- --------------------------------------------------- -- " << std::endl;
-    }
-  } else {
-    glGetProgramiv(shader, GL_LINK_STATUS, &success);
-    if (!success) {
-      glGetProgramInfoLog(shader, 1024, NULL, infoLog);
-      std::cout << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n" << infoLog
-                << "\n -- --------------------------------------------------- -- " << std::endl;
-    }
-  }
+  pipeline.rasterizer.viewport.setViewport(0, 0, width, height);
 }
 
 int main() {
@@ -122,38 +89,12 @@ int main() {
   glEnableVertexAttribArray(0);
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *) offsetof(Vertex, pos));
 
-  // Load shaders
-  auto vertexShaderStr = readFileToString("../asset/pass_through.vert");
-  auto fragShaderStr = readFileToString("../asset/color.frag");
-  const char *vs_str = vertexShaderStr.c_str();
-  const char *fs_str = fragShaderStr.c_str();
-
-  // Compile vertex shader
-  GLuint vs = glCreateShader(GL_VERTEX_SHADER);
-  glShaderSource(vs, 1, &vs_str, nullptr);
-  glCompileShader(vs);
-  checkCompileErrors(vs, "VERTEX");
-
-  // Compile fragment shader
-  GLuint fs = glCreateShader(GL_FRAGMENT_SHADER);
-  glShaderSource(fs, 1, &fs_str, nullptr);
-  glCompileShader(fs);
-  checkCompileErrors(fs, "FRAGMENT");
-
-  // Link shaders into program
-  GLuint program = glCreateProgram();
-  glAttachShader(program, vs);
-  glAttachShader(program, fs);
-  glLinkProgram(program);
-  checkCompileErrors(program, "PROGRAM");
-
-  glDeleteShader(vs);
-  glDeleteShader(fs);
+  pipeline.program.initialize("../asset/pass_through.vert", "../asset/color.frag");
 
   while (!glfwWindowShouldClose(window)) {
     glClear(GL_COLOR_BUFFER_BIT);
 
-    glUseProgram(program);
+    pipeline.bind();
     glBindVertexArray(vao);
     glDrawElements(GL_TRIANGLES, obj.indices.size(), GL_UNSIGNED_INT, nullptr);
 

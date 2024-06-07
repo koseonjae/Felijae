@@ -8,7 +8,16 @@ find_package(glad CONFIG REQUIRED)
 find_package(glfw3 CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
 
-add_executable(PracticeGL main.cpp)
+add_executable(PracticeGL
+    main.cpp
+    OpenGL/OpenGLPipeline.cpp
+    OpenGL/OpenGLPipeline.h
+    OpenGL/OpenGLShader.cpp
+    OpenGL/OpenGLShader.h
+    OpenGL/OpenGLBuffer.cpp
+    OpenGL/OpenGLBuffer.h
+    OpenGL/OpenGLProgram.cpp
+    OpenGL/OpenGLProgram.h)
 
 target_link_libraries(PracticeGL PRIVATE
     glad::glad
