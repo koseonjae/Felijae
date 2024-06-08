@@ -1,5 +1,5 @@
 #include "OpenGL/OpenGLPipeline.h"
-#include "OpenGL/Model.h"
+#include "OpenGL/OpenGLModel.h"
 
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
@@ -12,10 +12,6 @@
 using namespace std;
 
 OpenGLPipeline pipeline{};
-
-void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
-  pipeline.rasterizer.viewport.setViewport(0, 0, width, height);
-}
 
 int main() {
   // Initialize GLFW
@@ -43,7 +39,9 @@ int main() {
     return -1;
   }
 
-  glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+  glfwSetFramebufferSizeCallback(window, [](GLFWwindow *window, int width, int height) {
+    pipeline.rasterizer.viewport.setViewport(0, 0, width, height);
+  });
 
   glClearColor(0.0, 1.0, 0.0, 1.0);
 
@@ -59,7 +57,7 @@ int main() {
   obj.indices.push_back(0);
   obj.indices.push_back(1);
   obj.indices.push_back(2);
-  Model model;
+  OpenGLModel model;
   model.initialize(move(obj));
 
   pipeline.program.initialize("../asset/pass_through.vert", "../asset/color.frag");

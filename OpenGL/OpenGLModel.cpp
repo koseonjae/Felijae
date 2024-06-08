@@ -1,12 +1,12 @@
-#include "Model.h"
+#include "OpenGLModel.h"
 
-Model::~Model() {
+OpenGLModel::~OpenGLModel() {
   glDeleteBuffers(1, &m_abo);
   glDeleteBuffers(1, &m_eabo);
   glDeleteVertexArrays(1, &m_vao);
 }
 
-void Model::initialize(Object obj) {
+void OpenGLModel::initialize(Object obj) {
   glGenVertexArrays(1, &m_vao);
   glBindVertexArray(m_vao);
 
@@ -27,9 +27,9 @@ void Model::initialize(Object obj) {
   m_obj = std::move(obj);
 }
 
-void Model::bind() {
+void OpenGLModel::bind() {
   glBindVertexArray(m_abo);
 }
-void Model::draw() {
+void OpenGLModel::draw() {
   glDrawElements(GL_TRIANGLES, m_obj.indices.size(), GL_UNSIGNED_INT, nullptr);
 }

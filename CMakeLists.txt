@@ -13,7 +13,7 @@ add_executable(PracticeGL
     OpenGL/OpenGLPipeline.cpp
     OpenGL/OpenGLPipeline.h
     OpenGL/OpenGLProgram.cpp
-    OpenGL/OpenGLProgram.h OpenGL/Model.cpp OpenGL/Model.h)
+    OpenGL/OpenGLProgram.h OpenGL/OpenGLModel.cpp OpenGL/OpenGLModel.h)
 
 target_link_libraries(PracticeGL PRIVATE
     glad::glad

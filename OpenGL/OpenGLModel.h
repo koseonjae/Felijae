@@ -14,10 +14,10 @@ struct Object {
   std::vector<unsigned int> indices;
 };
 
-class Model {
+class OpenGLModel {
  public:
-  Model() = default;
-  ~Model();
+  OpenGLModel() = default;
+  ~OpenGLModel();
   void initialize(Object obj);
   void bind();
   void draw();
