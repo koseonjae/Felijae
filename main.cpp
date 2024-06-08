@@ -1,4 +1,5 @@
 #include "OpenGL/OpenGLPipeline.h"
+#include "OpenGL/Model.h"
 
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
@@ -58,15 +59,18 @@ int main() {
   obj.indices.push_back(0);
   obj.indices.push_back(1);
   obj.indices.push_back(2);
+  Model model;
+  model.initialize(move(obj));
 
-  pipeline.model.initialize(move(obj));
   pipeline.program.initialize("../asset/pass_through.vert", "../asset/color.frag");
 
   while (!glfwWindowShouldClose(window)) {
     glClear(GL_COLOR_BUFFER_BIT);
 
     pipeline.bind();
-    pipeline.draw();
+    model.bind();
+
+    model.draw();
 
     glfwSwapBuffers(window);
     glfwPollEvents();

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "OpenGLProgram.h"
-#include "Model.h"
 
 #include <glad/glad.h>
 
@@ -77,11 +76,9 @@ class OpenGLPipeline {
   OpenGLPipeline() = default;
   ~OpenGLPipeline() noexcept = default;
   void bind();
-  void draw();
 
  public:
   Rasterizer rasterizer;
   OutputMerger outputMerger;
   OpenGLProgram program;
-  Model model;
 };

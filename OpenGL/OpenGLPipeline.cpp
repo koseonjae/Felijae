@@ -34,9 +34,5 @@ void OutputMerger::bind() {
 void OpenGLPipeline::bind() {
   rasterizer.bind();
   outputMerger.bind();
-  model.bind();
   program.bind();
-}
-void OpenGLPipeline::draw() {
-  model.draw();
 }
