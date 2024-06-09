@@ -13,9 +13,17 @@ add_executable(PracticeGL
     OpenGL/OpenGLPipeline.cpp
     OpenGL/OpenGLPipeline.h
     OpenGL/OpenGLProgram.cpp
-    OpenGL/OpenGLProgram.h OpenGL/OpenGLModel.cpp OpenGL/OpenGLModel.h)
+    OpenGL/OpenGLProgram.h
+    OpenGL/OpenGLModel.cpp
+    OpenGL/OpenGLModel.h
+    Model/Triangle.cpp
+    Model/Triangle.h
+    Model/Object.h)
 
 target_link_libraries(PracticeGL PRIVATE
     glad::glad
     glfw
     glm::glm)
+
+target_include_directories(PracticeGL PRIVATE
+    ${CMAKE_SOURCE_DIR})

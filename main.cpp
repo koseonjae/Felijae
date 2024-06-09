@@ -1,13 +1,10 @@
 #include "OpenGL/OpenGLPipeline.h"
 #include "OpenGL/OpenGLModel.h"
+#include "Model/Triangle.h"
 
 #include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
 
 #include <iostream>
-#include <vector>
-#include <filesystem>
-#include <fstream>
 
 using namespace std;
 
@@ -45,18 +42,8 @@ int main() {
 
   glClearColor(0.0, 1.0, 0.0, 1.0);
 
-  // Object setup
-  Object obj{};
-  Vertex v{};
-  v.pos = glm::vec3(1.0, -1.0, 0.0);
-  obj.vertices.push_back(v);
-  v.pos = glm::vec3(0.0, 1.0, 0.0);
-  obj.vertices.push_back(v);
-  v.pos = glm::vec3(-1.0, -1.0, 0.0);
-  obj.vertices.push_back(v);
-  obj.indices.push_back(0);
-  obj.indices.push_back(1);
-  obj.indices.push_back(2);
+  auto obj = Triangle::load();
+
   OpenGLModel model;
   model.initialize(move(obj));
 

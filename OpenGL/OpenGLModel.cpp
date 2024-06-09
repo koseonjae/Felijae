@@ -1,12 +1,12 @@
 #include "OpenGLModel.h"
 
 OpenGLModel::~OpenGLModel() {
-  glDeleteBuffers(1, &m_abo);
-  glDeleteBuffers(1, &m_eabo);
-  glDeleteVertexArrays(1, &m_vao);
+  release();
 }
 
 void OpenGLModel::initialize(Object obj) {
+  release();
+
   glGenVertexArrays(1, &m_vao);
   glBindVertexArray(m_vao);
 
@@ -25,11 +25,24 @@ void OpenGLModel::initialize(Object obj) {
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *) offsetof(Vertex, pos));
 
   m_obj = std::move(obj);
+  m_initialized = true;
+}
+
+void OpenGLModel::release() {
+  if (!m_initialized)
+    return;
+  glDeleteBuffers(1, &m_abo);
+  glDeleteBuffers(1, &m_eabo);
+  glDeleteVertexArrays(1, &m_vao);
+  m_initialized = false;
 }
 
 void OpenGLModel::bind() {
+  assert(m_initialized);
   glBindVertexArray(m_abo);
 }
+
 void OpenGLModel::draw() {
+  assert(m_initialized);
   glDrawElements(GL_TRIANGLES, m_obj.indices.size(), GL_UNSIGNED_INT, nullptr);
 }
