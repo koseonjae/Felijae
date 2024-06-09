@@ -1,6 +1,7 @@
 #pragma once
 
 #include "OpenGLProgram.h"
+#include "OpenGLModel.h"
 
 #include <glad/glad.h>
 
@@ -80,5 +81,4 @@ class OpenGLPipeline {
  public:
   Rasterizer rasterizer;
   OutputMerger outputMerger;
-  OpenGLProgram program;
 };

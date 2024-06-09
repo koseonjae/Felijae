@@ -1,5 +1,7 @@
 #include "OpenGLModel.h"
 
+#include <glm/gtc/matrix_transform.hpp>
+
 OpenGLModel::~OpenGLModel() {
   release();
 }
@@ -25,6 +27,7 @@ void OpenGLModel::initialize(Object obj) {
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *) offsetof(Vertex, pos));
 
   m_obj = std::move(obj);
+
   m_initialized = true;
 }
 
@@ -37,12 +40,21 @@ void OpenGLModel::release() {
   m_initialized = false;
 }
 
-void OpenGLModel::bind() {
-  assert(m_initialized);
-  glBindVertexArray(m_abo);
+void OpenGLModel::update() {
+  assert(m_program);
+  m_program->update();
 }
 
 void OpenGLModel::draw() {
   assert(m_initialized);
+  glBindVertexArray(m_abo);
+
+  assert(m_program);
+  m_program->update();
+
   glDrawElements(GL_TRIANGLES, m_obj.indices.size(), GL_UNSIGNED_INT, nullptr);
+}
+
+void OpenGLModel::setProgram(std::unique_ptr<OpenGLProgram> program) {
+  m_program = std::move(program);
 }

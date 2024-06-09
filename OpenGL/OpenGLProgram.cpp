@@ -82,7 +82,7 @@ OpenGLProgram::~OpenGLProgram() {
   glDeleteProgram(m_program);
 }
 
-void OpenGLProgram::bind() {
+void OpenGLProgram::update() {
   assert(m_program != -1);
   glUseProgram(m_program);
 

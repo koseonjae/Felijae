@@ -1,5 +1,6 @@
 #include "OpenGL/OpenGLPipeline.h"
 #include "OpenGL/OpenGLModel.h"
+#include "OpenGL/OpenGLProgram.h"
 #include "Model/Triangle.h"
 
 #include <GLFW/glfw3.h>
@@ -7,6 +8,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <iostream>
+#include <memory>
 
 using namespace std;
 
@@ -44,15 +46,7 @@ int main() {
 
   glClearColor(0.0, 1.0, 0.0, 1.0);
 
-  auto obj = Triangle::load();
-
-  OpenGLModel model;
-  model.initialize(move(obj));
-
-  pipeline.program.initialize("../asset/pass_through.vert", "../asset/color.frag");
-
-  glm::mat4 worldMat(1.0f);
-  worldMat = glm::translate(worldMat, glm::vec3(0.0, 0.0, 0.0));
+  auto worldMat = glm::mat4(1.0);
 
   glm::vec3 eye = glm::vec3(2.0, 0.0, 2.0);
   glm::vec3 at = glm::vec3(0.0, 0.0, 0.0);
@@ -65,16 +59,24 @@ int main() {
   float f = 100.0f;
   auto projMat = glm::perspective(fovy, aspectRatio, n, f);
 
-  pipeline.program.setUniform("worldMat", worldMat);
-  pipeline.program.setUniform("viewMat", viewMat);
-  pipeline.program.setUniform("projMat", projMat);
+  auto program = std::make_unique<OpenGLProgram>();
+  program->initialize("../asset/pass_through.vert", "../asset/color.frag");
+  program->setUniform("worldMat", worldMat);
+  program->setUniform("viewMat", viewMat);
+  program->setUniform("projMat", projMat);
+
+  auto triangleObj = Triangle::load();
+
+  OpenGLModel model;
+  model.initialize(std::move(triangleObj));
+  model.setProgram(std::move(program));
 
   while (!glfwWindowShouldClose(window)) {
     glClear(GL_COLOR_BUFFER_BIT);
 
     pipeline.bind();
-    model.bind();
 
+    model.update();
     model.draw();
 
     glfwSwapBuffers(window);
