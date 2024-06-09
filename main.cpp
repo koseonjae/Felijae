@@ -3,6 +3,7 @@
 #include "Model/Triangle.h"
 
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
 
 #include <iostream>
 
@@ -48,6 +49,10 @@ int main() {
   model.initialize(move(obj));
 
   pipeline.program.initialize("../asset/pass_through.vert", "../asset/color.frag");
+
+  pipeline.program.setUniform("worldMat", glm::mat4(1.0f));
+  pipeline.program.setUniform("viewMat", glm::mat4(1.0f));
+  pipeline.program.setUniform("projMat", glm::mat4(1.0f));
 
   while (!glfwWindowShouldClose(window)) {
     glClear(GL_COLOR_BUFFER_BIT);

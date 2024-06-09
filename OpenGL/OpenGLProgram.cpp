@@ -1,10 +1,13 @@
 #include "OpenGLProgram.h"
 
+#include <glm/gtc/type_ptr.hpp>
+
 #include <iostream>
 #include <vector>
 #include <filesystem>
 #include <fstream>
 #include <cassert>
+#include <string_view>
 
 std::string readFileToString(const std::filesystem::path &filePath) {
   std::ifstream fileStream(filePath, std::ios::in | std::ios::binary);
@@ -82,4 +85,21 @@ OpenGLProgram::~OpenGLProgram() {
 void OpenGLProgram::bind() {
   assert(m_program != -1);
   glUseProgram(m_program);
+
+  auto tasks = [&]() {
+    std::lock_guard<std::mutex> l(m_taskLock);
+    return std::move(this->m_tasks);
+  }();
+
+  for(const auto& task : tasks)
+    task();
+}
+
+void OpenGLProgram::setUniform(const std::string& name, const glm::mat4 &mat4) {
+  std::lock_guard<std::mutex> l(m_taskLock);
+  m_tasks.emplace_back([=]() {
+    GLint loc = glGetUniformLocation(m_program, name.data());
+    assert(loc != -1);
+    glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(mat4));
+  });
 }
