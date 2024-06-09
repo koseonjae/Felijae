@@ -4,6 +4,7 @@
 
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include <iostream>
 
@@ -50,9 +51,23 @@ int main() {
 
   pipeline.program.initialize("../asset/pass_through.vert", "../asset/color.frag");
 
-  pipeline.program.setUniform("worldMat", glm::mat4(1.0f));
-  pipeline.program.setUniform("viewMat", glm::mat4(1.0f));
-  pipeline.program.setUniform("projMat", glm::mat4(1.0f));
+  glm::mat4 worldMat(1.0f);
+  worldMat = glm::translate(worldMat, glm::vec3(0.0, 0.0, 0.0));
+
+  glm::vec3 eye = glm::vec3(2.0, 0.0, 2.0);
+  glm::vec3 at = glm::vec3(0.0, 0.0, 0.0);
+  glm::vec3 up = glm::vec3(0.0, 1.0, 0.0);
+  auto viewMat = glm::lookAt(eye, at, up);
+
+  auto fovy = glm::radians<float>(90);
+  auto aspectRatio = 1.f; // frustum width == height
+  float n = 0.0f;
+  float f = 100.0f;
+  auto projMat = glm::perspective(fovy, aspectRatio, n, f);
+
+  pipeline.program.setUniform("worldMat", worldMat);
+  pipeline.program.setUniform("viewMat", viewMat);
+  pipeline.program.setUniform("projMat", projMat);
 
   while (!glfwWindowShouldClose(window)) {
     glClear(GL_COLOR_BUFFER_BIT);
