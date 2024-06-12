@@ -30,5 +30,6 @@ class OpenGLProgram {
  private:
   GLuint m_program = -1;
   std::mutex m_taskLock;
-  std::vector<std::function<void()>> m_tasks;
+  std::vector<std::function<void()>> m_generalTasks;
+  std::vector<std::function<void(int index)>> m_textureTasks;
 };

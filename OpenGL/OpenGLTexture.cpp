@@ -38,6 +38,7 @@ void OpenGLTexture::_initIfNeeded() {
     if (!m_initializer)
       assert(false && "Texture is not initialized");
     m_initializer();
+    m_initializer = {};
   }
 }
 
