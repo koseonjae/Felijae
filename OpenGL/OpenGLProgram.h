@@ -7,6 +7,7 @@
 
 #include <string_view>
 #include <functional>
+#include <unordered_map>
 
 class OpenGLProgram {
  public:
@@ -30,6 +31,6 @@ class OpenGLProgram {
  private:
   GLuint m_program = -1;
   std::mutex m_taskLock;
-  std::vector<std::function<void()>> m_generalTasks;
-  std::vector<std::function<void(int index)>> m_textureTasks;
+  std::unordered_map<std::string, std::function<void()>> m_generalTasks;
+  std::unordered_map<std::string, std::function<void(int index)>> m_textureTasks;
 };
