@@ -11,6 +11,6 @@ uniform mat4 projMat;
 out vec2 vTexCoord;
 
 void main() {
-    vTexCoord = pos.st * 0.5 + 0.5; // todo: texCoord 직접 전달
+    vTexCoord = texCoord;
     gl_Position = projMat * viewMat * worldMat * vec4(pos, 1.0);
 }
