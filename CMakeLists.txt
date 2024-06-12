@@ -8,6 +8,8 @@ find_package(glad CONFIG REQUIRED)
 find_package(glfw3 CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
 
+add_subdirectory(external)
+
 add_executable(PracticeGL
     main.cpp
     OpenGL/OpenGLPipeline.cpp
@@ -21,6 +23,7 @@ add_executable(PracticeGL
     Model/Object.h)
 
 target_link_libraries(PracticeGL PRIVATE
+    external
     glad::glad
     glfw
     glm::glm)
