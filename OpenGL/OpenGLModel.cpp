@@ -1,5 +1,7 @@
 #include "OpenGLModel.h"
 
+#include <OpenGL/OpenGLProgram.h>
+#include <OpenGL/OpenGLPipeline.h>
 #include <glm/gtc/matrix_transform.hpp>
 
 OpenGLModel::~OpenGLModel() {
@@ -49,7 +51,10 @@ void OpenGLModel::release() {
 }
 
 void OpenGLModel::update() {
+  assert(m_pipeline);
   assert(m_program);
+
+  m_pipeline->bind();
   m_program->update();
 }
 
@@ -65,4 +70,8 @@ void OpenGLModel::draw() {
 
 void OpenGLModel::setProgram(std::unique_ptr<OpenGLProgram> program) {
   m_program = std::move(program);
+}
+
+void OpenGLModel::setPipeline(std::shared_ptr<OpenGLPipeline> pipeline) {
+  m_pipeline = std::move(pipeline);
 }

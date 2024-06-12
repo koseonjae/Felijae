@@ -13,7 +13,7 @@
 
 using namespace std;
 
-OpenGLPipeline pipeline{};
+auto pipeline = make_shared<OpenGLPipeline>();
 
 int main() {
   // Initialize GLFW
@@ -42,7 +42,7 @@ int main() {
   }
 
   glfwSetFramebufferSizeCallback(window, [](GLFWwindow *window, int width, int height) {
-    pipeline.rasterizer.viewport.setViewport(0, 0, width, height);
+    pipeline->rasterizer.viewport.setViewport(0, 0, width, height);
   });
 
   glClearColor(0.0, 1.0, 0.0, 1.0);
@@ -73,12 +73,11 @@ int main() {
 
   OpenGLModel model;
   model.initialize(std::move(triangleObj));
+  model.setPipeline(pipeline);
   model.setProgram(std::move(program));
 
   while (!glfwWindowShouldClose(window)) {
     glClear(GL_COLOR_BUFFER_BIT);
-
-    pipeline.bind();
 
     model.update();
     model.draw();
