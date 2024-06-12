@@ -20,7 +20,11 @@ add_executable(PracticeGL
     OpenGL/OpenGLModel.h
     Model/Triangle.cpp
     Model/Triangle.h
-    Model/Object.h)
+    Model/Object.h
+    OpenGL/OpenGLTexture.cpp
+    OpenGL/OpenGLTexture.h
+    Utility/ImageLoader.cpp
+    Utility/ImageLoader.h)
 
 target_link_libraries(PracticeGL PRIVATE
     external

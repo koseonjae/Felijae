@@ -1,6 +1,7 @@
 #include "OpenGL/OpenGLPipeline.h"
 #include "OpenGL/OpenGLModel.h"
 #include "OpenGL/OpenGLProgram.h"
+#include "OpenGL/OpenGLTexture.h"
 #include "Model/Triangle.h"
 
 #include <GLFW/glfw3.h>
@@ -60,10 +61,13 @@ int main() {
   auto projMat = glm::perspective(fovy, aspectRatio, n, f);
 
   auto program = std::make_unique<OpenGLProgram>();
-  program->initialize("../asset/pass_through.vert", "../asset/color.frag");
+  program->initialize("../asset/shader/pass_through.vert", "../asset/shader/color.frag");
   program->setUniform("worldMat", worldMat);
   program->setUniform("viewMat", viewMat);
   program->setUniform("projMat", projMat);
+
+  auto texture = make_shared<OpenGLTexture>("../asset/image/face.jpeg");
+  program->setUniform("uTexture", texture);
 
   auto triangleObj = Triangle::load();
 
