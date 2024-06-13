@@ -2,7 +2,7 @@
 #include <Utility/ImageLoader.h>
 #include <cassert>
 
-OpenGLTexture::OpenGLTexture(std::string_view path) {
+OpenGLTexture::OpenGLTexture(std::string_view path, bool lazyLoading) {
   assert(!m_initializer && "Texture is initialized twice");
 
   m_initializer = [=]() {
@@ -25,6 +25,9 @@ OpenGLTexture::OpenGLTexture(std::string_view path) {
     m_textureId = textureId;
     m_initialized = true;
   };
+
+  if (!lazyLoading)
+    _initIfNeeded();
 }
 
 OpenGLTexture::~OpenGLTexture() {

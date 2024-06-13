@@ -6,7 +6,7 @@
 
 class OpenGLTexture : std::enable_shared_from_this<OpenGLTexture> {
  public:
-  OpenGLTexture(std::string_view path);
+  OpenGLTexture(std::string_view path, bool lazyLoading = false);
   ~OpenGLTexture();
 
   OpenGLTexture(const OpenGLTexture&) = delete;
