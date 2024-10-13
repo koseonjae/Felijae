@@ -37,12 +37,12 @@ OpenGLTexture::~OpenGLTexture() {
 }
 
 void OpenGLTexture::_initIfNeeded() {
-  if (!m_initialized) {
-    if (!m_initializer)
-      assert(false && "Texture is not initialized");
-    m_initializer();
-    m_initializer = {};
-  }
+  if (m_initialized)
+    return;
+  if (!m_initializer)
+    assert(false && "Texture is not initialized");
+  m_initializer();
+  m_initializer = {};
 }
 
 void OpenGLTexture::bind() {

@@ -29,7 +29,7 @@ class OpenGLProgram {
   void setUniform(const std::string &name, std::shared_ptr<OpenGLTexture> texture);
 
  private:
-  GLuint m_program = -1;
+  GLuint m_program = -1; // fixme: uint에 음수
   std::mutex m_taskLock;
   std::unordered_map<std::string, std::function<void()>> m_generalTasks;
   std::unordered_map<std::string, std::function<void(int index)>> m_textureTasks;
