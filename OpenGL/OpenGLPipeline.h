@@ -5,9 +5,12 @@
 
 #include <glad/glad.h>
 
+class Rasterizer;
+class OpenGLPipeline;
+
 class Culling {
+  friend class Rasterizer;
  public:
-  void bind();
   void enableCulling(bool enable) {
     m_enable = enable;
   }
@@ -19,13 +22,16 @@ class Culling {
   }
 
  private:
+  void bind();
+
+ private:
   bool m_enable = true;
   bool m_ccw = true;
   bool m_cullBackFace = true;
-
 };
 
 class Viewport {
+  friend class Rasterizer;
  public:
   void setViewport(int minX, int minY, int width, int height) {
     m_minX = minX;
@@ -37,6 +43,7 @@ class Viewport {
     m_minZ = minZ;
     m_maxZ = maxZ;
   }
+ private:
   void bind();
  private:
   int m_minX = -1;
@@ -48,13 +55,14 @@ class Viewport {
 };
 
 class Rasterizer {
+  friend class OpenGLPipeline;
   // primitive assembly
   // clipping
   // perspective division
   // culling
   // viewport transform
   // scan conversion
- public:
+ private:
   void bind();
 
  public:
@@ -63,12 +71,13 @@ class Rasterizer {
 };
 
 class OutputMerger {
+  friend class OpenGLPipeline;
   // depth test
   // alpha blending
   // color buffer
   // depth buffer
   // clear, clearColor?
- public:
+ private:
   void bind();
 };
 
