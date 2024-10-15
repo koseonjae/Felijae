@@ -8,12 +8,12 @@ void Culling::bind() {
 
   glEnable(GL_CULL_FACE);
 
-  if (m_ccw)
+  if (m_frontFace == FrontFace::CCW)
     glFrontFace(GL_CCW);
   else
     glFrontFace(GL_CW);
 
-  if (m_cullBackFace)
+  if (m_cullMode == CullMode::Back)
     glCullFace(GL_BACK);
   else
     glCullFace(GL_FRONT);

@@ -11,14 +11,20 @@ class OpenGLPipeline;
 class Culling {
   friend class Rasterizer;
  public:
-  void enableCulling(bool enable) {
+  enum class CullMode {
+    Front, Back
+  };
+  enum class FrontFace {
+    CCW, CW
+  };
+  inline void enableCulling(bool enable) {
     m_enable = enable;
   }
-  void setFrontFace(bool ccw) {
-    m_ccw = ccw;
+  inline void setFrontFace(FrontFace frontFace) {
+    m_frontFace = frontFace;
   }
-  void cullBackFace(bool backFace) {
-    m_cullBackFace = backFace;
+  inline void setCullMode(CullMode mode) {
+    m_cullMode = mode;
   }
 
  private:
@@ -26,8 +32,8 @@ class Culling {
 
  private:
   bool m_enable = true;
-  bool m_ccw = true;
-  bool m_cullBackFace = true;
+  FrontFace m_frontFace = FrontFace::CCW;
+  CullMode m_cullMode = CullMode::Back;
 };
 
 class Viewport {
