@@ -70,7 +70,7 @@ int main() {
   program->setUniform("projMat", projMat);
 
   auto texture = make_shared<OpenGLTexture>("../asset/image/face.jpeg");
-  program->setUniform("uTexture", texture);
+  program->setTexture("uTexture", texture);
 
   auto triangleObj = Triangle::load();
 

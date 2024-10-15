@@ -91,7 +91,7 @@ void OpenGLProgram::setUniform(const std::string &name, const glm::mat4 &mat4) {
   }});
 }
 
-void OpenGLProgram::setUniform(const std::string &name, std::shared_ptr<OpenGLTexture> texture) {
+void OpenGLProgram::setTexture(const std::string &name, std::shared_ptr<OpenGLTexture> texture) {
   std::lock_guard<std::mutex> l(m_taskLock);
   m_textureTasks.insert({name, [=, texture = move(texture)](int index) {
     glActiveTexture(GL_TEXTURE0 + index);
