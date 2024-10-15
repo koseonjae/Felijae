@@ -1,4 +1,4 @@
-#include "OpenGLPipeline.h"
+#include "OpenGL/OpenGLPipeline.h"
 
 #include <glad/glad.h>
 

@@ -1,4 +1,4 @@
-#include "Triangle.h"
+#include "Model/Triangle.h"
 
 Object Triangle::load() {
   Object obj{};
