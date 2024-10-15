@@ -1,31 +1,13 @@
 #include "OpenGLProgram.h"
 
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/glm.hpp>
 
 #include <iostream>
-#include <vector>
-#include <filesystem>
-#include <fstream>
 #include <cassert>
 #include <string_view>
 
-std::string readFileToString(const std::filesystem::path &filePath) {
-  std::ifstream fileStream(filePath, std::ios::in | std::ios::binary);
-  if (!fileStream) {
-    throw std::runtime_error("Could not open file: " + filePath.string());
-  }
-
-  std::string content;
-  fileStream.seekg(0, std::ios::end);
-  content.resize(fileStream.tellg());
-  fileStream.seekg(0, std::ios::beg);
-  fileStream.read(&content[0], content.size());
-  fileStream.close();
-
-  return content;
-}
-
-void checkCompileErrors(GLuint shader, std::string type) {
+void checkCompileErrors(GLuint shader, std::string_view type) {
   GLint success;
   GLchar infoLog[1024];
   if (type != "PROGRAM") {
@@ -45,13 +27,11 @@ void checkCompileErrors(GLuint shader, std::string type) {
   }
 }
 
-void OpenGLProgram::initialize(std::string_view vsPath, std::string_view fsPath) {
+void OpenGLProgram::initialize(std::string_view vertexShaderStr, std::string_view fragShaderStr) {
   if (m_program == -1)
     glDeleteProgram(m_program);
-  auto vertexShaderStr = readFileToString(vsPath);
-  auto fragShaderStr = readFileToString(fsPath);
-  const char *vs_str = vertexShaderStr.c_str();
-  const char *fs_str = fragShaderStr.c_str();
+  const char *vs_str = vertexShaderStr.data();
+  const char *fs_str = fragShaderStr.data();
 
   // Compile vertex shader
   GLuint vs = glCreateShader(GL_VERTEX_SHADER);

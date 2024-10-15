@@ -23,6 +23,8 @@ add_executable(PracticeGL
     Model/Object.h
     OpenGL/OpenGLTexture.cpp
     OpenGL/OpenGLTexture.h
+    Utility/FileReader.cpp
+    Utility/FileReader.h
     Utility/ImageLoader.cpp
     Utility/ImageLoader.h)
 

@@ -3,6 +3,7 @@
 #include "OpenGL/OpenGLProgram.h"
 #include "OpenGL/OpenGLTexture.h"
 #include "Model/Triangle.h"
+#include <Utility/FileReader.h>
 
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
@@ -60,8 +61,10 @@ int main() {
   float f = 100.0f;
   auto projMat = glm::perspective(fovy, aspectRatio, n, f);
 
+  auto vs = readFileToString("../asset/shader/pass_through.vert");
+  auto fs = readFileToString("../asset/shader/color.frag");
   auto program = std::make_unique<OpenGLProgram>();
-  program->initialize("../asset/shader/pass_through.vert", "../asset/shader/color.frag");
+  program->initialize(vs, fs);
   program->setUniform("worldMat", worldMat);
   program->setUniform("viewMat", viewMat);
   program->setUniform("projMat", projMat);
