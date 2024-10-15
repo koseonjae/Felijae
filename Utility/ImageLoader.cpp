@@ -8,6 +8,11 @@
 ImageData ImageLoader::load(std::string_view path) {
   ImageData imageData{};
 
+  // opengl의 텍스쳐 좌표   : 좌하단이 0,0
+  // 이미지의 좌표          : 좌상단이 0,0
+  // 이를 보정하기 위한 옵션
+  stbi_set_flip_vertically_on_load(true);
+
   unsigned char *data = stbi_load(path.data(), &imageData.width, &imageData.heigth, &imageData.nChannels, 0);
   assert(data != nullptr && "Failed to load imageData");
   assert(imageData.nChannels == 3);
