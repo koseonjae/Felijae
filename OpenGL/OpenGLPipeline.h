@@ -3,8 +3,6 @@
 #include "OpenGLProgram.h"
 #include "OpenGLModel.h"
 
-#include <glad/glad.h>
-
 class Rasterizer;
 class OpenGLPipeline;
 

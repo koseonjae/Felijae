@@ -1,5 +1,7 @@
 #include "OpenGLPipeline.h"
 
+#include <glad/glad.h>
+
 void Culling::bind() {
   if (!m_enable) {
     glDisable(GL_CULL_FACE);
