@@ -75,16 +75,16 @@ void OpenGLProgram::update() {
   }
 
   for (const auto &[name, task] : generalTasks)
-    task();
+    task(name);
 
   int index = 0;
   for (const auto &[name, task] : textureTasks)
-    task(index++);
+    task(name, index++);
 }
 
 void OpenGLProgram::setUniform(const std::string &name, const glm::mat4 &mat4) {
   std::lock_guard<std::mutex> l(m_taskLock);
-  m_generalTasks.insert({name, [=]() {
+  m_generalTasks.insert({name, [=](std::string_view name) {
     GLint loc = glGetUniformLocation(m_program, name.data());
     assert(loc != -1);
     glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(mat4));
@@ -93,7 +93,7 @@ void OpenGLProgram::setUniform(const std::string &name, const glm::mat4 &mat4) {
 
 void OpenGLProgram::setTexture(const std::string &name, std::shared_ptr<OpenGLTexture> texture) {
   std::lock_guard<std::mutex> l(m_taskLock);
-  m_textureTasks.insert({name, [=, texture = move(texture)](int index) {
+  m_textureTasks.insert({name, [=, texture = std::move(texture)](std::string_view name, int index) {
     glActiveTexture(GL_TEXTURE0 + index);
     texture->bind();
     GLint loc = glGetUniformLocation(m_program, name.data());

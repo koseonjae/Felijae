@@ -30,6 +30,6 @@ class OpenGLProgram {
  private:
   GLuint m_program = -1; // fixme: uint에 음수
   std::mutex m_taskLock;
-  std::unordered_map<std::string, std::function<void()>> m_generalTasks;
-  std::unordered_map<std::string, std::function<void(int index)>> m_textureTasks;
+  std::unordered_map<std::string, std::function<void(std::string_view)>> m_generalTasks;
+  std::unordered_map<std::string, std::function<void(std::string_view, int)>> m_textureTasks;
 };
