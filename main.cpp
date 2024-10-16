@@ -42,6 +42,10 @@ int main() {
     return -1;
   }
 
+  int width, height;
+  glfwGetFramebufferSize(window, &width, &height);
+  pipeline->rasterizer.viewport.setViewport(0, 0, width, height);
+
   glfwSetFramebufferSizeCallback(window, [](GLFWwindow *window, int width, int height) {
     pipeline->rasterizer.viewport.setViewport(0, 0, width, height);
   });

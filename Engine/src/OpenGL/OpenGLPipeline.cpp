@@ -22,7 +22,9 @@ void Culling::bind() {
 }
 
 void Viewport::bind() {
+  assert(m_minX >= 0 && m_minY >= 0 && m_width > 0 && m_height > 0 && "Invalid viewport");
   glViewport(m_minX, m_minY, m_width, m_height);
+  assert(0 <= m_minZ && m_minZ <= 1 && 0 <= m_maxZ && m_maxZ <= 1 && "Invalid viewport depth value");
   glDepthRangef(m_minZ, m_maxZ);
 }
 
