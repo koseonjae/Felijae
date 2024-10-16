@@ -24,9 +24,9 @@ class OpenGLProgram {
 
   void update();
 
-  void setUniform(const std::string &name, const glm::mat4 &mat4);
+  void setUniform(std::string_view name, const glm::mat4 &mat4);
 
-  void setTexture(const std::string &name, std::shared_ptr<OpenGLTexture> texture);
+  void setTexture(std::string_view name, std::shared_ptr<OpenGLTexture> texture);
 
  private:
   GLuint m_program = -1; // fixme: uint에 음수
