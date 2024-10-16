@@ -16,6 +16,7 @@ void checkCompileErrors(GLuint shader, std::string_view type) {
       glGetShaderInfoLog(shader, 1024, NULL, infoLog);
       std::cout << "ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n" << infoLog
                 << "\n -- --------------------------------------------------- -- " << std::endl;
+      assert(false && "Shader compilation error");
     }
   } else {
     glGetProgramiv(shader, GL_LINK_STATUS, &success);
@@ -23,15 +24,15 @@ void checkCompileErrors(GLuint shader, std::string_view type) {
       glGetProgramInfoLog(shader, 1024, NULL, infoLog);
       std::cout << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n" << infoLog
                 << "\n -- --------------------------------------------------- -- " << std::endl;
+      assert(false && "program linking error");
     }
   }
 }
 
 void OpenGLProgram::initialize(std::string_view vertexShaderStr, std::string_view fragShaderStr) {
   m_threadChecker.checkThread();
+  assert(!m_initialized && "OpenGLProgram is already initialized");
 
-  if (m_program == -1)
-    glDeleteProgram(m_program);
   const char *vs_str = vertexShaderStr.data();
   const char *fs_str = fragShaderStr.data();
 
@@ -48,28 +49,30 @@ void OpenGLProgram::initialize(std::string_view vertexShaderStr, std::string_vie
   checkCompileErrors(fs, "FRAGMENT");
 
   // Link shaders into program
-  m_program = glCreateProgram();
-  glAttachShader(m_program, vs);
-  glAttachShader(m_program, fs);
-  glLinkProgram(m_program);
-  checkCompileErrors(m_program, "PROGRAM");
+  int program = glCreateProgram();
+  glAttachShader(program, vs);
+  glAttachShader(program, fs);
+  glLinkProgram(program);
+  checkCompileErrors(program, "PROGRAM");
+  m_program = program;
 
   glDeleteShader(vs);
   glDeleteShader(fs);
+
+  m_initialized = true;
 }
 
 OpenGLProgram::~OpenGLProgram() {
   m_threadChecker.checkThread();
-
-  if (m_program == -1)
+  if (!m_initialized)
     return;
   glDeleteProgram(m_program);
 }
 
 void OpenGLProgram::update() {
   m_threadChecker.checkThread();
+  assert(m_initialized && "OpenGLProgram is not initialized");
 
-  assert(m_program != -1);
   glUseProgram(m_program);
 
   decltype(m_generalTasks) generalTasks;
@@ -92,7 +95,7 @@ void OpenGLProgram::setUniform(std::string_view name, const glm::mat4 &mat4) {
   std::lock_guard<std::mutex> l(m_taskLock);
   m_generalTasks.insert({name.data(), [=](std::string_view name) {
     GLint loc = glGetUniformLocation(m_program, name.data());
-    assert(loc != -1);
+    assert(loc != -1 && "Invalid uniform location");
     glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(mat4));
   }});
 }
@@ -103,7 +106,7 @@ void OpenGLProgram::setTexture(std::string_view name, std::shared_ptr<OpenGLText
     glActiveTexture(GL_TEXTURE0 + index);
     texture->bind();
     GLint loc = glGetUniformLocation(m_program, name.data());
-    assert(loc != -1);
+    assert(loc != -1 && "Invalid texture location");
     glUniform1i(loc, index);
   }});
 }
