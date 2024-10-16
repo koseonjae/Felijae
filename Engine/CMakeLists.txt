@@ -6,6 +6,7 @@ add_library(Engine STATIC
     src/OpenGL/OpenGLTexture.cpp
     src/Utility/FileReader.cpp
     src/Utility/ImageLoader.cpp
+    src/Utility/ThreadChecker.cpp
 
     include/OpenGL/OpenGLPipeline.h
     include/OpenGL/OpenGLProgram.h
@@ -14,7 +15,8 @@ add_library(Engine STATIC
     include/Model/Object.h
     include/OpenGL/OpenGLTexture.h
     include/Utility/FileReader.h
-    include/Utility/ImageLoader.h)
+    include/Utility/ImageLoader.h
+    include/Utility/ThreadChecker.h)
 
 target_include_directories(Engine PUBLIC
     include)

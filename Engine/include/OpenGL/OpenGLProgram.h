@@ -1,6 +1,7 @@
 #pragma once
 
 #include "OpenGLTexture.h"
+#include <Utility/ThreadChecker.h>
 
 #include <glm/glm.hpp>
 
@@ -32,4 +33,5 @@ class OpenGLProgram {
   std::mutex m_taskLock;
   std::unordered_map<std::string, std::function<void(std::string_view)>> m_generalTasks;
   std::unordered_map<std::string, std::function<void(std::string_view, int)>> m_textureTasks;
+  ThreadChecker m_threadChecker;
 };

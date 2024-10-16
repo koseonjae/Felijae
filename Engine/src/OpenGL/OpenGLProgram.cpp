@@ -28,6 +28,8 @@ void checkCompileErrors(GLuint shader, std::string_view type) {
 }
 
 void OpenGLProgram::initialize(std::string_view vertexShaderStr, std::string_view fragShaderStr) {
+  m_threadChecker.checkThread();
+
   if (m_program == -1)
     glDeleteProgram(m_program);
   const char *vs_str = vertexShaderStr.data();
@@ -57,12 +59,16 @@ void OpenGLProgram::initialize(std::string_view vertexShaderStr, std::string_vie
 }
 
 OpenGLProgram::~OpenGLProgram() {
+  m_threadChecker.checkThread();
+
   if (m_program == -1)
     return;
   glDeleteProgram(m_program);
 }
 
 void OpenGLProgram::update() {
+  m_threadChecker.checkThread();
+
   assert(m_program != -1);
   glUseProgram(m_program);
 
