@@ -37,6 +37,7 @@ void OpenGLPipeline::_bindRasterizer() {
 }
 
 void OpenGLPipeline::_bindOutputMerger() {
+  glClearColor(0.0, 1.0, 0.0, 1.0);
 }
 
 void OpenGLPipeline::bind() {

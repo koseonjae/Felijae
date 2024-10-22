@@ -30,6 +30,10 @@ class Model {
     m_pipeline = std::move(pipeline);
   }
 
+  Program* getProgram() const {
+    return m_program.get();
+  }
+
  protected:
   std::unique_ptr<Program> m_program;
   std::shared_ptr<Pipeline> m_pipeline;

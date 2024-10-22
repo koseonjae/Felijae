@@ -16,7 +16,21 @@ void Scene::addModel(std::shared_ptr<Model> model) {
 }
 
 void Scene::update() {
+  auto lightColor = m_light.getLightColor();
+  auto lightDir = m_light.getLightDirection();
+  auto view = m_camera.getViewMatrix();
+  auto proj = m_camera.getProjMatrix();
+  auto eye = m_camera.getEye();
+  auto updateProgram = [&](Program* program) {
+    program->setUniform("uLightDir", lightDir);
+    program->setUniform("uLightColor", lightColor);
+    program->setUniform("uViewMat", view);
+    program->setUniform("uProjMat", proj);
+    program->setUniform("uCameraPosition", eye);
+  };
+
   for(auto& model : m_models) {
+    updateProgram(model->getProgram());
     model->update();
   }
 }

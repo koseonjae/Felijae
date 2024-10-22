@@ -63,7 +63,7 @@ void OpenGLModel::render() {
   glBindVertexArray(m_abo);
 
   assert(m_program);
-  m_program->update();
+//  m_program->update();
 
   glDrawElements(GL_TRIANGLES, m_indicesSize, GL_UNSIGNED_INT, nullptr);
 }

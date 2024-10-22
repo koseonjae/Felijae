@@ -5,7 +5,11 @@
 class Camera final {
  public:
   void setCamera(const glm::vec3 &eye, const glm::vec3 &at, const glm::vec3 &up);
-  void setProjection(float near, float far, float fovy, float aspectRatio);
+  void setProjection(float fovy, float aspectRatio, float near, float far);
+
+  glm::mat4 getViewMatrix() const;
+  glm::mat4 getProjMatrix() const;
+  glm::vec3 getEye() const;
 
  private:
   float m_near{0.0f};
