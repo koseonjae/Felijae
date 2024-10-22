@@ -73,10 +73,10 @@ int main() {
   program->setUniform("viewMat", viewMat);
   program->setUniform("projMat", projMat);
 
-  auto texture = make_shared<OpenGLTexture>("../asset/model/cube/uvmap.jpeg");
+  auto texture = make_shared<OpenGLTexture>("../asset/model/suzanne/uvmap.jpeg");
   program->setTexture("uTexture", texture);
 
-  auto obj = loadObj("../asset/model/cube/cube.obj");
+  auto obj = loadObj("../asset/model/suzanne/suzanne.obj");
 
   OpenGLModel model;
   model.initialize(std::move(obj));
