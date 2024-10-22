@@ -54,7 +54,7 @@ int main() {
 
   auto worldMat = glm::mat4(1.0);
 
-  glm::vec3 eye = glm::vec3(5.0, 5.0, 5.0);
+  glm::vec3 eye = glm::vec3(3.0, 3.0, 3.0);
   glm::vec3 at = glm::vec3(0.0, 0.0, 0.0);
   glm::vec3 up = glm::vec3(0.0, 1.0, 0.0);
   auto viewMat = glm::lookAt(eye, at, up);
@@ -65,13 +65,22 @@ int main() {
   float f = 100.0f;
   auto projMat = glm::perspective(fovy, aspectRatio, n, f);
 
-  auto vs = readFileToString("../asset/shader/pass_through.vert");
-  auto fs = readFileToString("../asset/shader/color.frag");
+  auto vs = readFileToString("../asset/shader/lighting.vert");
+  auto fs = readFileToString("../asset/shader/lighting.frag");
   auto program = std::make_unique<OpenGLProgram>();
   program->initialize(vs, fs);
-  program->setUniform("worldMat", worldMat);
-  program->setUniform("viewMat", viewMat);
-  program->setUniform("projMat", projMat);
+  program->setUniform("uWorldMat", worldMat);
+  program->setUniform("uViewMat", viewMat);
+  program->setUniform("uProjMat", projMat);
+  program->setUniform("uCameraPosition", eye);
+
+  glm::vec3 lightDir{0.0f, 0.0f, 5.0f};
+  glm::vec3 lightColor{1.0f, 1.0f, 1.0f};
+  program->setUniform("uLightDir", lightDir);
+  program->setUniform("uLightColor", lightColor);
+
+  glm::vec3 emitLight{0.0f, 0.0f, 0.0f};
+  program->setUniform("uEmitLight", emitLight);
 
   auto texture = make_shared<OpenGLTexture>("../asset/model/suzanne/uvmap.jpeg");
   program->setTexture("uTexture", texture);

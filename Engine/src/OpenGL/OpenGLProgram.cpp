@@ -91,6 +91,15 @@ void OpenGLProgram::update() {
     task(name, index++);
 }
 
+void OpenGLProgram::setUniform(std::string_view name, const glm::vec3 &vec3) {
+  std::lock_guard<std::mutex> l(m_taskLock);
+  m_generalTasks.insert({name.data(), [=](std::string_view name) {
+    GLint loc = glGetUniformLocation(m_program, name.data());
+    assert(loc != -1 && "Invalid uniform location");
+    glUniform3fv(loc, 1, glm::value_ptr(vec3));
+  }});
+}
+
 void OpenGLProgram::setUniform(std::string_view name, const glm::mat4 &mat4) {
   std::lock_guard<std::mutex> l(m_taskLock);
   m_generalTasks.insert({name.data(), [=](std::string_view name) {
