@@ -1,5 +1,6 @@
 #pragma once
 
+#include <Model/Model.h>
 #include <Model/Object.h>
 
 #include <glad/glad.h>
@@ -12,23 +13,19 @@
 class OpenGLPipeline;
 class OpenGLProgram;
 
-class OpenGLModel {
+class OpenGLModel final : public Model {
  public:
   OpenGLModel() = default;
 
   ~OpenGLModel();
 
-  void initialize(Object obj);
+  void initialize(const Object &obj) override;
 
-  void release();
+  void release() override;
 
-  void update();
+  void update() override;
 
-  void draw();
-
-  void setProgram(std::unique_ptr<OpenGLProgram> program);
-
-  void setPipeline(std::shared_ptr<OpenGLPipeline> pipeline);
+  void render() override;
 
  private:
   bool m_initialized = false;
@@ -36,8 +33,5 @@ class OpenGLModel {
   GLuint m_vao;
   GLuint m_abo;
   GLuint m_eabo;
-
-  std::unique_ptr<OpenGLProgram> m_program;
-  std::shared_ptr<OpenGLPipeline> m_pipeline;
-  glm::mat4 m_translate = glm::mat4(1.0);
+  int m_indicesSize{ 0 };
 };

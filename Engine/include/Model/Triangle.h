@@ -2,7 +2,7 @@
 
 #include "Model/Object.h"
 
-class Triangle {
+class Triangle final {
  public:
   static Object load();
 };

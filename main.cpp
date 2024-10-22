@@ -44,10 +44,10 @@ int main() {
 
   int width, height;
   glfwGetFramebufferSize(window, &width, &height);
-  pipeline->rasterizer.viewport.setViewport(0, 0, width, height);
+  pipeline->getRasterizer().getViewport().setViewport(0, 0, width, height);
 
   glfwSetFramebufferSizeCallback(window, [](GLFWwindow *window, int width, int height) {
-    pipeline->rasterizer.viewport.setViewport(0, 0, width, height);
+    pipeline->getRasterizer().getViewport().setViewport(0, 0, width, height);
   });
 
   glClearColor(0.0, 1.0, 0.0, 1.0);
@@ -96,7 +96,7 @@ int main() {
     glClear(GL_COLOR_BUFFER_BIT);
 
     model.update();
-    model.draw();
+    model.render();
 
     glfwSwapBuffers(window);
     glfwPollEvents();

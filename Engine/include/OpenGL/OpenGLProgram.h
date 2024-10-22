@@ -1,6 +1,7 @@
 #pragma once
 
 #include "OpenGLTexture.h"
+#include <Model/Program.h>
 #include <Utility/ThreadChecker.h>
 
 #include <glm/glm.hpp>
@@ -9,7 +10,7 @@
 #include <functional>
 #include <unordered_map>
 
-class OpenGLProgram {
+class OpenGLProgram : public Program{
  public:
   OpenGLProgram() = default;
   ~OpenGLProgram();
@@ -20,15 +21,15 @@ class OpenGLProgram {
   OpenGLProgram(const OpenGLProgram &) = delete;
   OpenGLProgram &operator=(const OpenGLProgram &) = delete;
 
-  void initialize(std::string_view vsPath, std::string_view fsPath);
+  void initialize(std::string_view vsPath, std::string_view fsPath) override;
 
-  void update();
+  void update() override;
 
-  void setUniform(std::string_view name, const glm::vec3 &vec3);
+  void setUniform(std::string_view name, const glm::vec3 &vec3) override;
 
-  void setUniform(std::string_view name, const glm::mat4 &mat4);
+  void setUniform(std::string_view name, const glm::mat4 &mat4) override;
 
-  void setTexture(std::string_view name, std::shared_ptr<OpenGLTexture> texture);
+  void setTexture(std::string_view name, std::shared_ptr<Texture> texture) override;
 
  private:
   GLuint m_program = 0;

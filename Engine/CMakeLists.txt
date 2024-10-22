@@ -4,6 +4,8 @@ add_library(Engine STATIC
     src/OpenGL/OpenGLModel.cpp
     src/Model/Triangle.cpp
     src/Model/Object.cpp
+    src/Model/Camera.cpp
+    src/Model/Scene.cpp
     src/OpenGL/OpenGLTexture.cpp
     src/Utility/FileReader.cpp
     src/Utility/ImageLoader.cpp
@@ -14,6 +16,13 @@ add_library(Engine STATIC
     include/OpenGL/OpenGLModel.h
     include/Model/Triangle.h
     include/Model/Object.h
+    include/Model/Model.h
+    include/Model/Program.h
+    include/Model/Pipeline.h
+    include/Model/Light.h
+    include/Model/Camera.h
+    include/Model/Scene.h
+    include/Model/Texture.h
     include/OpenGL/OpenGLTexture.h
     include/Utility/FileReader.h
     include/Utility/ImageLoader.h

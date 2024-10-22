@@ -8,7 +8,7 @@ OpenGLModel::~OpenGLModel() {
   release();
 }
 
-void OpenGLModel::initialize(Object obj) {
+void OpenGLModel::initialize(const Object& obj) {
   release();
 
   glGenVertexArrays(1, &m_vao);
@@ -36,7 +36,7 @@ void OpenGLModel::initialize(Object obj) {
   glEnableVertexAttribArray(2);
   glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *) offsetof(Vertex, texCoord));
 
-  m_obj = std::move(obj);
+  m_indicesSize = static_cast<int>(obj.indices.size());
 
   m_initialized = true;
 }
@@ -58,20 +58,12 @@ void OpenGLModel::update() {
   m_program->update();
 }
 
-void OpenGLModel::draw() {
+void OpenGLModel::render() {
   assert(m_initialized);
   glBindVertexArray(m_abo);
 
   assert(m_program);
   m_program->update();
 
-  glDrawElements(GL_TRIANGLES, m_obj.indices.size(), GL_UNSIGNED_INT, nullptr);
-}
-
-void OpenGLModel::setProgram(std::unique_ptr<OpenGLProgram> program) {
-  m_program = std::move(program);
-}
-
-void OpenGLModel::setPipeline(std::shared_ptr<OpenGLPipeline> pipeline) {
-  m_pipeline = std::move(pipeline);
+  glDrawElements(GL_TRIANGLES, m_indicesSize, GL_UNSIGNED_INT, nullptr);
 }
