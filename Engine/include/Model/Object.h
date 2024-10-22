@@ -13,3 +13,5 @@ struct Object {
   std::vector<Vertex> vertices;
   std::vector<unsigned int> indices;
 };
+
+Object loadObj(std::string_view path);

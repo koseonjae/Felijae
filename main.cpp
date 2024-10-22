@@ -54,7 +54,7 @@ int main() {
 
   auto worldMat = glm::mat4(1.0);
 
-  glm::vec3 eye = glm::vec3(2.0, 0.0, 2.0);
+  glm::vec3 eye = glm::vec3(5.0, 5.0, 5.0);
   glm::vec3 at = glm::vec3(0.0, 0.0, 0.0);
   glm::vec3 up = glm::vec3(0.0, 1.0, 0.0);
   auto viewMat = glm::lookAt(eye, at, up);
@@ -73,13 +73,13 @@ int main() {
   program->setUniform("viewMat", viewMat);
   program->setUniform("projMat", projMat);
 
-  auto texture = make_shared<OpenGLTexture>("../asset/image/face.jpeg");
+  auto texture = make_shared<OpenGLTexture>("../asset/model/cube/uvmap.jpeg");
   program->setTexture("uTexture", texture);
 
-  auto triangleObj = Triangle::load();
+  auto obj = loadObj("../asset/model/cube/cube.obj");
 
   OpenGLModel model;
-  model.initialize(std::move(triangleObj));
+  model.initialize(std::move(obj));
   model.setPipeline(pipeline);
   model.setProgram(std::move(program));
 

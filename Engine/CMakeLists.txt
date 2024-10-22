@@ -3,6 +3,7 @@ add_library(Engine STATIC
     src/OpenGL/OpenGLProgram.cpp
     src/OpenGL/OpenGLModel.cpp
     src/Model/Triangle.cpp
+    src/Model/Object.cpp
     src/OpenGL/OpenGLTexture.cpp
     src/Utility/FileReader.cpp
     src/Utility/ImageLoader.cpp
@@ -24,6 +25,7 @@ target_include_directories(Engine PUBLIC
 find_package(glad CONFIG REQUIRED)
 find_package(glfw3 CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
+find_package(tinyobjloader CONFIG REQUIRED)
 
 add_subdirectory(external)
 
@@ -33,4 +35,5 @@ target_link_libraries(Engine
     PUBLIC
     glad::glad
     glfw
-    glm::glm)
+    glm::glm
+    tinyobjloader::tinyobjloader)
