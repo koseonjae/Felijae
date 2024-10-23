@@ -11,8 +11,8 @@ class Model;
 
 class Scene final {
  public:
-  void setLight(const Light &light);
-  void setCamera(const Camera &camera);
+  void setLight(const Light& light);
+  void setCamera(const Camera& camera);
   void addModel(std::shared_ptr<Model> model);
   void update();
   void render();

@@ -1,12 +1,12 @@
 #include <Model/Scene.h>
 #include <Model/Model.h>
 
-void Scene::setLight(const Light &light) {
+void Scene::setLight(const Light& light) {
   static_assert(std::is_trivially_copyable_v<Light> && "Light must be trivially copyable");
   m_light = light;
 }
 
-void Scene::setCamera(const Camera &camera) {
+void Scene::setCamera(const Camera& camera) {
   static_assert(std::is_trivially_copyable_v<Camera> && "Camera must be trivially copyable");
   m_camera = camera;
 }
@@ -21,7 +21,7 @@ void Scene::update() {
   auto view = m_camera.getViewMatrix();
   auto proj = m_camera.getProjMatrix();
   auto eye = m_camera.getEye();
-  auto updateProgram = [&](Program* program) {
+  auto updateProgram = [&](Program *program) {
     program->setUniform("uLightDir", lightDir);
     program->setUniform("uLightColor", lightColor);
     program->setUniform("uViewMat", view);
@@ -29,14 +29,14 @@ void Scene::update() {
     program->setUniform("uCameraPosition", eye);
   };
 
-  for(auto& model : m_models) {
+  for (auto& model : m_models) {
     updateProgram(model->getProgram());
     model->update();
   }
 }
 
 void Scene::render() {
-  for(auto& model : m_models) {
+  for (auto& model : m_models) {
     model->render();
   }
 }

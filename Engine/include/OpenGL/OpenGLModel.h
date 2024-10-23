@@ -19,7 +19,7 @@ class OpenGLModel final : public Model {
 
   ~OpenGLModel();
 
-  void initialize(const Object &obj) override;
+  void initialize(const Object& obj) override;
 
   void release() override;
 
@@ -33,5 +33,5 @@ class OpenGLModel final : public Model {
   GLuint m_vao;
   GLuint m_abo;
   GLuint m_eabo;
-  int m_indicesSize{ 0 };
+  int m_indicesSize{0};
 };

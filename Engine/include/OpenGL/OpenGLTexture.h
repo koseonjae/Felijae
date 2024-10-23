@@ -11,10 +11,10 @@ class OpenGLTexture final : public Texture, std::enable_shared_from_this<OpenGLT
   OpenGLTexture(std::string_view path, bool lazyLoading = false);
   ~OpenGLTexture();
 
-  OpenGLTexture(const OpenGLTexture &) = delete;
-  OpenGLTexture(OpenGLTexture &&) = delete;
-  OpenGLTexture &operator=(const OpenGLTexture &) = delete;
-  OpenGLTexture &operator=(OpenGLTexture &&) = delete;
+  OpenGLTexture(const OpenGLTexture&) = delete;
+  OpenGLTexture(OpenGLTexture&&) = delete;
+  OpenGLTexture& operator=(const OpenGLTexture&) = delete;
+  OpenGLTexture& operator=(OpenGLTexture&&) = delete;
 
   void bind() override;
 

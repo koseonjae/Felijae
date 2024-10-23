@@ -14,7 +14,7 @@ class Model {
 
   virtual ~Model() = default;
 
-  virtual void initialize(const Object &) = 0;
+  virtual void initialize(const Object&) = 0;
 
   virtual void release() = 0;
 
@@ -30,7 +30,7 @@ class Model {
     m_pipeline = std::move(pipeline);
   }
 
-  Program* getProgram() const {
+  Program *getProgram() const {
     return m_program.get();
   }
 

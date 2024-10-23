@@ -83,15 +83,15 @@ void OpenGLProgram::update() {
     textureTasks = std::move(m_textureTasks);
   }
 
-  for (const auto &[name, task] : generalTasks)
+  for (const auto& [name, task] : generalTasks)
     task(name);
 
   int index = 0;
-  for (const auto &[name, task] : textureTasks)
+  for (const auto& [name, task] : textureTasks)
     task(name, index++);
 }
 
-void OpenGLProgram::setUniform(std::string_view name, const glm::vec3 &vec3) {
+void OpenGLProgram::setUniform(std::string_view name, const glm::vec3& vec3) {
   std::lock_guard<std::mutex> l(m_taskLock);
   m_generalTasks.insert({name.data(), [=](std::string_view name) {
     GLint loc = glGetUniformLocation(m_program, name.data());
@@ -100,7 +100,7 @@ void OpenGLProgram::setUniform(std::string_view name, const glm::vec3 &vec3) {
   }});
 }
 
-void OpenGLProgram::setUniform(std::string_view name, const glm::mat4 &mat4) {
+void OpenGLProgram::setUniform(std::string_view name, const glm::mat4& mat4) {
   std::lock_guard<std::mutex> l(m_taskLock);
   m_generalTasks.insert({name.data(), [=](std::string_view name) {
     GLint loc = glGetUniformLocation(m_program, name.data());

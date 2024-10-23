@@ -3,7 +3,7 @@
 #include <iostream>
 #include <fstream>
 
-std::string readFileToString(const std::filesystem::path &filePath) {
+std::string readFileToString(const std::filesystem::path& filePath) {
   std::ifstream fileStream(filePath, std::ios::in | std::ios::binary);
   if (!fileStream) {
     throw std::runtime_error("Could not open file: " + filePath.string());

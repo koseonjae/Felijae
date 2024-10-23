@@ -2,7 +2,7 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
-void Camera::setCamera(const glm::vec3 &eye, const glm::vec3 &at, const glm::vec3 &up) {
+void Camera::setCamera(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& up) {
   m_eye = eye;
   m_at = at;
   m_up = up;

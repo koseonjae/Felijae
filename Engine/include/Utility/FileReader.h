@@ -3,4 +3,4 @@
 #include <string>
 #include <filesystem>
 
-std::string readFileToString(const std::filesystem::path &filePath);
+std::string readFileToString(const std::filesystem::path& filePath);

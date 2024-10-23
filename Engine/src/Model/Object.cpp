@@ -7,9 +7,9 @@ Object loadObj(std::string_view path) {
   bool success = reader.ParseFromFile(path.data(), config);
   assert(success && "Failed to parse obj.");
 
-  auto &attributes = reader.GetAttrib();
-  auto &shapes = reader.GetShapes();
-  auto &indices = shapes[0].mesh.indices;
+  auto& attributes = reader.GetAttrib();
+  auto& shapes = reader.GetShapes();
+  auto& indices = shapes[0].mesh.indices;
 
   Object result;
 

@@ -10,24 +10,24 @@
 #include <functional>
 #include <unordered_map>
 
-class OpenGLProgram : public Program{
+class OpenGLProgram : public Program {
  public:
   OpenGLProgram() = default;
   ~OpenGLProgram();
 
-  OpenGLProgram(OpenGLProgram &&) = delete;
-  OpenGLProgram &operator=(OpenGLProgram &&) = delete;
+  OpenGLProgram(OpenGLProgram&&) = delete;
+  OpenGLProgram& operator=(OpenGLProgram&&) = delete;
 
-  OpenGLProgram(const OpenGLProgram &) = delete;
-  OpenGLProgram &operator=(const OpenGLProgram &) = delete;
+  OpenGLProgram(const OpenGLProgram&) = delete;
+  OpenGLProgram& operator=(const OpenGLProgram&) = delete;
 
   void initialize(std::string_view vsPath, std::string_view fsPath) override;
 
   void update() override;
 
-  void setUniform(std::string_view name, const glm::vec3 &vec3) override;
+  void setUniform(std::string_view name, const glm::vec3& vec3) override;
 
-  void setUniform(std::string_view name, const glm::mat4 &mat4) override;
+  void setUniform(std::string_view name, const glm::mat4& mat4) override;
 
   void setTexture(std::string_view name, std::shared_ptr<Texture> texture) override;
 

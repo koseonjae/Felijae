@@ -4,7 +4,7 @@
 
 class Camera final {
  public:
-  void setCamera(const glm::vec3 &eye, const glm::vec3 &at, const glm::vec3 &up);
+  void setCamera(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& up);
   void setProjection(float fovy, float aspectRatio, float near, float far);
 
   glm::mat4 getViewMatrix() const;
