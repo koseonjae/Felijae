@@ -11,4 +11,6 @@ class OpenGLPipeline : public Pipeline {
   void _bindCulling();
   void _bindViewport();
   void _bindOutputMerger();
+  void _bindDepthTest();
+  void _bindAlphaBlending();
 };

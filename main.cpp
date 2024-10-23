@@ -28,10 +28,11 @@ int main() {
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
   glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+  glfwWindowHint(GLFW_DEPTH_BITS, 24);
 
   // Create GLFW window
-  GLFWwindow *window = glfwCreateWindow(800, 600, "LearnOpenGL", NULL, NULL);
-  if (window == NULL) {
+  GLFWwindow *window = glfwCreateWindow(800, 600, "LearnOpenGL", nullptr, nullptr);
+  if (window == nullptr) {
     std::cout << "Failed to create GLFW window" << std::endl;
     glfwTerminate();
     return -1;
@@ -47,6 +48,14 @@ int main() {
   int width, height;
   glfwGetFramebufferSize(window, &width, &height);
   pipeline->getRasterizer().getViewport().setViewport(0, 0, width, height);
+
+  pipeline->getOutputMerger().getDepthTest().setEnable(true);
+  pipeline->getOutputMerger().getDepthTest().setDepthFunc(DepthTest::DepthTestFunc::Less);
+
+  pipeline->getOutputMerger().getAlphaBlend().setEnable(true);
+  pipeline->getOutputMerger().getAlphaBlend().setFragmentBlendFunc(AlphaBlend::BlendFunc::SRC_ALPHA);
+  pipeline->getOutputMerger().getAlphaBlend().setPixelBlendFunc(AlphaBlend::BlendFunc::ONE_MINUS_SRC_ALPHA);
+  pipeline->getOutputMerger().getAlphaBlend().setBlendEquation(AlphaBlend::BlendEquation::Add);
 
   glfwSetFramebufferSizeCallback(window, [](GLFWwindow *window, int width, int height) {
     pipeline->getRasterizer().getViewport().setViewport(0, 0, width, height);
@@ -73,7 +82,9 @@ int main() {
     glm::vec3 up = glm::vec3(0.0, 1.0, 0.0);
     auto fovy = glm::radians<float>(90);
     auto aspectRatio = 1.f; // frustum width == height
-    float n = 0.0f;
+    float n = 0.1f; // note: 0이면 투영행렬 정의상 분모가 0이되어 미정의 동작,
+    //                 0.01, 0.001등 너무 작으면 정밀도가 낮아져 가까운 물체들에 대해 z fighting 발생할 수 있음
+    //                 => depth bit 조절 필요
     float f = 100.0f;
     Camera camera{};
     camera.setCamera(eye, at, up);
@@ -95,8 +106,12 @@ int main() {
   model->setProgram(std::move(program));
   scene.addModel(std::move(model));
 
+  // todo: clear, clearColor -> framebuffer class
+  glClearColor(0.0, 1.0, 0.0, 0.0);
+  glClearDepthf(1.0f);
+
   while (!glfwWindowShouldClose(window)) {
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
     scene.update();
     scene.render();
