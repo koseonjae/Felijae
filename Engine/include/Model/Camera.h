@@ -12,10 +12,10 @@ class Camera final {
   glm::vec3 getEye() const;
 
  private:
-  float m_near{0.0f};
-  float m_far{0.0f};
-  float m_fovy{0.0f};
-  float m_aspectRatio{0.0f}; // width / height
+  float m_near = 0.0f;
+  float m_far = 0.0f;
+  float m_fovy = 0.0f;
+  float m_aspectRatio = 0.0f; // width / height
   glm::vec3 m_eye;
   glm::vec3 m_at;
   glm::vec3 m_up;

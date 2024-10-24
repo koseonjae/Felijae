@@ -3,17 +3,17 @@
 #include <vector>
 #include <string_view>
 
-enum ImageForat {
+enum ImageFormat {
   RGB = 0,
   RGBA = 1,
 };
 
 struct ImageData {
   std::vector<uint8_t> pixel;
-  int width;
-  int heigth;
-  int nChannels;
-  ImageForat format;
+  int width = 0;
+  int height = 0;
+  int nChannels = 0;
+  ImageFormat format = RGB;
 };
 
 class ImageLoader {

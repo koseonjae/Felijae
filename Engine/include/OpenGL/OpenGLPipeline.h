@@ -4,6 +4,7 @@
 
 class OpenGLPipeline : public Pipeline {
  public:
+  ~OpenGLPipeline() override = default;
   void bind() override;
 
  private:

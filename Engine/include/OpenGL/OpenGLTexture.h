@@ -9,7 +9,7 @@
 class OpenGLTexture final : public Texture, std::enable_shared_from_this<OpenGLTexture> {
  public:
   OpenGLTexture(std::string_view path, bool lazyLoading = false);
-  ~OpenGLTexture();
+  ~OpenGLTexture() override;
 
   OpenGLTexture(const OpenGLTexture&) = delete;
   OpenGLTexture(OpenGLTexture&&) = delete;
@@ -23,6 +23,6 @@ class OpenGLTexture final : public Texture, std::enable_shared_from_this<OpenGLT
 
  private:
   bool m_initialized = false;
-  GLuint m_textureId;
+  GLuint m_textureId = 0;
   std::function<void()> m_initializer;
 };

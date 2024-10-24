@@ -19,10 +19,12 @@ glm::mat4 Camera::getViewMatrix() const {
   auto viewMat = glm::lookAt(m_eye, m_at, m_up);
   return viewMat;
 }
+
 glm::mat4 Camera::getProjMatrix() const {
   auto projMat = glm::perspective(m_fovy, m_aspectRatio, m_near, m_far);
   return projMat;
 }
+
 glm::vec3 Camera::getEye() const {
   return m_eye;
 }

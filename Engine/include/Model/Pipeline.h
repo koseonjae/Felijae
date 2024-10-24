@@ -47,8 +47,8 @@ class Viewport final {
   int m_minY = -1;
   int m_width = -1;
   int m_height = -1;
-  float m_minZ = 0;
-  float m_maxZ = 1;
+  float m_minZ = 0.0f;
+  float m_maxZ = 1.0f;
 };
 static_assert(std::is_trivially_copyable_v<Viewport>);
 

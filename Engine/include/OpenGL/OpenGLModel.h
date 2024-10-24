@@ -17,7 +17,7 @@ class OpenGLModel final : public Model {
  public:
   OpenGLModel() = default;
 
-  ~OpenGLModel();
+  ~OpenGLModel() override;
 
   void initialize(const Object& obj) override;
 
@@ -30,8 +30,8 @@ class OpenGLModel final : public Model {
  private:
   bool m_initialized = false;
   Object m_obj;
-  GLuint m_vao;
-  GLuint m_abo;
-  GLuint m_eabo;
-  int m_indicesSize{0};
+  GLuint m_vao = 0;
+  GLuint m_abo = 0;
+  GLuint m_eabo = 0;
+  int m_indicesSize = 0;
 };

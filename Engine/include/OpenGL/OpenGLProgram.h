@@ -10,10 +10,10 @@
 #include <functional>
 #include <unordered_map>
 
-class OpenGLProgram : public Program {
+class OpenGLProgram final : public Program {
  public:
   OpenGLProgram() = default;
-  ~OpenGLProgram();
+  ~OpenGLProgram() override;
 
   OpenGLProgram(OpenGLProgram&&) = delete;
   OpenGLProgram& operator=(OpenGLProgram&&) = delete;
