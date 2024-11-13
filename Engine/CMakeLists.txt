@@ -37,6 +37,7 @@ find_package(glm CONFIG REQUIRED)
 find_package(tinyobjloader CONFIG REQUIRED)
 
 add_subdirectory(external)
+add_subdirectory(graphics)
 
 target_link_libraries(Engine
     PUBLIC
@@ -45,4 +46,5 @@ target_link_libraries(Engine
     glad::glad
     glfw
     glm::glm
+    metal
     tinyobjloader::tinyobjloader)
