@@ -1,4 +1,5 @@
-#include "triangle_types.h"
+#include <Utility/FileReader.h>
+#include <Metal/triangle_types.h>
 
 #include <Foundation/Foundation.hpp>
 #include <Metal/Metal.hpp>
@@ -7,11 +8,8 @@
 #include <SDL.h>
 
 #include <iostream>
-#include <fstream>
 
 namespace {
-
-#include "triangle_metallib.h"
 
 const AAPLVertex triangleVertices[] = {
     // 2D positions,    RGBA colors
@@ -21,24 +19,6 @@ const AAPLVertex triangleVertices[] = {
 };
 
 const vector_uint2 viewport = {640, 480};
-
-std::string readFileToString(const std::filesystem::path& filePath) {
-  std::ifstream fileStream(filePath, std::ios::in | std::ios::binary);
-  if (!fileStream) {
-    throw std::runtime_error("Could not open file: " + filePath.string());
-  }
-
-  std::string content;
-  fileStream.seekg(0, std::ios::end);
-  content.resize(fileStream.tellg());
-  fileStream.seekg(0, std::ios::beg);
-  fileStream.read(&content[0], content.size());
-  fileStream.close();
-
-  return content;
-}
-
-}
 
 template<typename T>
 class MetalPtr {
@@ -59,6 +39,12 @@ class MetalPtr {
   T *m_ptr = nullptr;
 };
 
+NS::String* getNSString(std::string_view str) {
+  return NS::String::string(str.data(), NS::ASCIIStringEncoding);
+}
+
+}
+
 int main(int argc, char **argv) {
   SDL_SetHint(SDL_HINT_RENDER_DRIVER, "metal");
   SDL_InitSubSystem(SDL_INIT_VIDEO);
@@ -73,14 +59,8 @@ int main(int argc, char **argv) {
   auto name = device->name();
   std::cerr << "device name: " << name->utf8String() << std::endl;
 
-  auto library_data = dispatch_data_create(
-      &triangle_metallib[0], triangle_metallib_len,
-      dispatch_get_main_queue(),
-      ^{});
-
-  auto shaderSource = readFileToString("../triangle.metal");
-
-  auto library = MetalPtr(device->newLibrary(library_data, &err));
+  auto metalShaders = readFileToString("../asset/shader/triangle.metal");
+  auto library = MetalPtr(device->newLibrary(getNSString(metalShaders), nullptr, &err));
 
   if (!library) {
     std::cerr << "Failed to create library" << std::endl;

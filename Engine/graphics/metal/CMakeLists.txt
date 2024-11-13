@@ -1,6 +1,7 @@
 add_library(metal STATIC src/impl.cpp)
 
 target_include_directories(metal PUBLIC
+    include
     metal-cpp)
 
 # Metal
