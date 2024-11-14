@@ -4,12 +4,12 @@
 #include <Foundation/Foundation.hpp>
 #include <Metal/Metal.hpp>
 #include <QuartzCore/QuartzCore.hpp>
-
 #include <SDL.h>
 
 #include <iostream>
 
 namespace {
+const std::vector<int> viewport = {640, 480};
 
 const AAPLVertex triangleVertices[] = {
     // 2D positions,    RGBA colors
@@ -18,74 +18,61 @@ const AAPLVertex triangleVertices[] = {
     {{0, 250}, {0, 0, 1, 1}},
 };
 
-const vector_uint2 viewport = {640, 480};
-
 template<typename T>
 class MetalPtr {
  public:
-  MetalPtr(T *ptr) : m_ptr(ptr) { m_ptr->retain(); }
+  explicit MetalPtr(T* ptr) : m_ptr(ptr) { m_ptr->retain(); }
   ~MetalPtr() { m_ptr->release(); }
   MetalPtr(const MetalPtr<T>& rhs) = delete;
   MetalPtr(MetalPtr<T>&& rhs) = delete;
   MetalPtr& operator=(const MetalPtr<T>& rhs) = delete;
   MetalPtr& operator=(MetalPtr<T>&& rhs) = delete;
-
   auto operator->() { return m_ptr; }
   auto operator->() const { return m_ptr; }
   explicit operator bool() const { return m_ptr; }
-  auto get() const { return m_ptr; }
-
+  [[nodiscard]] T* get() const { return m_ptr; }
  private:
-  T *m_ptr = nullptr;
+  T* m_ptr = nullptr;
 };
 
-NS::String* getNSString(std::string_view str) {
+inline NS::String* getNSString(std::string_view str) {
   return NS::String::string(str.data(), NS::ASCIIStringEncoding);
 }
+} // namespace
 
-}
+int main(int argc, char** argv) {
+  NS::Error* err = nil;
 
-int main(int argc, char **argv) {
   SDL_SetHint(SDL_HINT_RENDER_DRIVER, "metal");
   SDL_InitSubSystem(SDL_INIT_VIDEO);
-  SDL_Window *window = SDL_CreateWindow("SDL Metal", -1, -1, viewport[0], viewport[1], SDL_WINDOW_ALLOW_HIGHDPI);
-  SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC);
+  SDL_Window* window = SDL_CreateWindow("SDL Metal", -1, -1, viewport[0], viewport[1], SDL_WINDOW_ALLOW_HIGHDPI);
 
-  NS::Error *err;
+  auto device = MetalPtr(MTL::CreateSystemDefaultDevice());
 
-  auto swapchain = (CA::MetalLayer *) SDL_RenderGetMetalLayer(renderer);
-  auto device = swapchain->device();
-
-  auto name = device->name();
-  std::cerr << "device name: " << name->utf8String() << std::endl;
+  SDL_MetalView view = SDL_Metal_CreateView(window);
+  auto layer = static_cast<CA::MetalLayer*>(SDL_Metal_GetLayer(view)); // swapchain
+  layer->setDevice(device.get());
+  layer->setPixelFormat(MTL::PixelFormatBGRA8Unorm);
 
   auto metalShaders = readFileToString("../asset/shader/triangle.metal");
   auto library = MetalPtr(device->newLibrary(getNSString(metalShaders), nullptr, &err));
+  assert(library && "Failed to create library");
 
-  if (!library) {
-    std::cerr << "Failed to create library" << std::endl;
-    std::exit(-1);
-  }
+  auto vertexFuncName = NS::String::string("vertexShader", NS::ASCIIStringEncoding);
+  auto vertexFunc = MetalPtr(library->newFunction(vertexFuncName));
 
-  auto vertex_function_name = NS::String::string("vertexShader", NS::ASCIIStringEncoding);
-  auto vertex_function = MetalPtr(library->newFunction(vertex_function_name));
+  auto fragmentFuncName = NS::String::string("fragmentShader", NS::ASCIIStringEncoding);
+  auto fragmentFunc = MetalPtr(library->newFunction(fragmentFuncName));
 
-  auto fragment_function_name = NS::String::string("fragmentShader", NS::ASCIIStringEncoding);
-  auto fragment_function = MetalPtr(library->newFunction(fragment_function_name));
+  auto pipelineDesc = MetalPtr(MTL::RenderPipelineDescriptor::alloc()->init());
+  pipelineDesc->setVertexFunction(vertexFunc.get());
+  pipelineDesc->setFragmentFunction(fragmentFunc.get());
 
-  auto pipeline_descriptor = MetalPtr(MTL::RenderPipelineDescriptor::alloc()->init());
-  pipeline_descriptor->setVertexFunction(vertex_function.get());
-  pipeline_descriptor->setFragmentFunction(fragment_function.get());
+  auto colorAttachmentDesc = pipelineDesc->colorAttachments()->object(0);
+  colorAttachmentDesc->setPixelFormat(layer->pixelFormat());
 
-  auto color_attachment_descriptor = pipeline_descriptor->colorAttachments()->object(0);
-  color_attachment_descriptor->setPixelFormat(swapchain->pixelFormat());
-
-  auto pipeline = MetalPtr(device->newRenderPipelineState(pipeline_descriptor.get(), &err));
-
-  if (!pipeline) {
-    std::cerr << "Failed to create pipeline" << std::endl;
-    std::exit(-1);
-  }
+  auto pipeline = MetalPtr(device->newRenderPipelineState(pipelineDesc.get(), &err));
+  assert(pipeline && "Failed to create pipeline");
 
   auto queue = MetalPtr(device->newCommandQueue());
 
@@ -97,49 +84,36 @@ int main(int argc, char **argv) {
       switch (e.type) {
         case SDL_QUIT: {
           quit = true;
-        }
           break;
+        }
       }
     }
 
-    auto drawable = swapchain->nextDrawable();
+    auto drawable = MetalPtr(layer->nextDrawable());
 
     auto pass = MetalPtr(MTL::RenderPassDescriptor::renderPassDescriptor());
 
-    auto color_attachment = pass->colorAttachments()->object(0);
-    color_attachment->setLoadAction(MTL::LoadAction::LoadActionClear);
-    color_attachment->setStoreAction(MTL::StoreAction::StoreActionStore);
-    color_attachment->setTexture(drawable->texture());
+    auto colorAttachment = pass->colorAttachments()->object(0);
+    colorAttachment->setLoadAction(MTL::LoadAction::LoadActionClear);
+    colorAttachment->setStoreAction(MTL::StoreAction::StoreActionStore);
+    colorAttachment->setTexture(drawable->texture());
 
-    //
     auto buffer = MetalPtr(queue->commandBuffer());
 
-    //
+    // encoding
     auto encoder = MetalPtr(buffer->renderCommandEncoder(pass.get()));
-
-    encoder->setViewport(MTL::Viewport{
-        0.0f, 0.0f,
-        (double) viewport[0], (double) viewport[1],
-        0.0f, 1.0f
-    });
-
+    encoder->setViewport(MTL::Viewport{0.0, 0.0, (double) viewport[0], (double) viewport[1], 0.0f, 1.0f});
     encoder->setRenderPipelineState(pipeline.get());
-
     encoder->setVertexBytes(&triangleVertices[0], sizeof(triangleVertices), AAPLVertexInputIndexVertices);
-    encoder->setVertexBytes(&viewport, sizeof(viewport), AAPLVertexInputIndexViewportSize);
-
-    NS::UInteger vertex_start = 0, vertex_count = 3;
-    encoder->drawPrimitives(MTL::PrimitiveType::PrimitiveTypeTriangle, vertex_start, vertex_count);
-
+    encoder->setVertexBytes(viewport.data(), sizeof(int) * viewport.size(), AAPLVertexInputIndexViewportSize);
+    encoder->drawPrimitives(MTL::PrimitiveType::PrimitiveTypeTriangle, 0ul, 3ul);
     encoder->endEncoding();
 
-    buffer->presentDrawable(drawable);
+    buffer->presentDrawable(drawable.get());
     buffer->commit();
-
-    drawable->release();
   }
 
-  SDL_DestroyRenderer(renderer);
+  SDL_Metal_DestroyView(view);
   SDL_DestroyWindow(window);
   SDL_Quit();
 
