@@ -11,7 +11,7 @@
 namespace {
 const std::vector<int> viewport = {640, 480};
 
-const AAPLVertex triangleVertices[] = {
+const std::vector<AAPLVertex> triangleVertices = {
     // 2D positions,    RGBA colors
     {{0, 1}, {1, 0, 0, 1}},
     {{-1, -1}, {0, 1, 0, 1}},
@@ -54,6 +54,18 @@ int main(int argc, char** argv) {
   layer->setDevice(device.get());
   layer->setPixelFormat(MTL::PixelFormatBGRA8Unorm);
 
+  auto verticesSize = sizeof(AAPLVertex) * triangleVertices.size();
+  auto vertexBuffer = MetalPtr(device->newBuffer(triangleVertices.data(), verticesSize, MTL::ResourceCPUCacheModeDefaultCache));
+
+  auto vertexDesc = MetalPtr(MTL::VertexDescriptor::alloc()->init());
+  vertexDesc->attributes()->object(0)->setFormat(MTL::VertexFormat::VertexFormatFloat2);
+  vertexDesc->attributes()->object(0)->setBufferIndex(AAPLVertexInputIndex::AAPLVertexInputIndexVertices);
+  vertexDesc->attributes()->object(0)->setOffset(offsetof(AAPLVertex, position));
+  vertexDesc->attributes()->object(1)->setFormat(MTL::VertexFormat::VertexFormatFloat4);
+  vertexDesc->attributes()->object(1)->setBufferIndex(AAPLVertexInputIndex::AAPLVertexInputIndexVertices);
+  vertexDesc->attributes()->object(1)->setOffset(offsetof(AAPLVertex, color));
+  vertexDesc->layouts()->object(0)->setStride(sizeof(AAPLVertex));
+
   auto metalShaders = readFileToString("../asset/shader/triangle.metal");
   auto library = MetalPtr(device->newLibrary(getNSString(metalShaders), nullptr, &err));
   assert(library && "Failed to create library");
@@ -67,6 +79,7 @@ int main(int argc, char** argv) {
   auto pipelineDesc = MetalPtr(MTL::RenderPipelineDescriptor::alloc()->init());
   pipelineDesc->setVertexFunction(vertexFunc.get());
   pipelineDesc->setFragmentFunction(fragmentFunc.get());
+  pipelineDesc->setVertexDescriptor(vertexDesc.get());
 
   auto colorAttachmentDesc = pipelineDesc->colorAttachments()->object(0);
   colorAttachmentDesc->setPixelFormat(layer->pixelFormat());
@@ -102,9 +115,8 @@ int main(int argc, char** argv) {
 
     // encoding
     auto encoder = MetalPtr(buffer->renderCommandEncoder(pass.get()));
-    encoder->setViewport(MTL::Viewport{0.0, 0.0, (double) viewport[0], (double) viewport[1], 0.0f, 1.0f});
     encoder->setRenderPipelineState(pipeline.get());
-    encoder->setVertexBytes(&triangleVertices[0], sizeof(triangleVertices), AAPLVertexInputIndexVertices);
+    encoder->setVertexBuffer(vertexBuffer.get(), 0, AAPLVertexInputIndexVertices);
     encoder->drawPrimitives(MTL::PrimitiveType::PrimitiveTypeTriangle, 0ul, 3ul);
     encoder->endEncoding();
 

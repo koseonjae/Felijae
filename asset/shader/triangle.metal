@@ -22,8 +22,8 @@ typedef enum AAPLVertexInputIndex
 //  vertex shader expects.
 typedef struct
 {
-  vector_float2 position;
-  vector_float4 color;
+  vector_float2 position [[attribute(0)]];
+  vector_float4 color [[attribute(1)]];
 } AAPLVertex;
 
 // Vertex shader outputs and fragment shader inputs
@@ -41,12 +41,10 @@ struct RasterizerData
     float4 color;
 };
 
-vertex RasterizerData vertexShader(uint vertexID [[vertex_id]],
-                                   constant AAPLVertex *vertices [[buffer(AAPLVertexInputIndexVertices)]])
-{
+vertex RasterizerData vertexShader(AAPLVertex v [[stage_in]]) {
     RasterizerData out;
-    out.position = float4(vertices[vertexID].position.xy, 0.0, 1.0);
-    out.color = vertices[vertexID].color;
+    out.position = float4(v.position.xy, 0.0, 1.0);
+    out.color = v.color;
     return out;
 }
 
