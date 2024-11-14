@@ -13,9 +13,9 @@ const std::vector<int> viewport = {640, 480};
 
 const AAPLVertex triangleVertices[] = {
     // 2D positions,    RGBA colors
-    {{250, -250}, {1, 0, 0, 1}},
-    {{-250, -250}, {0, 1, 0, 1}},
-    {{0, 250}, {0, 0, 1, 1}},
+    {{0, 1}, {1, 0, 0, 1}},
+    {{-1, -1}, {0, 1, 0, 1}},
+    {{1, -1}, {0, 0, 1, 1}},
 };
 
 template<typename T>
@@ -105,7 +105,6 @@ int main(int argc, char** argv) {
     encoder->setViewport(MTL::Viewport{0.0, 0.0, (double) viewport[0], (double) viewport[1], 0.0f, 1.0f});
     encoder->setRenderPipelineState(pipeline.get());
     encoder->setVertexBytes(&triangleVertices[0], sizeof(triangleVertices), AAPLVertexInputIndexVertices);
-    encoder->setVertexBytes(viewport.data(), sizeof(int) * viewport.size(), AAPLVertexInputIndexViewportSize);
     encoder->drawPrimitives(MTL::PrimitiveType::PrimitiveTypeTriangle, 0ul, 3ul);
     encoder->endEncoding();
 
