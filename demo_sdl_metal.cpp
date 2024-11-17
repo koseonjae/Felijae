@@ -13,9 +13,10 @@ const std::vector<int> viewport = {640, 480};
 
 const std::vector<AAPLVertex> triangleVertices = {
     // 2D positions,    RGBA colors
-    {{0, 1}, {1, 0, 0, 1}},
-    {{-1, -1}, {0, 1, 0, 1}},
-    {{1, -1}, {0, 0, 1, 1}},
+    {{-0.5, 0.5}, {0, 0, 1, 1}},
+    {{-0.5, -0.5}, {1, 1, 1, 1}},
+    {{0.5, -0.5}, {1, 1, 0, 1}},
+    {{0.5, 0.5}, {0, 0, 0, 1}},
 };
 
 template<typename T>
@@ -55,7 +56,12 @@ int main(int argc, char** argv) {
   layer->setPixelFormat(MTL::PixelFormatBGRA8Unorm);
 
   auto verticesSize = sizeof(AAPLVertex) * triangleVertices.size();
-  auto vertexBuffer = MetalPtr(device->newBuffer(triangleVertices.data(), verticesSize, MTL::ResourceCPUCacheModeDefaultCache));
+  auto resourceOption = MTL::ResourceCPUCacheModeDefaultCache;
+  auto vertexBuffer = MetalPtr(device->newBuffer(triangleVertices.data(), verticesSize, resourceOption));
+
+  std::vector<uint16_t> indices = {0, 1, 2, 3, 0, 2};
+  auto indicesSize = sizeof(uint16_t) * indices.size();
+  auto indexBuffer = MetalPtr(device->newBuffer(indices.data(), indicesSize, resourceOption));
 
   auto vertexDesc = MetalPtr(MTL::VertexDescriptor::alloc()->init());
   vertexDesc->attributes()->object(0)->setFormat(MTL::VertexFormat::VertexFormatFloat2);
@@ -117,7 +123,11 @@ int main(int argc, char** argv) {
     auto encoder = MetalPtr(buffer->renderCommandEncoder(pass.get()));
     encoder->setRenderPipelineState(pipeline.get());
     encoder->setVertexBuffer(vertexBuffer.get(), 0, AAPLVertexInputIndexVertices);
-    encoder->drawPrimitives(MTL::PrimitiveType::PrimitiveTypeTriangle, 0ul, 3ul);
+    encoder->drawIndexedPrimitives(MTL::PrimitiveType::PrimitiveTypeTriangle,
+                                   indices.size(),
+                                   MTL::IndexTypeUInt16,
+                                   indexBuffer.get(),
+                                   0);
     encoder->endEncoding();
 
     buffer->presentDrawable(drawable.get());
