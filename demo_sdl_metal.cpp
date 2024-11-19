@@ -37,13 +37,15 @@ int main(int argc, char** argv) {
   Object obj = Triangle::load();
   MetalBuffer vertexBuffer(&device, obj);
 
-  auto metalShaders = readFileToString("../asset/shader/triangle.metal");
-  auto library = MetalRef(device.get()->newLibrary(getNSString(metalShaders), nullptr, &err));
+  auto vertShader = readFileToString("../asset/shader/metal_triangle.vert");
+  auto library = MetalRef(device.get()->newLibrary(getNSString(vertShader), nullptr, &err));
   assert(library && "Failed to create library");
-
   auto vertexFuncName = NS::String::string("vertexShader", NS::ASCIIStringEncoding);
   auto vertexFunc = MetalRef(library->newFunction(vertexFuncName));
 
+  auto fragShader = readFileToString("../asset/shader/metal_triangle.frag");
+  library = MetalRef(device.get()->newLibrary(getNSString(fragShader), nullptr, &err));
+  assert(library && "Failed to create library");
   auto fragmentFuncName = NS::String::string("fragmentShader", NS::ASCIIStringEncoding);
   auto fragmentFunc = MetalRef(library->newFunction(fragmentFuncName));
 
