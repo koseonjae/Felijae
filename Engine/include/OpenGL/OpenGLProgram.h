@@ -1,6 +1,6 @@
 #pragma once
 
-#include "OpenGLTexture.h"
+#include <OpenGL/OpenGLTexture.h>
 #include <Model/Program.h>
 #include <Utility/ThreadChecker.h>
 

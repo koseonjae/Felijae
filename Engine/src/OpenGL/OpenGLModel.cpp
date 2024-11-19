@@ -1,4 +1,4 @@
-#include "OpenGL/OpenGLModel.h"
+#include <OpenGL/OpenGLModel.h>
 
 #include <OpenGL/OpenGLProgram.h>
 #include <OpenGL/OpenGLPipeline.h>

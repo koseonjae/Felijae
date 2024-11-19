@@ -1,7 +1,7 @@
-#include "OpenGL/OpenGLPipeline.h"
-#include "OpenGL/OpenGLModel.h"
-#include "OpenGL/OpenGLProgram.h"
-#include "OpenGL/OpenGLTexture.h"
+#include <OpenGL/OpenGLPipeline.h>
+#include <OpenGL/OpenGLModel.h>
+#include <OpenGL/OpenGLProgram.h>
+#include <OpenGL/OpenGLTexture.h>
 #include "Model/Triangle.h"
 #include <Model/Light.h>
 #include <Model/Scene.h>

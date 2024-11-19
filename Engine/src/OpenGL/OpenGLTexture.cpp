@@ -1,4 +1,4 @@
-#include "OpenGL/OpenGLTexture.h"
+#include <OpenGL/OpenGLTexture.h>
 #include <Utility/ImageLoader.h>
 #include <cassert>
 
