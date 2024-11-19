@@ -67,8 +67,8 @@ int main() {
 
   auto worldMat = glm::mat4(1.0);
 
-  auto vs = readFileToString("../asset/shader/lighting.vert");
-  auto fs = readFileToString("../asset/shader/lighting.frag");
+  auto vs = readFile("../asset/shader/lighting.vert");
+  auto fs = readFile("../asset/shader/lighting.frag");
   auto program = std::make_unique<OpenGLProgram>();
   program->initialize(vs, fs);
   program->setUniform("uWorldMat", worldMat);

@@ -1,6 +1,7 @@
 #include <Utility/FileReader.h>
 #include <Utility/MetalRef.h>
 #include <Metal/MetalBuffer.h>
+#include <Metal/MetalShader.h>
 #include <Model/Object.h>
 #include <Model/Triangle.h>
 
@@ -37,17 +38,8 @@ int main(int argc, char** argv) {
   Object obj = Triangle::load();
   MetalBuffer vertexBuffer(&device, obj);
 
-  auto vertShader = readFileToString("../asset/shader/metal_triangle.vert");
-  auto library = MetalRef(device.get()->newLibrary(getNSString(vertShader), nullptr, &err));
-  assert(library && "Failed to create library");
-  auto vertexFuncName = NS::String::string("vertexShader", NS::ASCIIStringEncoding);
-  auto vertexFunc = MetalRef(library->newFunction(vertexFuncName));
-
-  auto fragShader = readFileToString("../asset/shader/metal_triangle.frag");
-  library = MetalRef(device.get()->newLibrary(getNSString(fragShader), nullptr, &err));
-  assert(library && "Failed to create library");
-  auto fragmentFuncName = NS::String::string("fragmentShader", NS::ASCIIStringEncoding);
-  auto fragmentFunc = MetalRef(library->newFunction(fragmentFuncName));
+  MetalShader vertexFunc(&device, readFile("../asset/shader/metal_triangle.vert"), ShaderType::VERTEX);
+  MetalShader fragmentFunc(&device, readFile("../asset/shader/metal_triangle.frag"), ShaderType::FRAGMENT);
 
   auto pipelineDesc = MetalRef(MTL::RenderPipelineDescriptor::alloc()->init());
   pipelineDesc->setVertexFunction(vertexFunc.get());
