@@ -3,7 +3,7 @@
 #include <Model/Model.h>
 #include <Model/Object.h>
 
-#include <glad/glad.h>
+#include <OpenGL/gl3.h>
 #include <glm/glm.hpp>
 
 #include <vector>

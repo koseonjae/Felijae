@@ -31,8 +31,7 @@ add_library(Engine STATIC
 target_include_directories(Engine PUBLIC
     include)
 
-find_package(glad CONFIG REQUIRED)
-find_package(glfw3 CONFIG REQUIRED)
+find_package(OpenGL REQUIRED)
 find_package(glm CONFIG REQUIRED)
 find_package(tinyobjloader CONFIG REQUIRED)
 
@@ -43,8 +42,7 @@ target_link_libraries(Engine
     PUBLIC
     external
     PUBLIC
-    glad::glad
-    glfw
     glm::glm
+    OpenGL::GL
     metal
     tinyobjloader::tinyobjloader)

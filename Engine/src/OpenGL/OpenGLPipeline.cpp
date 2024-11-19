@@ -1,6 +1,6 @@
 #include "OpenGL/OpenGLPipeline.h"
 
-#include <glad/glad.h>
+#include <OpenGL/gl3.h>
 #include <cassert>
 
 void OpenGLPipeline::_bindCulling() {
@@ -82,7 +82,7 @@ void OpenGLPipeline::_bindAlphaBlending() {
   GLenum blendEquation = GL_NONE;
   switch (equation) {
     case AlphaBlend::BlendEquation::Add: {
-      blendEquation = GL_ADD;
+      blendEquation = GL_FUNC_ADD;
       break;
     }
     default:blendEquation = GL_NONE;

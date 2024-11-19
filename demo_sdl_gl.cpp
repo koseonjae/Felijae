@@ -7,11 +7,9 @@
 #include <Model/Scene.h>
 #include <Utility/FileReader.h>
 
-#include <GLFW/glfw3.h>
+#include <SDL2/SDL.h>
 #include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 
-#include <iostream>
 #include <memory>
 
 using namespace std;
@@ -19,34 +17,29 @@ using namespace std;
 auto pipeline = make_shared<OpenGLPipeline>();
 
 int main() {
-  // Initialize GLFW
-  if (!glfwInit()) {
-    std::cout << "Failed to initialize GLFW" << std::endl;
-    return -1;
-  }
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-  glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-  glfwWindowHint(GLFW_DEPTH_BITS, 24);
+  SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
+  SDL_Init(SDL_INIT_VIDEO);
+  SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+  SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
+  SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
+  SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
+  SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
+  SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
 
-  // Create GLFW window
-  GLFWwindow *window = glfwCreateWindow(800, 600, "LearnOpenGL", nullptr, nullptr);
-  if (window == nullptr) {
-    std::cout << "Failed to create GLFW window" << std::endl;
-    glfwTerminate();
-    return -1;
-  }
-  glfwMakeContextCurrent(window);
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
-  // Initialize GLAD
-  if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
-    std::cout << "Failed to initialize GLAD" << std::endl;
-    return -1;
-  }
+  SDL_Window* window = SDL_CreateWindow("SDL OpenGL",
+                                        SDL_WINDOWPOS_CENTERED,
+                                        SDL_WINDOWPOS_CENTERED,
+                                        800,
+                                        600,
+                                        SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
+  SDL_GLContext context = SDL_GL_CreateContext(window);
 
   int width, height;
-  glfwGetFramebufferSize(window, &width, &height);
+  SDL_GL_GetDrawableSize(window, &width, &height);
   pipeline->getRasterizer().getViewport().setViewport(0, 0, width, height);
 
   pipeline->getOutputMerger().getDepthTest().setEnable(true);
@@ -57,9 +50,20 @@ int main() {
   pipeline->getOutputMerger().getAlphaBlend().setPixelBlendFunc(AlphaBlend::BlendFunc::ONE_MINUS_SRC_ALPHA);
   pipeline->getOutputMerger().getAlphaBlend().setBlendEquation(AlphaBlend::BlendEquation::Add);
 
-  glfwSetFramebufferSizeCallback(window, [](GLFWwindow *window, int width, int height) {
-    pipeline->getRasterizer().getViewport().setViewport(0, 0, width, height);
-  });
+  SDL_AddEventWatch([](void* data, SDL_Event* event) -> int {
+    switch (event->window.event) {
+      case SDL_WINDOWEVENT_RESIZED:
+      case SDL_WINDOWEVENT_SIZE_CHANGED: {
+        auto width = event->window.data1;
+        auto height = event->window.data2;
+        // todo: impl
+      }
+      default: {
+        break;
+      }
+    }
+    return 0;
+  }, window);
 
   auto worldMat = glm::mat4(1.0);
 
@@ -108,18 +112,32 @@ int main() {
 
   // todo: clear, clearColor -> framebuffer class
   glClearColor(0.0, 1.0, 0.0, 0.0);
-  glClearDepthf(1.0f);
+  glClearDepth(1.0f);
 
-  while (!glfwWindowShouldClose(window)) {
+  bool running = true;
+  while (running) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+    SDL_Event event;
+    while (SDL_PollEvent(&event)) {
+      switch (event.type) {
+        case SDL_KEYUP: {
+          if (event.key.keysym.sym == SDLK_ESCAPE)
+            running = false;
+          break;
+        }
+      }
+    }
 
     scene.update();
     scene.render();
 
-    glfwSwapBuffers(window);
-    glfwPollEvents();
+    SDL_GL_SwapWindow(window);
   }
 
-  glfwTerminate();
+  SDL_GL_DeleteContext(context);
+  SDL_DestroyWindow(window);
+  SDL_Quit();
+
   return 0;
 }
