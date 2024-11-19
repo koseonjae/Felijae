@@ -2,11 +2,13 @@ add_library(Engine STATIC
     src/OpenGL/OpenGLPipeline.cpp
     src/OpenGL/OpenGLProgram.cpp
     src/OpenGL/OpenGLModel.cpp
+    src/OpenGL/OpenGLTexture.cpp
+    src/Metal/MetalDevice.cpp
+    src/Metal/MetalBuffer.cpp
     src/Model/Triangle.cpp
     src/Model/Object.cpp
     src/Model/Camera.cpp
     src/Model/Scene.cpp
-    src/OpenGL/OpenGLTexture.cpp
     src/Utility/FileReader.cpp
     src/Utility/ImageLoader.cpp
     src/Utility/ThreadChecker.cpp
@@ -14,6 +16,9 @@ add_library(Engine STATIC
     include/OpenGL/OpenGLPipeline.h
     include/OpenGL/OpenGLProgram.h
     include/OpenGL/OpenGLModel.h
+    include/OpenGL/OpenGLTexture.h
+    include/Metal/MetalDevice.h
+    include/Metal/MetalBuffer.h
     include/Model/Triangle.h
     include/Model/Object.h
     include/Model/Model.h
@@ -23,7 +28,6 @@ add_library(Engine STATIC
     include/Model/Camera.h
     include/Model/Scene.h
     include/Model/Texture.h
-    include/OpenGL/OpenGLTexture.h
     include/Utility/FileReader.h
     include/Utility/ImageLoader.h
     include/Utility/ThreadChecker.h)

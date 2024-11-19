@@ -11,23 +11,23 @@ enum AAPLVertexInputIndex
 
 struct AAPLVertex
 {
-  vector_float2 position [[attribute(0)]];
-  vector_float4 color [[attribute(1)]];
+  float3 position [[attribute(0)]];
+  float3 normal [[attribute(1)]];
+  float2 texCoord [[attribute(2)]];
 };
 
 struct RasterizerData
 {
     float4 position [[position]];
-    float4 color;
+
 };
 
 vertex RasterizerData vertexShader(AAPLVertex v [[stage_in]]) {
     RasterizerData out;
-    out.position = float4(v.position.xy, 0.0, 1.0);
-    out.color = v.color;
+    out.position = float4(v.position.xyz, 1.0);
     return out;
 }
 
 fragment float4 fragmentShader(RasterizerData in [[stage_in]]) {
-    return in.color;
+    return float4(1.0, 0.0, 0.0, 1.0);
 }
