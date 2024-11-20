@@ -13,7 +13,7 @@ ImageData ImageLoader::load(std::string_view path) {
   // 이를 보정하기 위한 옵션
   stbi_set_flip_vertically_on_load(true);
 
-  unsigned char *data = stbi_load(path.data(), &imageData.width, &imageData.height, &imageData.nChannels, 0);
+  unsigned char* data = stbi_load(path.data(), &imageData.width, &imageData.height, &imageData.nChannels, 0);
   assert(data != nullptr && "Failed to load imageData");
   assert(imageData.nChannels == 3);
   imageData.format = ImageFormat::RGB;

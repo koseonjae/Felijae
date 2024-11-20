@@ -23,7 +23,7 @@ void Scene::update() {
   auto view = m_camera.getViewMatrix();
   auto proj = m_camera.getProjMatrix();
   auto eye = m_camera.getEye();
-  auto updateProgram = [&](Program *program) {
+  auto updateProgram = [&](Program* program) {
     program->setUniform("uLightDir", lightDir);
     program->setUniform("uLightColor", lightColor);
     program->setUniform("uViewMat", view);

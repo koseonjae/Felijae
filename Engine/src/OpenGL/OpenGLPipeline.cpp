@@ -3,6 +3,29 @@
 #include <OpenGL/gl3.h>
 #include <cassert>
 
+void OpenGLPipeline::update() {
+  m_program->bind();
+  m_buffer->bind();
+  m_program->update();
+  _bindRasterizer();
+  _bindOutputMerger();
+}
+
+void OpenGLPipeline::render() {
+  m_program->bind();
+  m_buffer->draw();
+}
+
+void OpenGLPipeline::_bindRasterizer() {
+  _bindCulling();
+  _bindViewport();
+}
+
+void OpenGLPipeline::_bindOutputMerger() {
+  _bindDepthTest();
+  _bindAlphaBlending();
+}
+
 void OpenGLPipeline::_bindCulling() {
   auto [enable, frontFace, cullMode] = m_rasterizer.getCulling().getVariables();
   if (!enable) {
@@ -89,27 +112,4 @@ void OpenGLPipeline::_bindAlphaBlending() {
   }
   assert(blendEquation != GL_NONE && "[OpenGLPipeline] Invalid blend equation.");
   glBlendEquation(blendEquation);
-}
-
-void OpenGLPipeline::_bindRasterizer() {
-  _bindCulling();
-  _bindViewport();
-}
-
-void OpenGLPipeline::_bindOutputMerger() {
-  _bindDepthTest();
-  _bindAlphaBlending();
-}
-
-void OpenGLPipeline::update() {
-  m_program->bind();
-  m_buffer->bind();
-  m_program->update();
-  _bindRasterizer();
-  _bindOutputMerger();
-}
-
-void OpenGLPipeline::render() {
-  m_program->bind();
-  m_buffer->draw();
 }

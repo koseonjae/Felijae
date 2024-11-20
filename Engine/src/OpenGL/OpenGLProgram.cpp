@@ -33,8 +33,8 @@ void OpenGLProgram::initialize(std::string_view vertexShaderStr, std::string_vie
   m_threadChecker.checkThread();
   assert(!m_initialized && "OpenGLProgram is already initialized");
 
-  const char *vs_str = vertexShaderStr.data();
-  const char *fs_str = fragShaderStr.data();
+  const char* vs_str = vertexShaderStr.data();
+  const char* fs_str = fragShaderStr.data();
 
   // Compile vertex shader
   GLuint vs = glCreateShader(GL_VERTEX_SHADER);
