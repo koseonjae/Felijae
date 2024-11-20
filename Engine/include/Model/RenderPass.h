@@ -46,8 +46,6 @@ class RenderPass {
 
   virtual void bind() = 0;
 
-  virtual void render() = 0;
-
   void setAttachments(std::vector<Attachment> attachments) {
     m_attachments = std::move(attachments);
     m_dirty = true;

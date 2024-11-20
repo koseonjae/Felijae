@@ -27,9 +27,10 @@ void OpenGLRenderPass::bind() {
   _updateFrameBuffers();
   for (auto& frameBuffer : m_frameBuffers)
     frameBuffer.bind();
+  _updateRenderPass();
 }
 
-void OpenGLRenderPass::render() {
+void OpenGLRenderPass::_updateRenderPass() {
   GLbitfield clearBit = GL_NONE;
 
   for (const auto& attachment : m_attachments) {

@@ -25,13 +25,14 @@ class OpenGLProgram final : public Program {
 
   void bind() override;
 
-  void update() override;
-
   void setUniform(std::string_view name, const glm::vec3& vec3) override;
 
   void setUniform(std::string_view name, const glm::mat4& mat4) override;
 
   void setTexture(std::string_view name, std::shared_ptr<Texture> texture) override;
+
+ private:
+  void _updateTasks();
 
  private:
   GLuint m_program = 0;

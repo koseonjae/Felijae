@@ -74,9 +74,11 @@ void OpenGLProgram::bind() {
   assert(m_initialized && "OpenGLProgram is not initialized");
 
   glUseProgram(m_program);
+
+  _updateTasks();
 }
 
-void OpenGLProgram::update() {
+void OpenGLProgram::_updateTasks() {
   m_threadChecker.checkThread();
   assert(m_initialized && "OpenGLProgram is not initialized");
 

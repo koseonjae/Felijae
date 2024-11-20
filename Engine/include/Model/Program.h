@@ -14,8 +14,6 @@ class Program {
 
   virtual void bind() = 0;
 
-  virtual void update() = 0;
-
   virtual void setUniform(std::string_view name, const glm::vec3& vec3) = 0;
 
   virtual void setUniform(std::string_view name, const glm::mat4& mat4) = 0;

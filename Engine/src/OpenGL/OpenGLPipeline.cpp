@@ -4,17 +4,14 @@
 #include <cassert>
 
 void OpenGLPipeline::update() {
-  m_program->bind();
-  m_program->update();
 }
 
 void OpenGLPipeline::render() {
-  m_program->bind();
   m_renderPass->bind();
   _bindRasterizer();
   _bindOutputMerger();
+  m_program->bind();
   m_buffer->bind();
-  m_renderPass->render();
   m_buffer->draw();
 }
 
