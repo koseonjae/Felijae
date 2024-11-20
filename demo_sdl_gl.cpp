@@ -2,6 +2,7 @@
 #include <OpenGL/OpenGLModel.h>
 #include <OpenGL/OpenGLProgram.h>
 #include <OpenGL/OpenGLTexture.h>
+#include <OpenGL/OpenGLBuffer.h>
 #include "Model/Triangle.h"
 #include <Model/Light.h>
 #include <Model/Scene.h>
@@ -104,8 +105,11 @@ int main() {
 
   auto obj = loadObj("../asset/model/suzanne/suzanne.obj");
 
+  auto buffer = std::make_shared<OpenGLBuffer>();
+  buffer->initialize(obj);
+
   auto model = std::make_shared<OpenGLModel>();
-  model->initialize(obj);
+  model->setBuffer(buffer);
   model->setPipeline(pipeline);
   model->setProgram(std::move(program));
   scene.addModel(std::move(model));

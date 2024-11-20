@@ -7,16 +7,13 @@
 class Object;
 class Program;
 class Pipeline;
+class Buffer;
 
 class Model {
  public:
   Model() = default;
 
   virtual ~Model() = default;
-
-  virtual void initialize(const Object&) = 0;
-
-  virtual void release() = 0;
 
   virtual void update() = 0;
 
@@ -34,7 +31,12 @@ class Model {
     return m_program.get();
   }
 
+  void setBuffer(std::shared_ptr<Buffer> buffer) {
+    m_buffer = std::move(buffer);
+  }
+
  protected:
   std::unique_ptr<Program> m_program;
   std::shared_ptr<Pipeline> m_pipeline;
+  std::shared_ptr<Buffer> m_buffer;
 };

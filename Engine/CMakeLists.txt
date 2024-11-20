@@ -2,6 +2,7 @@ add_library(Engine STATIC
     src/OpenGL/OpenGLPipeline.cpp
     src/OpenGL/OpenGLProgram.cpp
     src/OpenGL/OpenGLModel.cpp
+    src/OpenGL/OpenGLBuffer.cpp
     src/OpenGL/OpenGLTexture.cpp
     src/Metal/MetalDevice.cpp
     src/Metal/MetalBuffer.cpp
@@ -17,6 +18,7 @@ add_library(Engine STATIC
     include/OpenGL/OpenGLPipeline.h
     include/OpenGL/OpenGLProgram.h
     include/OpenGL/OpenGLModel.h
+    include/OpenGL/OpenGLBuffer.h
     include/OpenGL/OpenGLTexture.h
     include/Metal/MetalDevice.h
     include/Metal/MetalBuffer.h
