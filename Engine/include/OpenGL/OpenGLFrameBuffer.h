@@ -10,7 +10,7 @@
 class OpenGLFrameBuffer {
  public:
   ~OpenGLFrameBuffer();
-  void initialize(std::shared_ptr<Texture> texture, GLuint attachmentIdx);
+  void initialize(const std::shared_ptr<Texture>& texture, GLuint attachmentIdx);
   void bind();
   GLuint getHandle() const { return m_handle; }
 

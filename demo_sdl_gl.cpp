@@ -134,7 +134,7 @@ int main() {
   std::vector<Attachment> attachments;
   attachments.emplace_back(Attachment{
       .texture = colorTexture,
-      .clear = ClearColor{1.0f, 0.0f, 0.0f, 1.0f},
+      .clear = ClearColor{1.0f, 1.0f, 0.0f, 1.0f},
       .load = LoadFunc::Clear,
       .store = StoreFunc::Store,
       .type = AttachmentType::Color,

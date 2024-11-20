@@ -8,7 +8,7 @@ OpenGLFrameBuffer::~OpenGLFrameBuffer() {
   glDeleteFramebuffers(1, &m_handle);
 };
 
-void OpenGLFrameBuffer::initialize(std::shared_ptr<Texture> texture, GLuint attachmentIdx) {
+void OpenGLFrameBuffer::initialize(const std::shared_ptr<Texture>& texture, GLuint attachmentIdx) {
   GLuint handle;
   glGenFramebuffers(1, &handle);
   glBindFramebuffer(GL_FRAMEBUFFER, handle);
