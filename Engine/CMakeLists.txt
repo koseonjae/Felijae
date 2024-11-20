@@ -4,6 +4,9 @@ add_library(Engine STATIC
     src/OpenGL/OpenGLModel.cpp
     src/OpenGL/OpenGLBuffer.cpp
     src/OpenGL/OpenGLTexture.cpp
+    src/OpenGL/OpenGLFrameBuffer.cpp
+    src/OpenGL/OpenGLRenderPass.cpp
+    src/OpenGL/OpenGLUtils.cpp
     src/Metal/MetalDevice.cpp
     src/Metal/MetalBuffer.cpp
     src/Metal/MetalShader.cpp
@@ -20,14 +23,20 @@ add_library(Engine STATIC
     include/OpenGL/OpenGLModel.h
     include/OpenGL/OpenGLBuffer.h
     include/OpenGL/OpenGLTexture.h
+    include/OpenGL/OpenGLFrameBuffer.h
+    include/OpenGL/OpenGLRenderPass.h
+    include/OpenGL/OpenGLUtils.h
     include/Metal/MetalDevice.h
     include/Metal/MetalBuffer.h
     include/Metal/MetalShader.h
     include/Model/Triangle.h
     include/Model/Object.h
+    include/Utility/ImageFormat.h
     include/Model/Model.h
     include/Model/Program.h
-    include/Model/Pipeline.h
+    include/Model/Rasterizer.h
+    include/Model/OutputMerger.h
+    include/Model/RenderPass.h
     include/Model/Light.h
     include/Model/Camera.h
     include/Model/Scene.h

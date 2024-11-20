@@ -8,7 +8,7 @@
 
 class OpenGLTexture final : public Texture, std::enable_shared_from_this<OpenGLTexture> {
  public:
-  explicit OpenGLTexture(std::string_view path, bool lazyLoading = false);
+  OpenGLTexture() = default;
   ~OpenGLTexture() override;
 
   OpenGLTexture(const OpenGLTexture&) = delete;
@@ -16,7 +16,15 @@ class OpenGLTexture final : public Texture, std::enable_shared_from_this<OpenGLT
   OpenGLTexture& operator=(const OpenGLTexture&) = delete;
   OpenGLTexture& operator=(OpenGLTexture&&) = delete;
 
+  void initialize(std::string_view path, bool lazyLoading = false) override;
+
+  void initialize(int width, int height, ImageFormat format, bool lazyLoading = false) override;
+
+  void initialize(ImageData imageData, bool lazyLoading = false) override;
+
   void bind() override;
+
+  uint32_t getHandle() const override;
 
  private:
   void _initIfNeeded();

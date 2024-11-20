@@ -4,6 +4,7 @@
 #include <Model/Program.h>
 #include <Model/Rasterizer.h>
 #include <Model/OutputMerger.h>
+#include <Model/RenderPass.h>
 
 #include <memory>
 
@@ -18,6 +19,7 @@ class Pipeline {
  public:
   void setBuffer(std::shared_ptr<Buffer> buffer) { m_buffer = std::move(buffer); }
   void setProgram(std::shared_ptr<Program> program) { m_program = std::move(program); }
+  void setRenderPass(std::shared_ptr<RenderPass> renderPass) { m_renderPass = std::move(renderPass); }
   void setRasterizer(const Rasterizer& rasterizer) { m_rasterizer = rasterizer; }
   void setOutputMerger(const OutputMerger& output_merger) { m_outputMerger = output_merger; }
 
@@ -33,9 +35,13 @@ class Pipeline {
   const OutputMerger& getOutputMerger() const { return m_outputMerger; }
   OutputMerger& getOutputMerger() { return m_outputMerger; }
 
+  const RenderPass* getRenderPass() const { return m_renderPass.get(); }
+  RenderPass* getRenderPass() { return m_renderPass.get(); }
+
  protected:
   std::shared_ptr<Buffer> m_buffer;
   std::shared_ptr<Program> m_program;
+  std::shared_ptr<RenderPass> m_renderPass;
   Rasterizer m_rasterizer;
   OutputMerger m_outputMerger;
 };

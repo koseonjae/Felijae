@@ -3,6 +3,7 @@
 #include <OpenGL/OpenGLProgram.h>
 #include <OpenGL/OpenGLTexture.h>
 #include <OpenGL/OpenGLBuffer.h>
+#include <OpenGL/OpenGLRenderPass.h>
 #include "Model/Triangle.h"
 #include <Model/Light.h>
 #include <Model/Scene.h>
@@ -55,11 +56,10 @@ int main() {
   }, window);
 
   // RASTERIZER
-  {
-    int width, height;
-    SDL_GL_GetDrawableSize(window, &width, &height);
-    pipeline->getRasterizer().getViewport().setViewport(0, 0, width, height);
-  }
+  int width, height;
+  SDL_GL_GetDrawableSize(window, &width, &height);
+  pipeline->getRasterizer().getViewport().setViewport(0, 0, width, height);
+
 
   // OUTPUT MERGER
   {
@@ -112,7 +112,8 @@ int main() {
     glm::vec3 emitLight{0.0f, 0.0f, 0.0f};
     program->setUniform("uEmitLight", emitLight);
 
-    auto texture = make_shared<OpenGLTexture>("../asset/model/suzanne/uvmap.jpeg");
+    auto texture = std::make_shared<OpenGLTexture>();
+    texture->initialize("../asset/model/suzanne/uvmap.jpeg");
     program->setTexture("uTexture", texture);
 
     pipeline->setProgram(program);
@@ -127,9 +128,21 @@ int main() {
   model->setPipeline(pipeline);
   scene.addModel(std::move(model));
 
-  // todo: clear, clearColor -> framebuffer class
-  glClearColor(0.0, 1.0, 0.0, 0.0);
-  glClearDepth(1.0f);
+  auto frameBufTexture = std::make_shared<OpenGLTexture>();
+  frameBufTexture->initialize(width, height, ImageFormat::RGB);
+
+  std::vector<Attachment> attachments;
+  attachments.emplace_back(Attachment{
+      .texture = frameBufTexture,
+      .clear = ClearColor{1.0f, 0.0f, 0.0f, 1.0f},
+      .load = LoadFunc::Clear,
+      .store = StoreFunc::Store,
+      .type = AttachmentType::Color
+  });
+
+  auto renderPass = std::make_shared<OpenGLRenderPass>();
+  renderPass->setAttachments(std::move(attachments));
+  pipeline->setRenderPass(std::move(renderPass));
 
   bool running = true;
   while (running) {

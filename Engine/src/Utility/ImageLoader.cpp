@@ -1,4 +1,6 @@
-#include "Utility/ImageLoader.h"
+#include <Utility/ImageLoader.h>
+
+#include <Utility/ImageFormat.h>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
@@ -13,12 +15,13 @@ ImageData ImageLoader::load(std::string_view path) {
   // 이를 보정하기 위한 옵션
   stbi_set_flip_vertically_on_load(true);
 
-  unsigned char* data = stbi_load(path.data(), &imageData.width, &imageData.height, &imageData.nChannels, 0);
+  int nChannels = -1;
+  unsigned char* data = stbi_load(path.data(), &imageData.width, &imageData.height, &nChannels, 0);
   assert(data != nullptr && "Failed to load imageData");
-  assert(imageData.nChannels == 3);
+  assert(nChannels == 3);
   imageData.format = ImageFormat::RGB;
 
-  auto size = imageData.width * imageData.height * imageData.nChannels;
+  auto size = imageData.width * imageData.height * nChannels;
   imageData.pixel.resize(size);
   memcpy(imageData.pixel.data(), data, size);
 
