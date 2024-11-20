@@ -44,20 +44,20 @@ void OpenGLRenderPass::render() {
       if (type == AttachmentType::Color) {
         const auto& color = std::get<ClearColor>(clear);
         assert(color.r >= 0.0f && color.g >= 0.0f && color.b >= 0.0f && color.a >= 0.0f && "ClearColor is not defined");
-        glClearColor(color.r, color.g, color.g, color.a);
-        clearBit |= GL_CLEAR;
+        glClearColor(color.r, color.g, color.b, color.a);
+        clearBit |= GL_COLOR_BUFFER_BIT;
       }
       else if (type == AttachmentType::Depth) {
         const auto& depth = std::get<ClearDepth>(clear);
         assert(depth.depth >= 0.0f && "ClearDepth is not defined");
         glClearDepth(static_cast<double>(depth.depth));
-        clearBit |= GL_DEPTH;
+        clearBit |= GL_DEPTH_BUFFER_BIT;
       }
       else if (type == AttachmentType::Stencil) {
         const auto& stencil = std::get<ClearStencil>(clear);
         assert(stencil.s != INT_MAX && "ClearStencil is not defined");
         glClearStencil(stencil.s);
-        clearBit |= GL_STENCIL;
+        clearBit |= GL_STENCIL_BUFFER_BIT;
       }
     }
     else if (loadFunc == LoadFunc::DontCare) {

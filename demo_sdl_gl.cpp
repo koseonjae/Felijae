@@ -128,12 +128,12 @@ int main() {
   model->setPipeline(pipeline);
   scene.addModel(std::move(model));
 
-  auto frameBufTexture = std::make_shared<OpenGLTexture>();
-  frameBufTexture->initialize(width, height, ImageFormat::RGBA);
+  auto colorTexture = std::make_shared<OpenGLTexture>();
+  colorTexture->initialize(width, height, ImageFormat::RGBA);
 
   std::vector<Attachment> attachments;
   attachments.emplace_back(Attachment{
-      .texture = frameBufTexture,
+      .texture = colorTexture,
       .clear = ClearColor{1.0f, 0.0f, 0.0f, 1.0f},
       .load = LoadFunc::Clear,
       .store = StoreFunc::Store,
