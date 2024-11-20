@@ -19,24 +19,16 @@ class Model {
 
   virtual void render() = 0;
 
-  void setProgram(std::unique_ptr<Program> program) {
-    m_program = std::move(program);
-  }
+  void setPipeline(std::shared_ptr<Pipeline> pipeline) { m_pipeline = std::move(pipeline); }
 
-  void setPipeline(std::shared_ptr<Pipeline> pipeline) {
-    m_pipeline = std::move(pipeline);
-  }
-
-  Program *getProgram() const {
-    return m_program.get();
-  }
+  const Pipeline* getPipeline() const { return m_pipeline.get(); }
+  Pipeline* getPipeline() { return m_pipeline.get(); }
 
   void setBuffer(std::shared_ptr<Buffer> buffer) {
     m_buffer = std::move(buffer);
   }
 
  protected:
-  std::unique_ptr<Program> m_program;
   std::shared_ptr<Pipeline> m_pipeline;
   std::shared_ptr<Buffer> m_buffer;
 };

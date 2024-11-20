@@ -102,6 +102,7 @@ void OpenGLPipeline::_bindOutputMerger() {
 }
 
 void OpenGLPipeline::bind() {
+  m_program->update();
   _bindRasterizer();
   _bindOutputMerger();
 }

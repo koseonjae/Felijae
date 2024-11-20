@@ -1,5 +1,7 @@
 #include <Model/Scene.h>
 #include <Model/Model.h>
+#include <Model/Pipeline.h>
+#include <Model/Program.h>
 
 void Scene::setLight(const Light& light) {
   static_assert(std::is_trivially_copyable_v<Light> && "Light must be trivially copyable");
@@ -30,7 +32,7 @@ void Scene::update() {
   };
 
   for (auto& model : m_models) {
-    updateProgram(model->getProgram());
+    updateProgram(model->getPipeline()->getProgram());
     model->update();
   }
 }

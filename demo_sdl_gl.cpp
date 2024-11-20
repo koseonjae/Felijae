@@ -70,7 +70,7 @@ int main() {
 
   auto vs = readFile("../asset/shader/lighting.vert");
   auto fs = readFile("../asset/shader/lighting.frag");
-  auto program = std::make_unique<OpenGLProgram>();
+  auto program = std::make_shared<OpenGLProgram>();
   program->initialize(vs, fs);
   program->setUniform("uWorldMat", worldMat);
 
@@ -103,6 +103,8 @@ int main() {
   auto texture = make_shared<OpenGLTexture>("../asset/model/suzanne/uvmap.jpeg");
   program->setTexture("uTexture", texture);
 
+  pipeline->setProgram(program);
+
   auto obj = loadObj("../asset/model/suzanne/suzanne.obj");
 
   auto buffer = std::make_shared<OpenGLBuffer>();
@@ -111,7 +113,6 @@ int main() {
   auto model = std::make_shared<OpenGLModel>();
   model->setBuffer(buffer);
   model->setPipeline(pipeline);
-  model->setProgram(std::move(program));
   scene.addModel(std::move(model));
 
   // todo: clear, clearColor -> framebuffer class
