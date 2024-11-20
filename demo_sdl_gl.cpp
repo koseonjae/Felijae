@@ -129,7 +129,7 @@ int main() {
   scene.addModel(std::move(model));
 
   auto frameBufTexture = std::make_shared<OpenGLTexture>();
-  frameBufTexture->initialize(width, height, ImageFormat::RGB);
+  frameBufTexture->initialize(width, height, ImageFormat::RGBA);
 
   std::vector<Attachment> attachments;
   attachments.emplace_back(Attachment{
@@ -137,7 +137,7 @@ int main() {
       .clear = ClearColor{1.0f, 0.0f, 0.0f, 1.0f},
       .load = LoadFunc::Clear,
       .store = StoreFunc::Store,
-      .type = AttachmentType::Color
+      .type = AttachmentType::Color,
   });
 
   auto renderPass = std::make_shared<OpenGLRenderPass>();
@@ -146,8 +146,6 @@ int main() {
 
   bool running = true;
   while (running) {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
       switch (event.type) {
@@ -161,6 +159,17 @@ int main() {
 
     scene.update();
     scene.render();
+
+    auto openGLRenderPass = dynamic_cast<OpenGLRenderPass*>(pipeline->getRenderPass());
+    assert(openGLRenderPass != nullptr && "Failed to cast to openGLRenderPass");
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, openGLRenderPass->getFrameBuffer(0).getHandle());
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+
+    glBlitFramebuffer(
+        0, 0, width, height,  // 소스 영역 (FBO)
+        0, 0, width, height,  // 대상 영역 (화면)
+        GL_COLOR_BUFFER_BIT, GL_NEAREST
+    );
 
     SDL_GL_SwapWindow(window);
   }

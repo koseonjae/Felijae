@@ -7,6 +7,7 @@ class OpenGLRenderPass : public RenderPass {
  public:
   void bind() override;
   void render() override;
+  const OpenGLFrameBuffer& getFrameBuffer(int idx) const { return m_frameBuffers[idx]; }
 
  private:
   void _updateFrameBuffers();

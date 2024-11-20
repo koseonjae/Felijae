@@ -1,7 +1,12 @@
 #include <OpenGL/OpenGLFrameBuffer.h>
-#include <OpenGL/OpenGLRenderPass.h>
 
 #include <cassert>
+
+OpenGLFrameBuffer::~OpenGLFrameBuffer() {
+  if (!m_initialized)
+    return;
+  glDeleteFramebuffers(1, &m_handle);
+};
 
 void OpenGLFrameBuffer::initialize(std::shared_ptr<Texture> texture, GLuint attachmentIdx) {
   GLuint handle;
@@ -15,8 +20,10 @@ void OpenGLFrameBuffer::initialize(std::shared_ptr<Texture> texture, GLuint atta
     assert(false && "Failed to create frame buffer");
 
   m_handle = handle;
+  m_initialized = true;
 }
 
 void OpenGLFrameBuffer::bind() {
+  assert(m_initialized && "FrameBuffer is not initialized");
   glBindFramebuffer(GL_FRAMEBUFFER, m_handle);
 }

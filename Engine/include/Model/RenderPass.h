@@ -50,10 +50,12 @@ class RenderPass {
 
   void setAttachments(std::vector<Attachment> attachments) {
     m_attachments = std::move(attachments);
-    m_updated = true;
+    m_dirty = true;
   }
+
+  const std::vector<Attachment>& getAttachments() const { return m_attachments; }
 
  protected:
   std::vector<Attachment> m_attachments;
-  bool m_updated = false;
+  bool m_dirty = false;
 };

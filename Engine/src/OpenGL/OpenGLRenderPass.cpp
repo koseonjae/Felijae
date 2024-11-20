@@ -5,7 +5,7 @@
 #include <cassert>
 
 void OpenGLRenderPass::_updateFrameBuffers() {
-  if (!m_updated)
+  if (!m_dirty)
     return;
   m_frameBuffers.clear();
   int colorAttachmentCnt = 0;
@@ -20,7 +20,7 @@ void OpenGLRenderPass::_updateFrameBuffers() {
     else
       assert(false && "Undefined attachment type");
   }
-  m_updated = true;
+  m_dirty = false;
 }
 
 void OpenGLRenderPass::bind() {
