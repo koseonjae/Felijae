@@ -45,7 +45,7 @@ void OpenGLTexture::initialize(ImageData imageData, bool lazyLoading) {
     GLint format = getGLFormat(image.format);
     auto data = image.pixel.empty() ? nullptr : image.pixel.data();
 
-    GLuint textureId;
+    GLuint textureId = 0;
     glGenTextures(1, &textureId);
     glBindTexture(GL_TEXTURE_2D, textureId);
     glTexImage2D(GL_TEXTURE_2D, 0, format, image.width, image.height, 0, format, GL_UNSIGNED_BYTE, data);
