@@ -116,11 +116,12 @@ void OpenGLProgram::setUniform(std::string_view name, const glm::mat4& mat4) {
 
 void OpenGLProgram::setTexture(std::string_view name, std::shared_ptr<Texture> texture) {
   std::lock_guard<std::mutex> l(m_taskLock);
-  m_textureTasks.insert({name.data(), [=, texture = std::move(texture)](std::string_view name, int index) {
+  m_textureTasks.insert({name.data(), [=, texture = std::move(texture)](std::string_view name, int index) mutable {
     glActiveTexture(GL_TEXTURE0 + index);
     texture->bind();
     GLint loc = glGetUniformLocation(m_program, name.data());
     assert(loc != -1 && "Invalid texture location");
     glUniform1i(loc, index);
+    m_textures.insert({name.data(), std::move(texture)}); // avoid texture destruction
   }});
 }

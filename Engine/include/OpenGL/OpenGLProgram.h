@@ -40,4 +40,5 @@ class OpenGLProgram final : public Program {
   std::unordered_map<std::string, std::function<void(std::string_view)>> m_generalTasks;
   std::unordered_map<std::string, std::function<void(std::string_view, int)>> m_textureTasks;
   ThreadChecker m_threadChecker;
+  std::unordered_map<std::string, std::shared_ptr<Texture>> m_textures;
 };
