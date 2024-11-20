@@ -69,11 +69,16 @@ OpenGLProgram::~OpenGLProgram() {
   glDeleteProgram(m_program);
 }
 
-void OpenGLProgram::update() {
+void OpenGLProgram::bind() {
   m_threadChecker.checkThread();
   assert(m_initialized && "OpenGLProgram is not initialized");
 
   glUseProgram(m_program);
+}
+
+void OpenGLProgram::update() {
+  m_threadChecker.checkThread();
+  assert(m_initialized && "OpenGLProgram is not initialized");
 
   decltype(m_generalTasks) generalTasks;
   decltype(m_textureTasks) textureTasks;

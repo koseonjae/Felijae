@@ -5,7 +5,8 @@
 class OpenGLPipeline : public Pipeline {
  public:
   ~OpenGLPipeline() override = default;
-  void bind() override;
+  void update() override;
+  void render() override;
 
  private:
   void _bindRasterizer();

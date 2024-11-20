@@ -24,11 +24,6 @@ class Model {
   const Pipeline* getPipeline() const { return m_pipeline.get(); }
   Pipeline* getPipeline() { return m_pipeline.get(); }
 
-  void setBuffer(std::shared_ptr<Buffer> buffer) {
-    m_buffer = std::move(buffer);
-  }
-
  protected:
   std::shared_ptr<Pipeline> m_pipeline;
-  std::shared_ptr<Buffer> m_buffer;
 };

@@ -39,18 +39,6 @@ int main() {
                                         SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
   SDL_GLContext context = SDL_GL_CreateContext(window);
 
-  int width, height;
-  SDL_GL_GetDrawableSize(window, &width, &height);
-  pipeline->getRasterizer().getViewport().setViewport(0, 0, width, height);
-
-  pipeline->getOutputMerger().getDepthTest().setEnable(true);
-  pipeline->getOutputMerger().getDepthTest().setDepthFunc(DepthTest::DepthTestFunc::Less);
-
-  pipeline->getOutputMerger().getAlphaBlend().setEnable(true);
-  pipeline->getOutputMerger().getAlphaBlend().setFragmentBlendFunc(AlphaBlend::BlendFunc::SRC_ALPHA);
-  pipeline->getOutputMerger().getAlphaBlend().setPixelBlendFunc(AlphaBlend::BlendFunc::ONE_MINUS_SRC_ALPHA);
-  pipeline->getOutputMerger().getAlphaBlend().setBlendEquation(AlphaBlend::BlendEquation::Add);
-
   SDL_AddEventWatch([](void* data, SDL_Event* event) -> int {
     switch (event->window.event) {
       case SDL_WINDOWEVENT_RESIZED:
@@ -66,21 +54,35 @@ int main() {
     return 0;
   }, window);
 
-  auto worldMat = glm::mat4(1.0);
+  // RASTERIZER
+  {
+    int width, height;
+    SDL_GL_GetDrawableSize(window, &width, &height);
+    pipeline->getRasterizer().getViewport().setViewport(0, 0, width, height);
+  }
 
-  auto vs = readFile("../asset/shader/lighting.vert");
-  auto fs = readFile("../asset/shader/lighting.frag");
-  auto program = std::make_shared<OpenGLProgram>();
-  program->initialize(vs, fs);
-  program->setUniform("uWorldMat", worldMat);
+  // OUTPUT MERGER
+  {
+    pipeline->getOutputMerger().getDepthTest().setEnable(true);
+    pipeline->getOutputMerger().getDepthTest().setDepthFunc(DepthTest::DepthTestFunc::Less);
+
+    pipeline->getOutputMerger().getAlphaBlend().setEnable(true);
+    pipeline->getOutputMerger().getAlphaBlend().setFragmentBlendFunc(AlphaBlend::BlendFunc::SRC_ALPHA);
+    pipeline->getOutputMerger().getAlphaBlend().setPixelBlendFunc(AlphaBlend::BlendFunc::ONE_MINUS_SRC_ALPHA);
+    pipeline->getOutputMerger().getAlphaBlend().setBlendEquation(AlphaBlend::BlendEquation::Add);
+  }
 
   Scene scene;
+
+  // Light
   {
     Light light{};
     light.setLightColor({1.0f, 1.0f, 1.0f});
     light.setLightDirection({0.0f, 0.0f, 1.0f});
     scene.setLight(light);
   }
+
+  // Camera
   {
     glm::vec3 eye = glm::vec3(3.0, 3.0, 3.0);
     glm::vec3 at = glm::vec3(0.0, 0.0, 0.0);
@@ -97,21 +99,31 @@ int main() {
     scene.setCamera(camera);
   }
 
-  glm::vec3 emitLight{0.0f, 0.0f, 0.0f};
-  program->setUniform("uEmitLight", emitLight);
+  // Program
+  {
+    auto worldMat = glm::mat4(1.0);
 
-  auto texture = make_shared<OpenGLTexture>("../asset/model/suzanne/uvmap.jpeg");
-  program->setTexture("uTexture", texture);
+    auto vs = readFile("../asset/shader/lighting.vert");
+    auto fs = readFile("../asset/shader/lighting.frag");
+    auto program = std::make_shared<OpenGLProgram>();
+    program->initialize(vs, fs);
+    program->setUniform("uWorldMat", worldMat);
 
-  pipeline->setProgram(program);
+    glm::vec3 emitLight{0.0f, 0.0f, 0.0f};
+    program->setUniform("uEmitLight", emitLight);
+
+    auto texture = make_shared<OpenGLTexture>("../asset/model/suzanne/uvmap.jpeg");
+    program->setTexture("uTexture", texture);
+
+    pipeline->setProgram(program);
+  }
 
   auto obj = loadObj("../asset/model/suzanne/suzanne.obj");
-
   auto buffer = std::make_shared<OpenGLBuffer>();
   buffer->initialize(obj);
+  pipeline->setBuffer(std::move(buffer));
 
   auto model = std::make_shared<OpenGLModel>();
-  model->setBuffer(buffer);
   model->setPipeline(pipeline);
   scene.addModel(std::move(model));
 

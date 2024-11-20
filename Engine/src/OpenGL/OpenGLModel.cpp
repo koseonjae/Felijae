@@ -7,11 +7,10 @@
 
 void OpenGLModel::update() {
   assert(m_pipeline);
-
-  m_pipeline->bind();
+  m_pipeline->update();
 }
 
 void OpenGLModel::render() {
-  m_buffer->bind();
-  m_buffer->draw();
+  assert(m_pipeline);
+  m_pipeline->render();
 }

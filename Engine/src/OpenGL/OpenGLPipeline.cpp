@@ -101,8 +101,15 @@ void OpenGLPipeline::_bindOutputMerger() {
   _bindAlphaBlending();
 }
 
-void OpenGLPipeline::bind() {
+void OpenGLPipeline::update() {
+  m_program->bind();
+  m_buffer->bind();
   m_program->update();
   _bindRasterizer();
   _bindOutputMerger();
+}
+
+void OpenGLPipeline::render() {
+  m_program->bind();
+  m_buffer->draw();
 }

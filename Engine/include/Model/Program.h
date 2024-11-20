@@ -12,6 +12,8 @@ class Program {
 
   virtual void initialize(std::string_view vsPath, std::string_view fsPath) = 0;
 
+  virtual void bind() = 0;
+
   virtual void update() = 0;
 
   virtual void setUniform(std::string_view name, const glm::vec3& vec3) = 0;

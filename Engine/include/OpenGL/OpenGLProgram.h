@@ -23,6 +23,8 @@ class OpenGLProgram final : public Program {
 
   void initialize(std::string_view vsPath, std::string_view fsPath) override;
 
+  void bind() override;
+
   void update() override;
 
   void setUniform(std::string_view name, const glm::vec3& vec3) override;
