@@ -10,29 +10,33 @@ void OpenGLRasterizer::bind() {
 }
 
 void OpenGLRasterizer::_bindCulling() {
-  const auto [enable, frontFace, cullMode] = getCulling().getVariables();
-  if (!enable) {
+  const auto& culling = getCulling();
+
+  if (!culling.enable) {
     glDisable(GL_CULL_FACE);
     return;
   }
-
   glEnable(GL_CULL_FACE);
 
-  if (frontFace == Culling::FrontFace::CCW)
+  if (culling.frontFace == Culling::FrontFace::CCW)
     glFrontFace(GL_CCW);
   else
     glFrontFace(GL_CW);
 
-  if (cullMode == Culling::CullMode::Back)
+  if (culling.cullMode == Culling::CullMode::Back)
     glCullFace(GL_BACK);
   else
     glCullFace(GL_FRONT);
 }
 
 void OpenGLRasterizer::_bindViewport() {
-  const auto [minX, minY, width, height, minZ, maxZ] = getViewport().getVariables();
-  assert(minX >= 0 && minY >= 0 && width > 0 && height > 0 && "Invalid viewport");
-  glViewport(minX, minY, width, height);
-  assert(0 <= minZ && minZ <= 1 && 0 <= maxZ && maxZ <= 1 && "Invalid viewport depth value");
-  glDepthRangef(minZ, maxZ);
+  const auto& viewport = getViewport();
+
+  assert(viewport.minX >= 0 && viewport.minY >= 0 && "Invalid viewport minX, minY");
+  assert(viewport.width > 0 && viewport.height > 0 && "Invalid viewport width, height");
+  glViewport(viewport.minX, viewport.minY, viewport.width, viewport.height);
+
+  assert(0.f <= viewport.minZ && viewport.minZ <= 1.f && "Invalid viewport minZ");
+  assert(0.f <= viewport.maxZ && viewport.maxZ <= 1.f && "Invalid viewport maxZ");
+  glDepthRangef(viewport.minZ, viewport.maxZ);
 }

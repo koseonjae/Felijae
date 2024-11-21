@@ -62,14 +62,27 @@ int main() {
 
   // RASTERIZER
   {
+    Culling culling = {
+        .enable = true,
+        .frontFace = Culling::FrontFace::CCW,
+        .cullMode = Culling::CullMode::Back
+    };
+    Viewport viewport = {
+        .minX = 0,
+        .minY = 0,
+        .width = width,
+        .height = height,
+        .minZ = 0.0f,
+        .maxZ = 1.0f
+    };
     auto rasterizer = std::make_shared<OpenGLRasterizer>();
+    rasterizer->setCulling(culling);
+    rasterizer->setViewport(viewport);
     pipeline->setRasterizer(std::move(rasterizer));
-    pipeline->getRasterizer()->getViewport().setViewport(0, 0, width, height);
   }
 
   // OUTPUT MERGER
   {
-    auto outputMerger = std::make_shared<OpenGLOutputMerger>();
     DepthTest depthTest = {
         .enable = true,
         .depthFunc = DepthTest::DepthTestFunc::Less,
@@ -81,6 +94,7 @@ int main() {
         .pixelBlendFunc = AlphaBlend::BlendFunc::ONE_MINUS_SRC_ALPHA,
         .blendEquation = AlphaBlend::BlendEquation::Add
     };
+    auto outputMerger = std::make_shared<OpenGLOutputMerger>();
     outputMerger->setDepthTest(depthTest);
     outputMerger->setAlphaBlend(alphaBlend);
     pipeline->setOutputMerger(std::move(outputMerger));
