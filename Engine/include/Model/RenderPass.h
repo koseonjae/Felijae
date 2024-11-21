@@ -32,12 +32,11 @@ struct ClearStencil {
 };
 
 struct Attachment {
-  std::shared_ptr<Texture> texture;
-  std::variant<ClearColor, ClearDepth, ClearStencil> clear;
-  LoadFunc load = LoadFunc::Undefined;
-  StoreFunc store = StoreFunc::Undefined;
   AttachmentType type = AttachmentType::Undefined;
-  auto getVariables() const { return std::make_tuple(type, load, store, clear); }
+  LoadFunc loadFunc = LoadFunc::Undefined;
+  StoreFunc storeFunc = StoreFunc::Undefined;
+  std::variant<ClearColor, ClearDepth, ClearStencil> clear;
+  std::shared_ptr<Texture> texture;
 };
 
 class RenderPass {

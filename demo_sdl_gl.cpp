@@ -18,8 +18,6 @@
 
 using namespace std;
 
-auto pipeline = make_shared<OpenGLPipeline>();
-
 int main() {
   SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
   SDL_Init(SDL_INIT_VIDEO);
@@ -59,6 +57,8 @@ int main() {
 
   int width, height;
   SDL_GL_GetDrawableSize(window, &width, &height);
+
+  auto pipeline = make_shared<OpenGLPipeline>();
 
   // RASTERIZER
   {
@@ -156,21 +156,24 @@ int main() {
   model->setPipeline(pipeline);
   scene.addModel(std::move(model));
 
-  auto colorTexture = std::make_shared<OpenGLTexture>();
-  colorTexture->initialize(width, height, ImageFormat::RGBA);
+  // Render Pass
+  {
+    auto colorTexture = std::make_shared<OpenGLTexture>();
+    colorTexture->initialize(width, height, ImageFormat::RGBA);
 
-  std::vector<Attachment> attachments;
-  attachments.emplace_back(Attachment{
-      .texture = colorTexture,
-      .clear = ClearColor{1.0f, 1.0f, 0.0f, 1.0f},
-      .load = LoadFunc::Clear,
-      .store = StoreFunc::Store,
-      .type = AttachmentType::Color,
-  });
+    std::vector<Attachment> attachments;
+    attachments.emplace_back(Attachment{
+        .type = AttachmentType::Color,
+        .loadFunc = LoadFunc::Clear,
+        .storeFunc = StoreFunc::Store,
+        .clear = ClearColor{1.0f, 1.0f, 0.0f, 1.0f},
+        .texture = std::move(colorTexture),
+    });
 
-  auto renderPass = std::make_shared<OpenGLRenderPass>();
-  renderPass->setAttachments(std::move(attachments));
-  pipeline->setRenderPass(std::move(renderPass));
+    auto renderPass = std::make_shared<OpenGLRenderPass>();
+    renderPass->setAttachments(std::move(attachments));
+    pipeline->setRenderPass(std::move(renderPass));
+  }
 
   bool running = true;
   while (running) {
