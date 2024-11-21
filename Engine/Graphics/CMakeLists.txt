@@ -3,7 +3,6 @@ add_library(Graphics STATIC
     src/OpenGL/OpenGLRasterizer.cpp
     src/OpenGL/OpenGLOutputMerger.cpp
     src/OpenGL/OpenGLProgram.cpp
-    src/OpenGL/OpenGLModel.cpp
     src/OpenGL/OpenGLBuffer.cpp
     src/OpenGL/OpenGLTexture.cpp
     src/OpenGL/OpenGLFrameBuffer.cpp
@@ -16,6 +15,7 @@ add_library(Graphics STATIC
     src/Model/Object.cpp
     src/Model/Camera.cpp
     src/Model/Scene.cpp
+    src/Model/Model.cpp
     src/Utility/FileReader.cpp
     src/Utility/ImageLoader.cpp
     src/Utility/ThreadChecker.cpp
@@ -24,7 +24,6 @@ add_library(Graphics STATIC
     include/Graphics/OpenGL/OpenGLRasterizer.h
     include/Graphics/OpenGL/OpenGLOutputMerger.h
     include/Graphics/OpenGL/OpenGLProgram.h
-    include/Graphics/OpenGL/OpenGLModel.h
     include/Graphics/OpenGL/OpenGLBuffer.h
     include/Graphics/OpenGL/OpenGLTexture.h
     include/Graphics/OpenGL/OpenGLFrameBuffer.h

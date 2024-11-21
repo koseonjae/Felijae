@@ -1,5 +1,5 @@
 #include <Graphics/OpenGL/OpenGLPipeline.h>
-#include <Graphics/OpenGL/OpenGLModel.h>
+#include <Graphics/Model/Model.h>
 #include <Graphics/OpenGL/OpenGLProgram.h>
 #include <Graphics/OpenGL/OpenGLTexture.h>
 #include <Graphics/OpenGL/OpenGLBuffer.h>
@@ -175,7 +175,7 @@ int main() {
 
   // Model
   {
-    auto model = std::make_shared<OpenGLModel>();
+    auto model = std::make_shared<Model>();
     model->setPipeline(pipeline);
     scene.addModel(std::move(model));
   }

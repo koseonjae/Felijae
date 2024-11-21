@@ -17,9 +17,9 @@ class Model {
 
   virtual ~Model() = default;
 
-  virtual void update() = 0;
+  void update() ;
 
-  virtual void render() = 0;
+  void render();
 
   void setPipeline(std::shared_ptr<Pipeline> pipeline) { m_pipeline = std::move(pipeline); }
 
@@ -56,9 +56,9 @@ class Model {
   std::shared_ptr<Pipeline> m_pipeline;
 
  private:
-  glm::vec3 m_translate;
-  glm::vec3 m_scale;
-  glm::vec4 m_rotate;
+  glm::vec3 m_translate{};
+  glm::vec3 m_scale{};
+  glm::vec4 m_rotate{};
   glm::mat4 m_worldMat = glm::mat4(1.0f);
   bool m_dirty = false;
 };
