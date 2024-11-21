@@ -1,0 +1,8 @@
+//
+// Created by koseonjae on 2024. 11. 21..
+//
+
+#ifndef PRACTICEGL_ENGINE_INCLUDE_ENGINE_H_
+#define PRACTICEGL_ENGINE_INCLUDE_ENGINE_H_
+
+#endif //PRACTICEGL_ENGINE_INCLUDE_ENGINE_H_
