@@ -16,8 +16,8 @@ struct Viewport {
   int minY = -1;
   int width = -1;
   int height = -1;
-  float minZ = 0.0f;
-  float maxZ = 1.0f;
+  float minZ = -1.0f;
+  float maxZ = -1.0f;
 };
 static_assert(std::is_trivially_copyable_v<Viewport>);
 
