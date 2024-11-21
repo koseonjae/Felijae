@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Model/Rasterizer.h>
+#include <Graphics/Model/Rasterizer.h>
 
 class OpenGLRasterizer : public Rasterizer {
  public:

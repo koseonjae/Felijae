@@ -1,4 +1,4 @@
-#include <Metal/MetalDevice.h>
+#include <Graphics/Metal/MetalDevice.h>
 
 MetalDevice::MetalDevice(MTL::Device* device) : m_device{device} {
 }

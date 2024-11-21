@@ -1,4 +1,4 @@
-#include <OpenGL/OpenGLProgram.h>
+#include <Graphics/OpenGL/OpenGLProgram.h>
 
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/glm.hpp>

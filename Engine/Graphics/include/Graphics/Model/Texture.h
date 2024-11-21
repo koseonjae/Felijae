@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Utility/ImageData.h>
+#include <Graphics/Utility/ImageData.h>
 
 #include <string_view>
 

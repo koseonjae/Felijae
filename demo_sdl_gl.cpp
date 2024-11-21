@@ -1,15 +1,15 @@
-#include <OpenGL/OpenGLPipeline.h>
-#include <OpenGL/OpenGLModel.h>
-#include <OpenGL/OpenGLProgram.h>
-#include <OpenGL/OpenGLTexture.h>
-#include <OpenGL/OpenGLBuffer.h>
-#include <OpenGL/OpenGLRenderPass.h>
-#include <OpenGL/OpenGLRasterizer.h>
-#include <OpenGL/OpenGLOutputMerger.h>
-#include "Model/Triangle.h"
-#include <Model/Light.h>
-#include <Model/Scene.h>
-#include <Utility/FileReader.h>
+#include <Graphics/OpenGL/OpenGLPipeline.h>
+#include <Graphics/OpenGL/OpenGLModel.h>
+#include <Graphics/OpenGL/OpenGLProgram.h>
+#include <Graphics/OpenGL/OpenGLTexture.h>
+#include <Graphics/OpenGL/OpenGLBuffer.h>
+#include <Graphics/OpenGL/OpenGLRenderPass.h>
+#include <Graphics/OpenGL/OpenGLRasterizer.h>
+#include <Graphics/OpenGL/OpenGLOutputMerger.h>
+#include <Graphics/Model/Triangle.h>
+#include <Graphics/Model/Light.h>
+#include <Graphics/Model/Scene.h>
+#include <Graphics/Utility/FileReader.h>
 
 #include <SDL2/SDL.h>
 #include <glm/glm.hpp>

@@ -1,4 +1,4 @@
-#include <OpenGL/OpenGLBuffer.h>
+#include <Graphics/OpenGL/OpenGLBuffer.h>
 
 void OpenGLBuffer::initialize(const Object& obj) {
   release();

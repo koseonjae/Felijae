@@ -1,9 +1,9 @@
-#include <Utility/FileReader.h>
-#include <Utility/MetalRef.h>
-#include <Metal/MetalBuffer.h>
-#include <Metal/MetalShader.h>
-#include <Model/Object.h>
-#include <Model/Triangle.h>
+#include <Graphics/Utility/FileReader.h>
+#include <Graphics/Utility/MetalRef.h>
+#include <Graphics/Metal/MetalBuffer.h>
+#include <Graphics/Metal/MetalShader.h>
+#include <Graphics/Model/Object.h>
+#include <Graphics/Model/Triangle.h>
 
 #include <Foundation/Foundation.hpp>
 #include <Metal/triangle_types.h>

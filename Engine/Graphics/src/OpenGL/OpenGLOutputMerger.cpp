@@ -1,4 +1,4 @@
-#include <OpenGL/OpenGLOutputMerger.h>
+#include <Graphics/OpenGL/OpenGLOutputMerger.h>
 
 #include <OpenGL/gl3.h>
 

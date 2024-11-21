@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Model/Texture.h>
+#include <Graphics/Model/Texture.h>
 
 #include <vector>
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Model/Program.h>
+#include <Graphics/Model/Program.h>
 
 #include <glm/glm.hpp>
 

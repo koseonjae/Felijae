@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Utility/MetalRef.h>
-#include <Metal/MetalDevice.h>
+#include <Graphics/Utility/MetalRef.h>
+#include <Graphics/Metal/MetalDevice.h>
 
 #include <Metal/MTLBuffer.hpp>
 #include <Metal/MTLVertexDescriptor.hpp>

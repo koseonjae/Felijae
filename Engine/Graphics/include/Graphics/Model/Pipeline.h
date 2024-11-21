@@ -1,10 +1,10 @@
 #pragma once
 
-#include <Model/Buffer.h>
-#include <Model/Program.h>
-#include <Model/Rasterizer.h>
-#include <Model/OutputMerger.h>
-#include <Model/RenderPass.h>
+#include <Graphics/Model/Buffer.h>
+#include <Graphics/Model/Program.h>
+#include <Graphics/Model/Rasterizer.h>
+#include <Graphics/Model/OutputMerger.h>
+#include <Graphics/Model/RenderPass.h>
 
 #include <memory>
 

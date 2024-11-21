@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Utility/ImageFormat.h>
+#include <Graphics/Utility/ImageFormat.h>
 
 #include <OpenGL/gl3.h>
 

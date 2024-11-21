@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Model/Texture.h>
-#include <Model/RenderPass.h>
+#include <Graphics/Model/Texture.h>
+#include <Graphics/Model/RenderPass.h>
 
 #include <OpenGL/gl3.h>
 

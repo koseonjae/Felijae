@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Utility/MetalRef.h>
+#include <Graphics/Utility/MetalRef.h>
 
 #include <Metal/MTLDevice.hpp>
 

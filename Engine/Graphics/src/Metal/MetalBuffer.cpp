@@ -1,6 +1,7 @@
-#include <Metal/MetalBuffer.h>
-#include <Model/Object.h>
-#include <Metal/MetalDevice.h>
+#include <Graphics/Metal/MetalBuffer.h>
+#include <Graphics/Model/Object.h>
+#include <Graphics/Metal/MetalDevice.h>
+
 #include <Metal/MTLVertexDescriptor.hpp>
 
 MetalBuffer::MetalBuffer(MetalDevice* device, const Object& obj) {

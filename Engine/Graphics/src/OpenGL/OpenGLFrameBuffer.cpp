@@ -1,4 +1,4 @@
-#include <OpenGL/OpenGLFrameBuffer.h>
+#include <Graphics/OpenGL/OpenGLFrameBuffer.h>
 
 #include <cassert>
 

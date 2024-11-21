@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Model/Pipeline.h>
+#include <Graphics/Model/Pipeline.h>
 
 class OpenGLPipeline : public Pipeline {
  public:

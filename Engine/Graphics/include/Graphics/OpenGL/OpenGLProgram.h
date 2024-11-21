@@ -1,8 +1,8 @@
 #pragma once
 
-#include <OpenGL/OpenGLTexture.h>
-#include <Model/Program.h>
-#include <Utility/ThreadChecker.h>
+#include <Graphics/OpenGL/OpenGLTexture.h>
+#include <Graphics/Model/Program.h>
+#include <Graphics/Utility/ThreadChecker.h>
 
 #include <glm/glm.hpp>
 

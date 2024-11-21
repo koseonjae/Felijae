@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Model/RenderPass.h>
-#include <OpenGL/OpenGLFrameBuffer.h>
+#include <Graphics/Model/RenderPass.h>
+#include <Graphics/OpenGL/OpenGLFrameBuffer.h>
 
 class OpenGLRenderPass : public RenderPass {
  public:

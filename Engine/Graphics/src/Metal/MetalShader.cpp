@@ -1,4 +1,4 @@
-#include <Metal/MetalShader.h>
+#include <Graphics/Metal/MetalShader.h>
 
 namespace {
 inline NS::String* getNSString(std::string_view str) {

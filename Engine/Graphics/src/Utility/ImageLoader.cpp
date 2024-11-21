@@ -1,6 +1,5 @@
-#include <Utility/ImageLoader.h>
-
-#include <Utility/ImageFormat.h>
+#include <Graphics/Utility/ImageLoader.h>
+#include <Graphics/Utility/ImageFormat.h>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>

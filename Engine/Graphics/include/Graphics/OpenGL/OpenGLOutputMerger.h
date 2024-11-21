@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Model/OutputMerger.h>
+#include <Graphics/Model/OutputMerger.h>
 
 class OpenGLOutputMerger : public OutputMerger {
  public:

@@ -1,6 +1,6 @@
-#include <OpenGL/OpenGLTexture.h>
-#include <Utility/ImageLoader.h>
-#include <OpenGL/OpenGLUtils.h>
+#include <Graphics/OpenGL/OpenGLTexture.h>
+#include <Graphics/OpenGL/OpenGLUtils.h>
+#include <Graphics/Utility/ImageLoader.h>
 
 #include <cassert>
 

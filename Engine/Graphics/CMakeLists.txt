@@ -20,34 +20,35 @@ add_library(Graphics STATIC
     src/Utility/ImageLoader.cpp
     src/Utility/ThreadChecker.cpp
 
-    include/OpenGL/OpenGLPipeline.h
-    include/OpenGL/OpenGLRasterizer.h
-    include/OpenGL/OpenGLOutputMerger.h
-    include/OpenGL/OpenGLProgram.h
-    include/OpenGL/OpenGLModel.h
-    include/OpenGL/OpenGLBuffer.h
-    include/OpenGL/OpenGLTexture.h
-    include/OpenGL/OpenGLFrameBuffer.h
-    include/OpenGL/OpenGLRenderPass.h
-    include/OpenGL/OpenGLUtils.h
-    include/Metal/MetalDevice.h
-    include/Metal/MetalBuffer.h
-    include/Metal/MetalShader.h
-    include/Model/Triangle.h
-    include/Model/Object.h
-    include/Utility/ImageFormat.h
-    include/Model/Model.h
-    include/Model/Program.h
-    include/Model/Rasterizer.h
-    include/Model/OutputMerger.h
-    include/Model/RenderPass.h
-    include/Model/Light.h
-    include/Model/Camera.h
-    include/Model/Scene.h
-    include/Model/Texture.h
-    include/Utility/FileReader.h
-    include/Utility/ImageLoader.h
-    include/Utility/ThreadChecker.h)
+    include/Graphics/OpenGL/OpenGLPipeline.h
+    include/Graphics/OpenGL/OpenGLRasterizer.h
+    include/Graphics/OpenGL/OpenGLOutputMerger.h
+    include/Graphics/OpenGL/OpenGLProgram.h
+    include/Graphics/OpenGL/OpenGLModel.h
+    include/Graphics/OpenGL/OpenGLBuffer.h
+    include/Graphics/OpenGL/OpenGLTexture.h
+    include/Graphics/OpenGL/OpenGLFrameBuffer.h
+    include/Graphics/OpenGL/OpenGLRenderPass.h
+    include/Graphics/OpenGL/OpenGLUtils.h
+    include/Graphics/Metal/MetalDevice.h
+    include/Graphics/Metal/MetalBuffer.h
+    include/Graphics/Metal/MetalShader.h
+    include/Graphics/Model/Triangle.h
+    include/Graphics/Model/Object.h
+    include/Graphics/Utility/ImageFormat.h
+    include/Graphics/Utility/ImageData.h
+    include/Graphics/Model/Model.h
+    include/Graphics/Model/Program.h
+    include/Graphics/Model/Rasterizer.h
+    include/Graphics/Model/OutputMerger.h
+    include/Graphics/Model/RenderPass.h
+    include/Graphics/Model/Light.h
+    include/Graphics/Model/Camera.h
+    include/Graphics/Model/Scene.h
+    include/Graphics/Model/Texture.h
+    include/Graphics/Utility/FileReader.h
+    include/Graphics/Utility/ImageLoader.h
+    include/Graphics/Utility/ThreadChecker.h)
 
 target_include_directories(Graphics PUBLIC
     include)

@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Model/Model.h>
-#include <Model/Object.h>
+#include <Graphics/Model/Model.h>
+#include <Graphics/Model/Object.h>
 
 #include <OpenGL/gl3.h>
 #include <glm/glm.hpp>

@@ -1,4 +1,4 @@
-#include <OpenGL/OpenGLPipeline.h>
+#include <Graphics/OpenGL/OpenGLPipeline.h>
 
 void OpenGLPipeline::update() {
 }

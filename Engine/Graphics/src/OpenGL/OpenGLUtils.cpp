@@ -1,4 +1,4 @@
-#include <OpenGL/OpenGLUtils.h>
+#include <Graphics/OpenGL/OpenGLUtils.h>
 
 #include <cassert>
 

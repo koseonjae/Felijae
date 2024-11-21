@@ -1,4 +1,4 @@
-#include <Model/Object.h>
+#include <Graphics/Model/Object.h>
 #include <tiny_obj_loader.h>
 
 Object loadObj(std::string_view path) {

@@ -1,4 +1,4 @@
-#include <Utility/ThreadChecker.h>
+#include <Graphics/Utility/ThreadChecker.h>
 
 #include <cassert>
 

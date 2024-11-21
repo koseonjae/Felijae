@@ -1,8 +1,7 @@
-#include <OpenGL/OpenGLModel.h>
+#include <Graphics/OpenGL/OpenGLModel.h>
 
-#include <OpenGL/OpenGLProgram.h>
-#include <OpenGL/OpenGLPipeline.h>
-#include <OpenGL/OpenGLBuffer.h>
+#include <Graphics/OpenGL/OpenGLPipeline.h>
+#include <Graphics/OpenGL/OpenGLBuffer.h>
 #include <glm/gtc/matrix_transform.hpp>
 
 void OpenGLModel::update() {
