@@ -1,8 +1,5 @@
-//
-// Created by koseonjae on 2024. 11. 21..
-//
+#pragma once
 
-#ifndef PRACTICEGL_ENGINE_INCLUDE_ENGINE_H_
-#define PRACTICEGL_ENGINE_INCLUDE_ENGINE_H_
+class Engine {
 
-#endif //PRACTICEGL_ENGINE_INCLUDE_ENGINE_H_
+};
