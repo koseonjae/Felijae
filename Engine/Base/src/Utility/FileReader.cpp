@@ -1,7 +1,7 @@
 #include <Base/Utility/FileReader.h>
 
-#include <iostream>
 #include <fstream>
+#include <iostream>
 
 std::string readFile(const std::filesystem::path& filePath) {
   std::ifstream fileStream(filePath, std::ios::in | std::ios::binary);

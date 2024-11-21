@@ -2,13 +2,15 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
-void Camera::setCamera(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& up) {
+void Camera::setCamera(const glm::vec3& eye, const glm::vec3& at,
+                       const glm::vec3& up) {
   m_eye = eye;
   m_at = at;
   m_up = up;
 }
 
-void Camera::setProjection(float fovy, float aspectRatio, float near, float far) {
+void Camera::setProjection(float fovy, float aspectRatio, float near,
+                           float far) {
   m_fovy = fovy;
   m_aspectRatio = aspectRatio;
   m_near = near;
@@ -25,6 +27,4 @@ glm::mat4 Camera::getProjMatrix() const {
   return projMat;
 }
 
-glm::vec3 Camera::getEye() const {
-  return m_eye;
-}
+glm::vec3 Camera::getEye() const { return m_eye; }

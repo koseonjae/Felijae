@@ -2,6 +2,8 @@
 
 #include <Graphics/Model/Pipeline.h>
 
+namespace goala {
+
 class OpenGLPipeline : public Pipeline {
  public:
   ~OpenGLPipeline() override = default;
@@ -9,8 +11,9 @@ class OpenGLPipeline : public Pipeline {
   void render() override;
 
  private:
-
   void _bindOutputMerger();
   void _bindDepthTest();
   void _bindAlphaBlending();
 };
+
+} // namespace goala

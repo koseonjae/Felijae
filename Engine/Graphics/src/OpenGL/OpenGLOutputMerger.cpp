@@ -1,5 +1,4 @@
 #include <Graphics/OpenGL/OpenGLOutputMerger.h>
-
 #include <OpenGL/gl3.h>
 
 #include <cassert>
@@ -48,9 +47,12 @@ void OpenGLOutputMerger::_bindAlphaBlending() {
 
   auto getBlendFunc = [](AlphaBlend::BlendFunc blendFunc) {
     switch (blendFunc) {
-      case AlphaBlend::BlendFunc::SRC_ALPHA: return GL_SRC_ALPHA;
-      case AlphaBlend::BlendFunc::ONE_MINUS_SRC_ALPHA: return GL_ONE_MINUS_SRC_ALPHA;
-      default: return GL_NONE;
+      case AlphaBlend::BlendFunc::SRC_ALPHA:
+        return GL_SRC_ALPHA;
+      case AlphaBlend::BlendFunc::ONE_MINUS_SRC_ALPHA:
+        return GL_ONE_MINUS_SRC_ALPHA;
+      default:
+        return GL_NONE;
     }
   };
   GLenum fragBlendFunc = getBlendFunc(alphaBlend.fragmentBlendFunc);
@@ -65,7 +67,8 @@ void OpenGLOutputMerger::_bindAlphaBlending() {
       blendEquation = GL_FUNC_ADD;
       break;
     }
-    default:blendEquation = GL_NONE;
+    default:
+      blendEquation = GL_NONE;
   }
   assert(blendEquation != GL_NONE && "[OpenGLPipeline] Invalid blend equation.");
   glBlendEquation(blendEquation);

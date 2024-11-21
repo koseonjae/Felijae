@@ -2,6 +2,8 @@
 
 #include <Graphics/Model/Rasterizer.h>
 
+namespace goala {
+
 class OpenGLRasterizer : public Rasterizer {
  public:
   void bind() override;
@@ -10,3 +12,5 @@ class OpenGLRasterizer : public Rasterizer {
   void _bindCulling();
   void _bindViewport();
 };
+
+} // namespace goala

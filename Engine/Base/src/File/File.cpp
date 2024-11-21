@@ -1,8 +1,8 @@
 #include <Base/File/File.h>
 #include <Base/Utility/FileReader.h>
 
-#include <filesystem>
 #include <cassert>
+#include <filesystem>
 
 std::unordered_map<std::string, std::string> File::m_assetPaths{};
 

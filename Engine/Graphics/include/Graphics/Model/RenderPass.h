@@ -4,16 +4,25 @@
 
 #include <vector>
 
+namespace goala {
+
 enum class AttachmentType {
-  Color, Depth, Stencil, Undefined
+  Color,
+  Depth,
+  Stencil,
+  Undefined
 };
 
 enum class LoadFunc {
-  Clear, DontCare, Undefined
+  Clear,
+  DontCare,
+  Undefined
 };
 
 enum class StoreFunc {
-  Store, DontCare, Undefined
+  Store,
+  DontCare,
+  Undefined
 };
 
 struct ClearColor {
@@ -50,9 +59,13 @@ class RenderPass {
     m_dirty = true;
   }
 
-  const std::vector<Attachment>& getAttachments() const { return m_attachments; }
+  const std::vector<Attachment>& getAttachments() const {
+    return m_attachments;
+  }
 
  protected:
   std::vector<Attachment> m_attachments;
   bool m_dirty = false;
 };
+
+} // namespace goala

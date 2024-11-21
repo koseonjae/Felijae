@@ -2,9 +2,11 @@
 
 #include <Base/Object/Object.h>
 #include <Graphics/Model/Buffer.h>
-
 #include <OpenGL/gl3.h>
+
 #include <glm/glm.hpp>
+
+namespace goala {
 
 class OpenGLBuffer final : public Buffer {
  public:
@@ -28,3 +30,5 @@ class OpenGLBuffer final : public Buffer {
   GLuint m_eabo = 0;
   int m_indicesSize = 0;
 };
+
+} // namespace goala

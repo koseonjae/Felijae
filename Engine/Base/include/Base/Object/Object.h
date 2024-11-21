@@ -5,6 +5,8 @@
 #include <glm/glm.hpp>
 #include <vector>
 
+namespace goala {
+
 struct Vertex {
   glm::vec3 pos{};
   glm::vec3 nor{};
@@ -17,3 +19,5 @@ struct Object {
 };
 
 Object loadObj(const File& file);
+
+} // namespace goala

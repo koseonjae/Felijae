@@ -1,5 +1,4 @@
 #include <Graphics/OpenGL/OpenGLRasterizer.h>
-
 #include <OpenGL/gl3.h>
 
 #include <cassert>

@@ -1,5 +1,7 @@
 #pragma once
 
-class Engine {
+namespace goala {
 
-};
+class Engine {};
+
+} // namespace goala

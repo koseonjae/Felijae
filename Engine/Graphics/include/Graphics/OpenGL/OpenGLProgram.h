@@ -1,14 +1,15 @@
 #pragma once
 
 #include <Base/Utility/ThreadChecker.h>
-#include <Graphics/OpenGL/OpenGLTexture.h>
 #include <Graphics/Model/Program.h>
+#include <Graphics/OpenGL/OpenGLTexture.h>
 
-#include <glm/glm.hpp>
-
-#include <string_view>
 #include <functional>
+#include <glm/glm.hpp>
+#include <string_view>
 #include <unordered_map>
+
+namespace goala {
 
 class OpenGLProgram final : public Program {
  public:
@@ -29,7 +30,8 @@ class OpenGLProgram final : public Program {
 
   void setUniform(std::string_view name, const glm::mat4& mat4) override;
 
-  void setTexture(std::string_view name, std::shared_ptr<Texture> texture) override;
+  void setTexture(std::string_view name,
+                  std::shared_ptr<Texture> texture) override;
 
  private:
   void _updateTasks();
@@ -38,8 +40,12 @@ class OpenGLProgram final : public Program {
   GLuint m_program = 0;
   bool m_initialized = false;
   std::mutex m_taskLock;
-  std::unordered_map<std::string, std::function<void(std::string_view)>> m_generalTasks;
-  std::unordered_map<std::string, std::function<void(std::string_view, int)>> m_textureTasks;
+  std::unordered_map<std::string, std::function<void(std::string_view)>>
+    m_generalTasks;
+  std::unordered_map<std::string, std::function<void(std::string_view, int)>>
+    m_textureTasks;
   ThreadChecker m_threadChecker;
   std::unordered_map<std::string, std::shared_ptr<Texture>> m_textures;
 };
+
+} // namespace goala

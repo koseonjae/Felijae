@@ -3,8 +3,9 @@
 #include <Graphics/Metal/MetalDevice.h>
 
 #include <Metal/MTLLibrary.hpp>
-
 #include <string_view>
+
+namespace goala {
 
 enum class ShaderType {
   VERTEX,
@@ -20,3 +21,5 @@ class MetalShader {
  private:
   MetalRef<MTL::Function> m_func;
 };
+
+} // namespace goala

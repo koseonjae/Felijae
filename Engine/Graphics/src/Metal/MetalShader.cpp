@@ -4,12 +4,14 @@ namespace {
 inline NS::String* getNSString(std::string_view str) {
   return NS::String::string(str.data(), NS::ASCIIStringEncoding);
 }
-}
+} // namespace
 
-MetalShader::MetalShader(MetalDevice* device, std::string_view source, ShaderType type) {
+MetalShader::MetalShader(MetalDevice* device, std::string_view source,
+                         ShaderType type) {
   NS::Error* err = nil;
 
-  auto library = MetalRef(device->get()->newLibrary(getNSString(source), nullptr, &err));
+  auto library =
+    MetalRef(device->get()->newLibrary(getNSString(source), nullptr, &err));
   assert(library && "Failed to create library");
 
   std::string shaderTypeStr;
@@ -22,10 +24,9 @@ MetalShader::MetalShader(MetalDevice* device, std::string_view source, ShaderTyp
   else
     assert(false && "undefined shader type");
 
-  auto funcName = NS::String::string(shaderTypeStr.data(), NS::ASCIIStringEncoding);
+  auto funcName =
+    NS::String::string(shaderTypeStr.data(), NS::ASCIIStringEncoding);
   m_func = MetalRef(library->newFunction(funcName));
 }
 
-MTL::Function* MetalShader::get() const {
-  return m_func.get();
-}
+MTL::Function* MetalShader::get() const { return m_func.get(); }

@@ -2,6 +2,8 @@
 
 #include <utility>
 
+namespace goala {
+
 template<typename T>
 class MetalRef {
  public:
@@ -9,8 +11,7 @@ class MetalRef {
   explicit MetalRef(T* ptr) : m_ptr(ptr) { m_ptr->retain(); }
 
   ~MetalRef() {
-    if (!m_ptr)
-      return;
+    if (!m_ptr) return;
     m_ptr->release();
   }
 
@@ -18,13 +19,10 @@ class MetalRef {
 
   MetalRef& operator=(const MetalRef<T>& rhs) = delete;
 
-  MetalRef(MetalRef<T>&& rhs) noexcept {
-    *this = std::move(rhs);
-  }
+  MetalRef(MetalRef<T>&& rhs) noexcept { *this = std::move(rhs); }
 
   MetalRef& operator=(MetalRef<T>&& rhs) noexcept {
-    if (this != &rhs)
-      std::swap(m_ptr, rhs.m_ptr);
+    if (this != &rhs) std::swap(m_ptr, rhs.m_ptr);
     return *this;
   }
 
@@ -36,3 +34,5 @@ class MetalRef {
  private:
   T* m_ptr = nullptr;
 };
+
+} // namespace goala

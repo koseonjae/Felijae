@@ -2,9 +2,17 @@
 
 #include <tuple>
 
+namespace goala {
+
 struct Culling {
-  enum class CullMode { Front, Back };
-  enum class FrontFace { CCW, CW };
+  enum class CullMode {
+    Front,
+    Back
+  };
+  enum class FrontFace {
+    CCW,
+    CW
+  };
   bool enable = true;
   FrontFace frontFace = FrontFace::CCW;
   CullMode cullMode = CullMode::Back;
@@ -45,3 +53,5 @@ class Rasterizer {
   Culling m_culling;
   Viewport m_viewport;
 };
+
+} // namespace goala

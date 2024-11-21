@@ -4,6 +4,8 @@
 
 #include <memory>
 
+namespace goala {
+
 class Renderer {
  public:
   virtual ~Renderer() = default;
@@ -17,3 +19,5 @@ class Renderer {
  protected:
   Scene* m_scene = nullptr;
 };
+
+} // namespace goala

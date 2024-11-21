@@ -3,8 +3,9 @@
 #include <Graphics/Model/Program.h>
 
 #include <glm/glm.hpp>
-
 #include <memory>
+
+namespace goala {
 
 class Object;
 class Program;
@@ -17,11 +18,13 @@ class Model {
 
   virtual ~Model() = default;
 
-  void update() ;
+  void update();
 
   void render();
 
-  void setPipeline(std::shared_ptr<Pipeline> pipeline) { m_pipeline = std::move(pipeline); }
+  void setPipeline(std::shared_ptr<Pipeline> pipeline) {
+    m_pipeline = std::move(pipeline);
+  }
 
   const Pipeline* getPipeline() const { return m_pipeline.get(); }
   Pipeline* getPipeline() { return m_pipeline.get(); }
@@ -43,8 +46,7 @@ class Model {
   }
 
   glm::mat4 calculateWorldMat() {
-    if (!m_dirty)
-      return m_worldMat;
+    if (!m_dirty) return m_worldMat;
 
     // todo: implement
 
@@ -62,3 +64,5 @@ class Model {
   glm::mat4 m_worldMat = glm::mat4(1.0f);
   bool m_dirty = false;
 };
+
+} // namespace goala

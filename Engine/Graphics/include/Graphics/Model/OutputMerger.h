@@ -2,6 +2,8 @@
 
 #include <tuple>
 
+namespace goala {
+
 struct DepthTest {
   enum class DepthTestFunc {
     Less,
@@ -14,7 +16,8 @@ static_assert(std::is_trivially_copyable_v<DepthTest>);
 
 struct AlphaBlend {
   enum class BlendFunc {
-    SRC_ALPHA, ONE_MINUS_SRC_ALPHA,
+    SRC_ALPHA,
+    ONE_MINUS_SRC_ALPHA,
   };
   enum class BlendEquation {
     Add,
@@ -43,3 +46,5 @@ class OutputMerger {
   DepthTest m_depthTest;
   AlphaBlend m_alphaBlend;
 };
+
+} // namespace goala

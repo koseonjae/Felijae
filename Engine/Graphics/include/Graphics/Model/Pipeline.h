@@ -1,12 +1,14 @@
 #pragma once
 
 #include <Graphics/Model/Buffer.h>
+#include <Graphics/Model/OutputMerger.h>
 #include <Graphics/Model/Program.h>
 #include <Graphics/Model/Rasterizer.h>
-#include <Graphics/Model/OutputMerger.h>
 #include <Graphics/Model/RenderPass.h>
 
 #include <memory>
+
+namespace goala {
 
 class Pipeline {
  public:
@@ -17,11 +19,21 @@ class Pipeline {
   virtual void render() = 0;
 
  public:
-  void setBuffer(std::shared_ptr<Buffer> buffer) { m_buffer = std::move(buffer); }
-  void setProgram(std::shared_ptr<Program> program) { m_program = std::move(program); }
-  void setRenderPass(std::shared_ptr<RenderPass> renderPass) { m_renderPass = std::move(renderPass); }
-  void setRasterizer(std::shared_ptr<Rasterizer> rasterizer) { m_rasterizer = std::move(rasterizer); }
-  void setOutputMerger(std::shared_ptr<OutputMerger> outputMerger) { m_outputMerger = std::move(outputMerger); }
+  void setBuffer(std::shared_ptr<Buffer> buffer) {
+    m_buffer = std::move(buffer);
+  }
+  void setProgram(std::shared_ptr<Program> program) {
+    m_program = std::move(program);
+  }
+  void setRenderPass(std::shared_ptr<RenderPass> renderPass) {
+    m_renderPass = std::move(renderPass);
+  }
+  void setRasterizer(std::shared_ptr<Rasterizer> rasterizer) {
+    m_rasterizer = std::move(rasterizer);
+  }
+  void setOutputMerger(std::shared_ptr<OutputMerger> outputMerger) {
+    m_outputMerger = std::move(outputMerger);
+  }
 
   const Buffer* getBuffer() const { return m_buffer.get(); }
   Buffer* getBuffer() { return m_buffer.get(); }
@@ -45,3 +57,5 @@ class Pipeline {
   std::shared_ptr<Rasterizer> m_rasterizer;
   std::shared_ptr<OutputMerger> m_outputMerger;
 };
+
+} // namespace goala

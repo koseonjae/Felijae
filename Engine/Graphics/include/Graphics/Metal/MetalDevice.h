@@ -4,6 +4,8 @@
 
 #include <Metal/MTLDevice.hpp>
 
+namespace goala {
+
 class MetalDevice {
  public:
   explicit MetalDevice(MTL::Device* device);
@@ -12,3 +14,5 @@ class MetalDevice {
  private:
   MetalRef<MTL::Device> m_device;
 };
+
+} // namespace goala

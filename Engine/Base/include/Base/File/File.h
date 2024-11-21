@@ -1,8 +1,10 @@
 #pragma once
 
-#include <unordered_map>
-#include <string_view>
 #include <string>
+#include <string_view>
+#include <unordered_map>
+
+namespace goala {
 
 class File {
  public:
@@ -18,3 +20,5 @@ class File {
   static std::unordered_map<std::string, std::string> m_assetPaths;
   std::string m_path;
 };
+
+} // namespace goala

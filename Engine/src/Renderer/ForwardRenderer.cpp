@@ -1,8 +1,7 @@
-#include <Engine/Renderer/ForwardRenderer.h>
-
-#include <Graphics/Model/Program.h>
-#include <Graphics/Model/Pipeline.h>
 #include <Engine/Model/Model.h>
+#include <Engine/Renderer/ForwardRenderer.h>
+#include <Graphics/Model/Pipeline.h>
+#include <Graphics/Model/Program.h>
 
 void ForwardRenderer::update() {
   auto lightColor = m_scene->getLight().getLightColor();

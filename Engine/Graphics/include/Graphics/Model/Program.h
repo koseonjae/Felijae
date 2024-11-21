@@ -1,7 +1,9 @@
 #pragma once
 
-#include <string_view>
 #include <glm/glm.hpp>
+#include <string_view>
+
+namespace goala {
 
 class Texture;
 
@@ -18,5 +20,8 @@ class Program {
 
   virtual void setUniform(std::string_view name, const glm::mat4& mat4) = 0;
 
-  virtual void setTexture(std::string_view name, std::shared_ptr<Texture> texture) = 0;
+  virtual void setTexture(std::string_view name,
+                          std::shared_ptr<Texture> texture) = 0;
 };
+
+} // namespace goala

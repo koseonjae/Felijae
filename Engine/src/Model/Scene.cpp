@@ -1,16 +1,12 @@
-#include <Engine/Model/Scene.h>
 #include <Engine/Model/Model.h>
+#include <Engine/Model/Scene.h>
 #include <Engine/Renderer/Renderer.h>
 #include <Graphics/Model/Pipeline.h>
 #include <Graphics/Model/Program.h>
 
-void Scene::update() {
-  m_renderer->update();
-}
+void Scene::update() { m_renderer->update(); }
 
-void Scene::render() {
-  m_renderer->render();
-}
+void Scene::render() { m_renderer->render(); }
 
 void Scene::setLight(const Light& light) {
   static_assert(std::is_trivially_copyable_v<Light> && "Light must be trivially copyable");
@@ -31,18 +27,12 @@ void Scene::addModel(std::shared_ptr<Model> model) {
   m_models.push_back(std::move(model));
 }
 
-const Light& Scene::getLight() const {
-  return m_light;
-}
+const Light& Scene::getLight() const { return m_light; }
 
-const Camera& Scene::getCamera() const {
-  return m_camera;
-}
+const Camera& Scene::getCamera() const { return m_camera; }
 
 const std::vector<std::shared_ptr<Model>>& Scene::getModels() const {
   return m_models;
 }
 
-std::vector<std::shared_ptr<Model>>& Scene::getModels() {
-  return m_models;
-}
+std::vector<std::shared_ptr<Model>>& Scene::getModels() { return m_models; }

@@ -1,3 +1,7 @@
+
+
+namespace goala {
+
 #pragma once
 
 class Object;
@@ -14,3 +18,5 @@ class Buffer {
 
   virtual void draw() = 0;
 };
+
+} // namespace goala

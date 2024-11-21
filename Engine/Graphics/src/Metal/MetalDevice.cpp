@@ -1,8 +1,5 @@
 #include <Graphics/Metal/MetalDevice.h>
 
-MetalDevice::MetalDevice(MTL::Device* device) : m_device{device} {
-}
+MetalDevice::MetalDevice(MTL::Device* device) : m_device{device} {}
 
-MTL::Device* MetalDevice::get() const {
-  return m_device.get();
-}
+MTL::Device* MetalDevice::get() const { return m_device.get(); }

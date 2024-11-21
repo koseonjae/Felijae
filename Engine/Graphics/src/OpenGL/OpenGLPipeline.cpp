@@ -1,7 +1,6 @@
 #include <Graphics/OpenGL/OpenGLPipeline.h>
 
-void OpenGLPipeline::update() {
-}
+void OpenGLPipeline::update() {}
 
 void OpenGLPipeline::render() {
   assert(m_renderPass && m_rasterizer && m_outputMerger && m_program && m_buffer && "There is empty pipeline");

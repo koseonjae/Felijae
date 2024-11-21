@@ -1,10 +1,12 @@
 #pragma once
 
-#include <Graphics/Utility/MetalRef.h>
 #include <Graphics/Metal/MetalDevice.h>
+#include <Graphics/Utility/MetalRef.h>
 
 #include <Metal/MTLBuffer.hpp>
 #include <Metal/MTLVertexDescriptor.hpp>
+
+namespace goala {
 
 class Object;
 
@@ -21,3 +23,5 @@ class MetalBuffer {
   MetalRef<MTL::Buffer> m_indexHandle;
   MetalRef<MTL::VertexDescriptor> m_vertexDesc;
 };
+
+} // namespace goala
