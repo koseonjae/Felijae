@@ -70,12 +70,19 @@ int main() {
   // OUTPUT MERGER
   {
     auto outputMerger = std::make_shared<OpenGLOutputMerger>();
-    outputMerger->getDepthTest().setEnable(true);
-    outputMerger->getDepthTest().setDepthFunc(DepthTest::DepthTestFunc::Less);
-    outputMerger->getAlphaBlend().setEnable(true);
-    outputMerger->getAlphaBlend().setFragmentBlendFunc(AlphaBlend::BlendFunc::SRC_ALPHA);
-    outputMerger->getAlphaBlend().setPixelBlendFunc(AlphaBlend::BlendFunc::ONE_MINUS_SRC_ALPHA);
-    outputMerger->getAlphaBlend().setBlendEquation(AlphaBlend::BlendEquation::Add);
+    DepthTest depthTest = {
+        .enable = true,
+        .depthFunc = DepthTest::DepthTestFunc::Less,
+        .updateDepthMask = true
+    };
+    AlphaBlend alphaBlend = {
+        .enable = true,
+        .fragmentBlendFunc = AlphaBlend::BlendFunc::SRC_ALPHA,
+        .pixelBlendFunc = AlphaBlend::BlendFunc::ONE_MINUS_SRC_ALPHA,
+        .blendEquation = AlphaBlend::BlendEquation::Add
+    };
+    outputMerger->setDepthTest(depthTest);
+    outputMerger->setAlphaBlend(alphaBlend);
     pipeline->setOutputMerger(std::move(outputMerger));
   }
 

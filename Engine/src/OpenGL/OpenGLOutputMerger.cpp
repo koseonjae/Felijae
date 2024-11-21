@@ -10,20 +10,21 @@ void OpenGLOutputMerger::bind() {
 }
 
 void OpenGLOutputMerger::_bindDepthTest() {
-  auto [enable, pipelineDepthFunc, updateDepthMask] = getDepthTest().getVariables();
-  if (!enable) {
+  const auto& depthTest = getDepthTest();
+
+  if (!depthTest.enable) {
     glDisable(GL_DEPTH_TEST);
     return;
   }
   glEnable(GL_DEPTH_TEST);
 
-  if (updateDepthMask)
+  if (depthTest.updateDepthMask)
     glDepthMask(GL_TRUE);
   else
     glDepthMask(GL_FALSE);
 
   GLenum depthFunc = GL_NONE;
-  switch (pipelineDepthFunc) {
+  switch (depthTest.depthFunc) {
     case DepthTest::DepthTestFunc::Less: {
       depthFunc = GL_LESS;
       break;
@@ -37,8 +38,9 @@ void OpenGLOutputMerger::_bindDepthTest() {
 }
 
 void OpenGLOutputMerger::_bindAlphaBlending() {
-  auto [enable, fragFunc, pixelFunc, equation] = getAlphaBlend().getVariables();
-  if (!enable) {
+  const auto& alphaBlend = getAlphaBlend();
+
+  if (!alphaBlend.enable) {
     glDisable(GL_BLEND);
     return;
   }
@@ -51,14 +53,14 @@ void OpenGLOutputMerger::_bindAlphaBlending() {
       default: return GL_NONE;
     }
   };
-  GLenum fragBlendFunc = getBlendFunc(fragFunc);
+  GLenum fragBlendFunc = getBlendFunc(alphaBlend.fragmentBlendFunc);
   assert(fragBlendFunc != GL_NONE && "[OpenGLPipeline] Invalid frag blend function.");
-  GLenum pixelBlendFunc = getBlendFunc(pixelFunc);
+  GLenum pixelBlendFunc = getBlendFunc(alphaBlend.pixelBlendFunc);
   assert(pixelBlendFunc != GL_NONE && "[OpenGLPipeline] Invalid pixel blend function.");
   glBlendFunc(fragBlendFunc, pixelBlendFunc);
 
   GLenum blendEquation = GL_NONE;
-  switch (equation) {
+  switch (alphaBlend.blendEquation) {
     case AlphaBlend::BlendEquation::Add: {
       blendEquation = GL_FUNC_ADD;
       break;
