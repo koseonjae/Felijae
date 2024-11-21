@@ -1,9 +1,17 @@
 add_library(Base STATIC
-    include/Base/Object.h
-    include/Base/Triangle.h
+    include/Base/ImageFormat.h
+    include/Base/ImageData.h
+    include/Base/Object/Object.h
+    include/Base/Object/Triangle.h
+    include/Base/Utility/FileReader.h
+    include/Base/Utility/ImageLoader.h
+    include/Base/Utility/ThreadChecker.h
 
-    src/Triangle.cpp
-    src/Object.cpp)
+    src/Object/Triangle.cpp
+    src/Object/Object.cpp
+    src/Utility/FileReader.cpp
+    src/Utility/ImageLoader.cpp
+    src/Utility/ThreadChecker.cpp)
 
 find_package(glm CONFIG REQUIRED)
 find_package(tinyobjloader CONFIG REQUIRED)

@@ -8,12 +8,10 @@ add_library(Graphics STATIC
     src/OpenGL/OpenGLFrameBuffer.cpp
     src/OpenGL/OpenGLRenderPass.cpp
     src/OpenGL/OpenGLUtils.cpp
+
     src/Metal/MetalDevice.cpp
     src/Metal/MetalBuffer.cpp
     src/Metal/MetalShader.cpp
-    src/Utility/FileReader.cpp
-    src/Utility/ImageLoader.cpp
-    src/Utility/ThreadChecker.cpp
 
     include/Graphics/OpenGL/OpenGLPipeline.h
     include/Graphics/OpenGL/OpenGLRasterizer.h
@@ -24,19 +22,15 @@ add_library(Graphics STATIC
     include/Graphics/OpenGL/OpenGLFrameBuffer.h
     include/Graphics/OpenGL/OpenGLRenderPass.h
     include/Graphics/OpenGL/OpenGLUtils.h
+
     include/Graphics/Metal/MetalDevice.h
     include/Graphics/Metal/MetalBuffer.h
     include/Graphics/Metal/MetalShader.h
-    include/Graphics/Utility/ImageFormat.h
-    include/Graphics/Utility/ImageData.h
     include/Graphics/Model/Program.h
     include/Graphics/Model/Rasterizer.h
     include/Graphics/Model/OutputMerger.h
     include/Graphics/Model/RenderPass.h
-    include/Graphics/Model/Texture.h
-    include/Graphics/Utility/FileReader.h
-    include/Graphics/Utility/ImageLoader.h
-    include/Graphics/Utility/ThreadChecker.h)
+    include/Graphics/Model/Texture.h)
 
 target_include_directories(Graphics PUBLIC
     include)
