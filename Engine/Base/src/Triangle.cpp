@@ -1,4 +1,4 @@
-#include <Graphics/Model/Triangle.h>
+#include <Base/Triangle.h>
 
 Object Triangle::load() {
   Object obj{};

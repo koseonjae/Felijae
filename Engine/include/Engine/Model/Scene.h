@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Graphics/Model/Light.h>
-#include <Graphics/Model/Camera.h>
+#include "Light.h"
+#include "Camera.h"
 
 #include <utility>
 #include <memory>

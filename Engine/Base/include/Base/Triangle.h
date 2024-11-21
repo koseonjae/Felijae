@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Graphics/Model/Object.h>
+#include <Base/Object.h>
 
 class Triangle final {
  public:

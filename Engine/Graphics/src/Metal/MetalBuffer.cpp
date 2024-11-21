@@ -1,6 +1,6 @@
 #include <Graphics/Metal/MetalBuffer.h>
-#include <Graphics/Model/Object.h>
 #include <Graphics/Metal/MetalDevice.h>
+#include <Base/Object.h>
 
 #include <Metal/MTLVertexDescriptor.hpp>
 

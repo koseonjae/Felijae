@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Graphics/Model/Buffer.h>
-#include <Graphics/Model/Object.h>
+#include <Base/Object.h>
 
 #include <OpenGL/gl3.h>
 #include <glm/glm.hpp>

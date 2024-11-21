@@ -1,7 +1,7 @@
-#include <Graphics/Model/Scene.h>
-#include <Graphics/Model/Model.h>
-#include <Graphics/Model/Pipeline.h>
-#include <Graphics/Model/Program.h>
+#include "Engine/Model/Scene.h"
+#include "Engine/Model/Model.h"
+#include "Graphics/Model/Pipeline.h"
+#include "Graphics/Model/Program.h"
 
 void Scene::setLight(const Light& light) {
   static_assert(std::is_trivially_copyable_v<Light> && "Light must be trivially copyable");
