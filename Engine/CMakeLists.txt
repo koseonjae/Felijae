@@ -1,5 +1,7 @@
 add_library(Engine STATIC
     src/OpenGL/OpenGLPipeline.cpp
+    src/OpenGL/OpenGLRasterizer.cpp
+    src/OpenGL/OpenGLOutputMerger.cpp
     src/OpenGL/OpenGLProgram.cpp
     src/OpenGL/OpenGLModel.cpp
     src/OpenGL/OpenGLBuffer.cpp
@@ -19,6 +21,8 @@ add_library(Engine STATIC
     src/Utility/ThreadChecker.cpp
 
     include/OpenGL/OpenGLPipeline.h
+    include/OpenGL/OpenGLRasterizer.h
+    include/OpenGL/OpenGLOutputMerger.h
     include/OpenGL/OpenGLProgram.h
     include/OpenGL/OpenGLModel.h
     include/OpenGL/OpenGLBuffer.h

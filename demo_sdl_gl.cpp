@@ -4,6 +4,8 @@
 #include <OpenGL/OpenGLTexture.h>
 #include <OpenGL/OpenGLBuffer.h>
 #include <OpenGL/OpenGLRenderPass.h>
+#include <OpenGL/OpenGLRasterizer.h>
+#include <OpenGL/OpenGLOutputMerger.h>
 #include "Model/Triangle.h"
 #include <Model/Light.h>
 #include <Model/Scene.h>
@@ -55,21 +57,26 @@ int main() {
     return 0;
   }, window);
 
-  // RASTERIZER
   int width, height;
   SDL_GL_GetDrawableSize(window, &width, &height);
-  pipeline->getRasterizer().getViewport().setViewport(0, 0, width, height);
 
+  // RASTERIZER
+  {
+    auto rasterizer = std::make_shared<OpenGLRasterizer>();
+    pipeline->setRasterizer(std::move(rasterizer));
+    pipeline->getRasterizer()->getViewport().setViewport(0, 0, width, height);
+  }
 
   // OUTPUT MERGER
   {
-    pipeline->getOutputMerger().getDepthTest().setEnable(true);
-    pipeline->getOutputMerger().getDepthTest().setDepthFunc(DepthTest::DepthTestFunc::Less);
-
-    pipeline->getOutputMerger().getAlphaBlend().setEnable(true);
-    pipeline->getOutputMerger().getAlphaBlend().setFragmentBlendFunc(AlphaBlend::BlendFunc::SRC_ALPHA);
-    pipeline->getOutputMerger().getAlphaBlend().setPixelBlendFunc(AlphaBlend::BlendFunc::ONE_MINUS_SRC_ALPHA);
-    pipeline->getOutputMerger().getAlphaBlend().setBlendEquation(AlphaBlend::BlendEquation::Add);
+    auto outputMerger = std::make_shared<OpenGLOutputMerger>();
+    outputMerger->getDepthTest().setEnable(true);
+    outputMerger->getDepthTest().setDepthFunc(DepthTest::DepthTestFunc::Less);
+    outputMerger->getAlphaBlend().setEnable(true);
+    outputMerger->getAlphaBlend().setFragmentBlendFunc(AlphaBlend::BlendFunc::SRC_ALPHA);
+    outputMerger->getAlphaBlend().setPixelBlendFunc(AlphaBlend::BlendFunc::ONE_MINUS_SRC_ALPHA);
+    outputMerger->getAlphaBlend().setBlendEquation(AlphaBlend::BlendEquation::Add);
+    pipeline->setOutputMerger(std::move(outputMerger));
   }
 
   Scene scene;

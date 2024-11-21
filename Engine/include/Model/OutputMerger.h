@@ -1,5 +1,7 @@
 #pragma once
 
+#include <tuple>
+
 class DepthTest final {
  public:
   enum class DepthTestFunc {
@@ -52,10 +54,14 @@ class AlphaBlend final {
 };
 static_assert(std::is_trivially_copyable_v<AlphaBlend>);
 
-class OutputMerger final {
+class OutputMerger {
   // depth test
   // alpha blending
  public:
+  virtual void bind() = 0;
+
+ public:
+  virtual ~OutputMerger() = default;
   void setDepthTest(const DepthTest& depthTest) { m_depthTest = depthTest; }
   void setAlphaBlend(const AlphaBlend& alphaBlend) { m_alphaBlend = alphaBlend; }
 
@@ -68,4 +74,3 @@ class OutputMerger final {
   DepthTest m_depthTest;
   AlphaBlend m_alphaBlend;
 };
-static_assert(std::is_trivially_copyable_v<OutputMerger>);

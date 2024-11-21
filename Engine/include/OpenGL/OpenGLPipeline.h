@@ -9,9 +9,6 @@ class OpenGLPipeline : public Pipeline {
   void render() override;
 
  private:
-  void _bindRasterizer();
-  void _bindCulling();
-  void _bindViewport();
 
   void _bindOutputMerger();
   void _bindDepthTest();

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <tuple>
+
 class Culling final {
  public:
   enum class CullMode {
@@ -50,7 +52,7 @@ class Viewport final {
 };
 static_assert(std::is_trivially_copyable_v<Viewport>);
 
-class Rasterizer final {
+class Rasterizer {
   // primitive assembly
   // clipping
   // perspective division
@@ -59,6 +61,10 @@ class Rasterizer final {
   // scan conversion
 
  public:
+  virtual void bind() = 0;
+
+ public:
+  virtual ~Rasterizer() = default;
   void setCulling(const Culling& culling) { m_culling = culling; };
   void setViewport(const Viewport& viewPort) { m_viewport = viewPort; }
 
@@ -71,4 +77,3 @@ class Rasterizer final {
   Culling m_culling;
   Viewport m_viewport;
 };
-static_assert(std::is_trivially_copyable_v<Rasterizer>);
