@@ -1,7 +1,7 @@
 #include <Base/Object/Object.h>
 #include <tiny_obj_loader.h>
 
-using namespace goala;
+namespace goala {
 
 Object loadObj(const File& file) {
   tinyobj::ObjReader reader;
@@ -40,3 +40,5 @@ Object loadObj(const File& file) {
 
   return result;
 }
+
+} // namespace goala
