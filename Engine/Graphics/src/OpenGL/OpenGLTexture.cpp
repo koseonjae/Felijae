@@ -19,7 +19,7 @@ void OpenGLTexture::_initIfNeeded() {
   m_initializer = {};
 }
 
-void OpenGLTexture::initialize(std::string_view path, bool lazyLoading) {
+void OpenGLTexture::initialize(File path, bool lazyLoading) {
   // todo: imageData쪽에 path를 넣어서 나중에 로딩되도록 할 수 있게 해야하나?
   auto image = ImageLoader::load(path);
   assert(image.format == ImageFormat::RGB);

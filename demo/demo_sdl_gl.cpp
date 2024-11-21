@@ -9,7 +9,7 @@
 #include <Base/Object/Triangle.h>
 #include <Engine/Model/Light.h>
 #include <Engine/Model/Scene.h>
-#include <Base/Utility/FileReader.h>
+#include <Base/File/File.h>
 
 #include <SDL2/SDL.h>
 #include <glm/glm.hpp>
@@ -19,6 +19,8 @@
 using namespace std;
 
 int main() {
+  File::registerPath("../../demo/asset", "asset://");
+
   SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
   SDL_Init(SDL_INIT_VIDEO);
   SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
@@ -102,8 +104,8 @@ int main() {
 
   // Program
   {
-    auto vs = readFile("../asset/shader/lighting.vert");
-    auto fs = readFile("../asset/shader/lighting.frag");
+    auto vs = File("asset://shader/lighting.vert").read();
+    auto fs = File("asset://shader/lighting.frag").read();
     auto program = std::make_shared<OpenGLProgram>();
     program->initialize(vs, fs);
 
@@ -111,7 +113,7 @@ int main() {
     program->setUniform("uEmitLight", emitLight);
 
     auto texture = std::make_shared<OpenGLTexture>();
-    texture->initialize("../asset/model/suzanne/uvmap.jpeg");
+    texture->initialize(File("asset://model/suzanne/uvmap.jpeg"));
     program->setTexture("uTexture", texture);
 
     pipeline->setProgram(program);
@@ -119,7 +121,7 @@ int main() {
 
   // Buffer
   {
-    auto obj = loadObj("../asset/model/suzanne/suzanne.obj");
+    auto obj = loadObj(File("asset://model/suzanne/suzanne.obj"));
     auto buffer = std::make_shared<OpenGLBuffer>();
     buffer->initialize(obj);
     pipeline->setBuffer(std::move(buffer));

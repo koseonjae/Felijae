@@ -1,5 +1,7 @@
 #pragma once
 
+#include <Base/File/File.h>
+
 #include <glm/glm.hpp>
 #include <vector>
 
@@ -14,4 +16,4 @@ struct Object {
   std::vector<unsigned int> indices;
 };
 
-Object loadObj(std::string_view path);
+Object loadObj(const File& file);

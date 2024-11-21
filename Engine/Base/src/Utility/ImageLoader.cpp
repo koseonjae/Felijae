@@ -6,7 +6,7 @@
 
 #include <cassert>
 
-ImageData ImageLoader::load(std::string_view path) {
+ImageData ImageLoader::load(File file) {
   ImageData imageData{};
 
   // opengl의 텍스쳐 좌표   : 좌하단이 0,0
@@ -15,6 +15,7 @@ ImageData ImageLoader::load(std::string_view path) {
   stbi_set_flip_vertically_on_load(true);
 
   int nChannels = -1;
+  auto path = file.getPath();
   unsigned char* data = stbi_load(path.data(), &imageData.width, &imageData.height, &nChannels, 0);
   assert(data != nullptr && "Failed to load imageData");
   assert(nChannels == 3);

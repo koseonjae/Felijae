@@ -1,10 +1,10 @@
 #include <Base/Object/Object.h>
 #include <tiny_obj_loader.h>
 
-Object loadObj(std::string_view path) {
+Object loadObj(const File& file) {
   tinyobj::ObjReader reader;
   tinyobj::ObjReaderConfig config{};
-  bool success = reader.ParseFromFile(path.data(), config);
+  bool success = reader.ParseFromFile(file.getPath(), config);
   assert(success && "Failed to parse obj.");
 
   auto& attributes = reader.GetAttrib();

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Base/ImageData.h>
+#include <Base/File/File.h>
 
 #include <string_view>
 
@@ -10,7 +11,7 @@ class Texture {
  public:
   virtual ~Texture() = default;
 
-  virtual void initialize(std::string_view path, bool lazyLoading) = 0;
+  virtual void initialize(File path, bool lazyLoading) = 0;
 
   virtual void initialize(int width, int height, ImageFormat format, bool lazyLoading) = 0;
 
