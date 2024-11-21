@@ -13,6 +13,8 @@
 
 #include <iostream>
 
+using namespace goala;
+
 namespace {
 const std::vector<int> viewport = {640, 480};
 
@@ -22,6 +24,8 @@ inline NS::String* getNSString(std::string_view str) {
 } // namespace
 
 int main(int argc, char** argv) {
+  File::registerPath("../../demo/asset", "asset://");
+
   NS::Error* err = nil;
 
   SDL_SetHint(SDL_HINT_RENDER_DRIVER, "metal");
@@ -38,8 +42,8 @@ int main(int argc, char** argv) {
   Object obj = Triangle::load();
   MetalBuffer vertexBuffer(&device, obj);
 
-  MetalShader vertexFunc(&device, readFile("../asset/shader/metal_triangle.vert"), ShaderType::VERTEX);
-  MetalShader fragmentFunc(&device, readFile("../asset/shader/metal_triangle.frag"), ShaderType::FRAGMENT);
+  MetalShader vertexFunc(&device, readFile(File("asset://shader/metal_triangle.vert").getPath()), ShaderType::VERTEX);
+  MetalShader fragmentFunc(&device, readFile(File("asset://shader/metal_triangle.frag").getPath()), ShaderType::FRAGMENT);
 
   auto pipelineDesc = MetalRef(MTL::RenderPipelineDescriptor::alloc()->init());
   pipelineDesc->setVertexFunction(vertexFunc.get());
