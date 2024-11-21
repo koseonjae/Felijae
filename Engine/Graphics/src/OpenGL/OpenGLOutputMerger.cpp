@@ -3,6 +3,8 @@
 
 #include <cassert>
 
+using namespace goala;
+
 void OpenGLOutputMerger::bind() {
   _bindDepthTest();
   _bindAlphaBlending();

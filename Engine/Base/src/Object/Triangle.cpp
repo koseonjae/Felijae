@@ -1,5 +1,7 @@
 #include <Base/Object/Triangle.h>
 
+using namespace goala;
+
 Object Triangle::load() {
   Object obj{};
   Vertex v{};

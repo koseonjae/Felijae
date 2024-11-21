@@ -4,6 +4,8 @@
 
 #include <Metal/MTLVertexDescriptor.hpp>
 
+using namespace goala;
+
 MetalBuffer::MetalBuffer(MetalDevice* device, const Object& obj) {
   auto resourceOption = MTL::ResourceCPUCacheModeDefaultCache;
 

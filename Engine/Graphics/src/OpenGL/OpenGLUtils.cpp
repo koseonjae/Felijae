@@ -2,6 +2,8 @@
 
 #include <cassert>
 
+using namespace goala;
+
 GLuint getGLFormat(ImageFormat format) {
   switch (format) {
     case ImageFormat::RGB:

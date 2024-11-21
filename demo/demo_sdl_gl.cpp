@@ -17,7 +17,7 @@
 
 #include <memory>
 
-using namespace std;
+using namespace goala;
 
 int main() {
   File::registerPath("../../demo/asset", "asset://");
@@ -61,7 +61,7 @@ int main() {
   int width, height;
   SDL_GL_GetDrawableSize(window, &width, &height);
 
-  auto pipeline = make_shared<OpenGLPipeline>();
+  auto pipeline = std::make_shared<OpenGLPipeline>();
 
   // Rasterizer
   {

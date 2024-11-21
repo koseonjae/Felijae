@@ -3,6 +3,8 @@
 
 #include <cassert>
 
+using namespace goala;
+
 void OpenGLRasterizer::bind() {
   _bindCulling();
   _bindViewport();

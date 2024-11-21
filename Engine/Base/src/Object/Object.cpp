@@ -1,6 +1,8 @@
 #include <Base/Object/Object.h>
 #include <tiny_obj_loader.h>
 
+using namespace goala;
+
 Object loadObj(const File& file) {
   tinyobj::ObjReader reader;
   tinyobj::ObjReaderConfig config{};

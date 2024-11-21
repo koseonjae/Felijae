@@ -4,6 +4,8 @@
 #include <Graphics/Model/Pipeline.h>
 #include <Graphics/Model/Program.h>
 
+using namespace goala;
+
 void Scene::update() { m_renderer->update(); }
 
 void Scene::render() { m_renderer->render(); }

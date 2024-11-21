@@ -2,6 +2,8 @@
 
 #include <cassert>
 
+using namespace goala;
+
 OpenGLFrameBuffer::~OpenGLFrameBuffer() {
   if (!m_initialized) return;
   glDeleteFramebuffers(1, &m_handle);

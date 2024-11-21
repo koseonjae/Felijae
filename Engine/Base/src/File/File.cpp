@@ -4,6 +4,8 @@
 #include <cassert>
 #include <filesystem>
 
+using namespace goala;
+
 std::unordered_map<std::string, std::string> File::m_assetPaths{};
 
 File::File(std::string_view path) : m_path(path.data()) {}

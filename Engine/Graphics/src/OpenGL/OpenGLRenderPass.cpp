@@ -3,6 +3,8 @@
 
 #include <cassert>
 
+using namespace goala;
+
 void OpenGLRenderPass::_updateFrameBuffers() {
   if (!m_dirty)
     return;

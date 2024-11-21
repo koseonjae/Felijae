@@ -3,6 +3,8 @@
 #include <Graphics/Model/Pipeline.h>
 #include <Graphics/Model/Program.h>
 
+using namespace goala;
+
 void ForwardRenderer::update() {
   auto lightColor = m_scene->getLight().getLightColor();
   auto lightDir = m_scene->getLight().getLightDirection();

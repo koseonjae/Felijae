@@ -1,5 +1,7 @@
 #include <Graphics/OpenGL/OpenGLPipeline.h>
 
+using namespace goala;
+
 void OpenGLPipeline::update() {}
 
 void OpenGLPipeline::render() {

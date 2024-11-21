@@ -3,6 +3,8 @@
 #include <fstream>
 #include <iostream>
 
+using namespace goala;
+
 std::string readFile(const std::filesystem::path& filePath) {
   std::ifstream fileStream(filePath, std::ios::in | std::ios::binary);
   if (!fileStream) {

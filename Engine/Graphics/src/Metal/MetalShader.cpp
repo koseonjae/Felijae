@@ -1,5 +1,7 @@
 #include <Graphics/Metal/MetalShader.h>
 
+using namespace goala;
+
 namespace {
 inline NS::String* getNSString(std::string_view str) {
   return NS::String::string(str.data(), NS::ASCIIStringEncoding);

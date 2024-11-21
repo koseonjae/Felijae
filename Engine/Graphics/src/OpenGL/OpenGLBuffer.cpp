@@ -1,5 +1,7 @@
 #include <Graphics/OpenGL/OpenGLBuffer.h>
 
+using namespace goala;
+
 void OpenGLBuffer::initialize(const Object& obj) {
   release();
 

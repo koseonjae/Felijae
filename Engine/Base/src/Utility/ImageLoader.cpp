@@ -6,6 +6,8 @@
 
 #include <cassert>
 
+using namespace goala;
+
 ImageData ImageLoader::load(File file) {
   ImageData imageData{};
 

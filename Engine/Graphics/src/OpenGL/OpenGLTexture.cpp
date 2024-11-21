@@ -4,6 +4,8 @@
 
 #include <cassert>
 
+using namespace goala;
+
 OpenGLTexture::~OpenGLTexture() {
   if (!m_initialized) return;
   glDeleteTextures(1, &m_textureId);
