@@ -60,7 +60,7 @@ int main() {
 
   auto pipeline = make_shared<OpenGLPipeline>();
 
-  // RASTERIZER
+  // Rasterizer
   {
     Culling culling = {
         .enable = true,
@@ -81,7 +81,7 @@ int main() {
     pipeline->setRasterizer(std::move(rasterizer));
   }
 
-  // OUTPUT MERGER
+  // Output Merger
   {
     DepthTest depthTest = {
         .enable = true,
@@ -100,42 +100,12 @@ int main() {
     pipeline->setOutputMerger(std::move(outputMerger));
   }
 
-  Scene scene;
-
-  // Light
-  {
-    Light light{};
-    light.setLightColor({1.0f, 1.0f, 1.0f});
-    light.setLightDirection({0.0f, 0.0f, 1.0f});
-    scene.setLight(light);
-  }
-
-  // Camera
-  {
-    glm::vec3 eye = glm::vec3(3.0, 3.0, 3.0);
-    glm::vec3 at = glm::vec3(0.0, 0.0, 0.0);
-    glm::vec3 up = glm::vec3(0.0, 1.0, 0.0);
-    auto fovy = glm::radians<float>(90);
-    auto aspectRatio = 1.f; // frustum width == height
-    float n = 0.1f; // note: 0이면 투영행렬 정의상 분모가 0이되어 미정의 동작,
-    //                 0.01, 0.001등 너무 작으면 정밀도가 낮아져 가까운 물체들에 대해 z fighting 발생할 수 있음
-    //                 => depth bit 조절 필요
-    float f = 100.0f;
-    Camera camera{};
-    camera.setCamera(eye, at, up);
-    camera.setProjection(fovy, aspectRatio, n, f);
-    scene.setCamera(camera);
-  }
-
   // Program
   {
-    auto worldMat = glm::mat4(1.0);
-
     auto vs = readFile("../asset/shader/lighting.vert");
     auto fs = readFile("../asset/shader/lighting.frag");
     auto program = std::make_shared<OpenGLProgram>();
     program->initialize(vs, fs);
-    program->setUniform("uWorldMat", worldMat);
 
     glm::vec3 emitLight{0.0f, 0.0f, 0.0f};
     program->setUniform("uEmitLight", emitLight);
@@ -147,14 +117,13 @@ int main() {
     pipeline->setProgram(program);
   }
 
-  auto obj = loadObj("../asset/model/suzanne/suzanne.obj");
-  auto buffer = std::make_shared<OpenGLBuffer>();
-  buffer->initialize(obj);
-  pipeline->setBuffer(std::move(buffer));
-
-  auto model = std::make_shared<OpenGLModel>();
-  model->setPipeline(pipeline);
-  scene.addModel(std::move(model));
+  // Buffer
+  {
+    auto obj = loadObj("../asset/model/suzanne/suzanne.obj");
+    auto buffer = std::make_shared<OpenGLBuffer>();
+    buffer->initialize(obj);
+    pipeline->setBuffer(std::move(buffer));
+  }
 
   // Render Pass
   {
@@ -173,6 +142,42 @@ int main() {
     auto renderPass = std::make_shared<OpenGLRenderPass>();
     renderPass->setAttachments(std::move(attachments));
     pipeline->setRenderPass(std::move(renderPass));
+  }
+
+  // Scene
+  Scene scene;
+
+  // Light
+  {
+    Light light{};
+    light.setLightColor({1.0f, 1.0f, 1.0f});
+    light.setLightDirection({0.0f, 0.0f, 1.0f});
+    scene.setLight(light);
+  }
+
+  // Camera
+  {
+    // note: 0이면 투영행렬 정의상 분모가 0이되어 미정의 동작,
+    // 0.01, 0.001등 너무 작으면 정밀도가 낮아져 가까운 물체들에 대해 z fighting 발생할 수 있음
+    // => depth bit 조절 필요
+    glm::vec3 eye = glm::vec3(3.0, 3.0, 3.0);
+    glm::vec3 at = glm::vec3(0.0, 0.0, 0.0);
+    glm::vec3 up = glm::vec3(0.0, 1.0, 0.0);
+    auto fovy = glm::radians<float>(90);
+    auto aspectRatio = 1.f; // frustum width == height
+    float n = 0.1f;
+    float f = 100.0f;
+    Camera camera{};
+    camera.setCamera(eye, at, up);
+    camera.setProjection(fovy, aspectRatio, n, f);
+    scene.setCamera(camera);
+  }
+
+  // Model
+  {
+    auto model = std::make_shared<OpenGLModel>();
+    model->setPipeline(pipeline);
+    scene.addModel(std::move(model));
   }
 
   bool running = true;

@@ -32,7 +32,9 @@ void Scene::update() {
   };
 
   for (auto& model : m_models) {
-    updateProgram(model->getPipeline()->getProgram());
+    auto* program = model->getPipeline()->getProgram();
+    updateProgram(program);
+    program->setUniform("uWorldMat", model->calculateWorldMat());
     model->update();
   }
 }
