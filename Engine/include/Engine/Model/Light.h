@@ -18,6 +18,6 @@ class Light final {
   };
 
  private:
-  glm::vec3 m_lightColor;
-  glm::vec3 m_lightDir;
+  glm::vec3 m_lightColor{};
+  glm::vec3 m_lightDir{};
 };

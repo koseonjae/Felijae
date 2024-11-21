@@ -1,7 +1,16 @@
 #include <Engine/Model/Scene.h>
 #include <Engine/Model/Model.h>
+#include <Engine/Renderer/Renderer.h>
 #include <Graphics/Model/Pipeline.h>
 #include <Graphics/Model/Program.h>
+
+void Scene::update() {
+  m_renderer->update();
+}
+
+void Scene::render() {
+  m_renderer->render();
+}
 
 void Scene::setLight(const Light& light) {
   static_assert(std::is_trivially_copyable_v<Light> && "Light must be trivially copyable");
@@ -13,34 +22,27 @@ void Scene::setCamera(const Camera& camera) {
   m_camera = camera;
 }
 
+void Scene::setRenderer(std::unique_ptr<Renderer> renderer) {
+  m_renderer = std::move(renderer);
+  m_renderer->setScene(this);
+}
+
 void Scene::addModel(std::shared_ptr<Model> model) {
   m_models.push_back(std::move(model));
 }
 
-void Scene::update() {
-  auto lightColor = m_light.getLightColor();
-  auto lightDir = m_light.getLightDirection();
-  auto view = m_camera.getViewMatrix();
-  auto proj = m_camera.getProjMatrix();
-  auto eye = m_camera.getEye();
-  auto updateProgram = [&](Program* program) {
-    program->setUniform("uLightDir", lightDir);
-    program->setUniform("uLightColor", lightColor);
-    program->setUniform("uViewMat", view);
-    program->setUniform("uProjMat", proj);
-    program->setUniform("uCameraPosition", eye);
-  };
-
-  for (auto& model : m_models) {
-    auto* program = model->getPipeline()->getProgram();
-    updateProgram(program);
-    program->setUniform("uWorldMat", model->calculateWorldMat());
-    model->update();
-  }
+const Light& Scene::getLight() const {
+  return m_light;
 }
 
-void Scene::render() {
-  for (auto& model : m_models) {
-    model->render();
-  }
+const Camera& Scene::getCamera() const {
+  return m_camera;
+}
+
+const std::vector<std::shared_ptr<Model>>& Scene::getModels() const {
+  return m_models;
+}
+
+std::vector<std::shared_ptr<Model>>& Scene::getModels() {
+  return m_models;
 }

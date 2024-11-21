@@ -9,6 +9,7 @@
 #include <Base/Object/Triangle.h>
 #include <Engine/Model/Light.h>
 #include <Engine/Model/Scene.h>
+#include <Engine/Renderer/ForwardRenderer.h>
 #include <Base/File/File.h>
 
 #include <SDL2/SDL.h>
@@ -148,6 +149,7 @@ int main() {
 
   // Scene
   Scene scene;
+  scene.setRenderer(std::make_unique<ForwardRenderer>());
 
   // Light
   {

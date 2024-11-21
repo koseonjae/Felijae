@@ -10,7 +10,6 @@ add_library(Engine STATIC
     src/Model/Camera.cpp
     src/Model/Model.cpp
     src/Model/Scene.cpp
-    src/Renderer/Renderer.cpp
     src/Renderer/ForwardRenderer.cpp
     src/Engine.cpp)
 

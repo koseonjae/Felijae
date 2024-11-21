@@ -16,7 +16,7 @@ class Camera final {
   float m_far = 0.0f;
   float m_fovy = 0.0f;
   float m_aspectRatio = 0.0f; // width / height
-  glm::vec3 m_eye;
-  glm::vec3 m_at;
-  glm::vec3 m_up;
+  glm::vec3 m_eye{};
+  glm::vec3 m_at{};
+  glm::vec3 m_up{};
 };
