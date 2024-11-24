@@ -8,7 +8,7 @@
 
 namespace goala {
 
-class OpenGLTexture final : public Texture, std::enable_shared_from_this<OpenGLTexture> {
+class OpenGLTexture final : public Texture, public std::enable_shared_from_this<OpenGLTexture> {
  public:
   OpenGLTexture() = default;
   ~OpenGLTexture() override;

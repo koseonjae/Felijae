@@ -45,9 +45,13 @@ void OpenGLTexture::initialize(ImageData imageData, bool lazyLoading) {
   assert(!m_initializer && "Texture is initialized twice");
   assert(!m_externalHandleInitialized && "Already initialized with external handle");
 
-  m_initializer = [=, image = std::move(imageData)]() {
-    assert(!m_initialized);
-
+  auto weak = weak_from_this();
+  m_initializer = [weak, image = std::move(imageData)]() {
+    auto self = weak.lock();
+    if (!self)
+      return;
+    assert(!self->m_initialized);
+    
     GLuint format = getGLFormat(image.format);
     auto data = image.pixel.empty() ? nullptr : image.pixel.data();
 
@@ -63,8 +67,8 @@ void OpenGLTexture::initialize(ImageData imageData, bool lazyLoading) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    m_handle = textureId;
-    m_initialized = true;
+    self->m_handle = textureId;
+    self->m_initialized = true;
   };
 
   if (!lazyLoading) _initIfNeeded();
