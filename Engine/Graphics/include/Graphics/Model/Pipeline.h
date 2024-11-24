@@ -19,21 +19,11 @@ class Pipeline {
   virtual void render() = 0;
 
  public:
-  void setBuffer(std::shared_ptr<Buffer> buffer) {
-    m_buffer = std::move(buffer);
-  }
-  void setProgram(std::shared_ptr<Program> program) {
-    m_program = std::move(program);
-  }
-  void setRenderPass(std::shared_ptr<RenderPass> renderPass) {
-    m_renderPass = std::move(renderPass);
-  }
-  void setRasterizer(std::shared_ptr<Rasterizer> rasterizer) {
-    m_rasterizer = std::move(rasterizer);
-  }
-  void setOutputMerger(std::shared_ptr<OutputMerger> outputMerger) {
-    m_outputMerger = std::move(outputMerger);
-  }
+  void setBuffer(std::shared_ptr<Buffer> buffer) { m_buffer = std::move(buffer); }
+  void setProgram(std::shared_ptr<Program> program) { m_program = std::move(program); }
+  void setRenderPass(std::shared_ptr<RenderPass> renderPass) { m_renderPass = std::move(renderPass); }
+  void setRasterizer(std::shared_ptr<Rasterizer> rasterizer) { m_rasterizer = std::move(rasterizer); }
+  void setOutputMerger(std::shared_ptr<OutputMerger> outputMerger) { m_outputMerger = std::move(outputMerger); }
 
   const Buffer* getBuffer() const { return m_buffer.get(); }
   Buffer* getBuffer() { return m_buffer.get(); }

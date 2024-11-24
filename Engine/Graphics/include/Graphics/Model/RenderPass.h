@@ -59,9 +59,7 @@ class RenderPass {
     m_dirty = true;
   }
 
-  const std::vector<Attachment>& getAttachments() const {
-    return m_attachments;
-  }
+  const std::vector<Attachment>& getAttachments() const { return m_attachments; }
 
  protected:
   std::vector<Attachment> m_attachments;

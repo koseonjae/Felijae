@@ -22,9 +22,7 @@ class Model {
 
   void render();
 
-  void setPipeline(std::shared_ptr<Pipeline> pipeline) {
-    m_pipeline = std::move(pipeline);
-  }
+  void setPipeline(std::shared_ptr<Pipeline> pipeline) {m_pipeline = std::move(pipeline);}
 
   const Pipeline* getPipeline() const { return m_pipeline.get(); }
   Pipeline* getPipeline() { return m_pipeline.get(); }
