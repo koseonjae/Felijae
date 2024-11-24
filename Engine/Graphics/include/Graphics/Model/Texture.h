@@ -5,8 +5,15 @@
 
 #include <cstdint>
 #include <string_view>
+#include <variant>
+
+namespace MTL {
+class Texture;
+}
 
 namespace goala {
+
+using TextureHandle = std::variant<uint32_t, MTL::Texture*>;
 
 class Texture {
  public:
@@ -18,9 +25,17 @@ class Texture {
 
   virtual void initialize(ImageData imageData, bool lazyLoading) = 0;
 
+  virtual void initialize(void* externalHandle) = 0;
+
   virtual void bind() = 0;
 
-  virtual uint32_t getHandle() const = 0;
+  template<typename T>
+  T getHandle() const {
+    return std::get<T>(m_handle);
+  }
+
+ protected:
+  TextureHandle m_handle{};
 };
 
 } // namespace goala

@@ -7,12 +7,14 @@
 using namespace goala;
 
 OpenGLTexture::~OpenGLTexture() {
-  if (!m_initialized) return;
+  if (!m_initialized)
+    return;
   glDeleteTextures(1, &m_textureId);
 }
 
 void OpenGLTexture::_initIfNeeded() {
-  if (m_initialized) return;
+  if (m_initialized)
+    return;
   if (!m_initializer) assert(false && "Texture is not initialized");
   m_initializer();
   m_initializer = {};
@@ -25,8 +27,7 @@ void OpenGLTexture::initialize(File path, bool lazyLoading) {
   initialize(image, lazyLoading);
 }
 
-void OpenGLTexture::initialize(int width, int height, ImageFormat format,
-                               bool lazyLoading) {
+void OpenGLTexture::initialize(int width, int height, ImageFormat format, bool lazyLoading) {
   ImageData image{
     .pixel = {},
     .width = width,
@@ -63,9 +64,11 @@ void OpenGLTexture::initialize(ImageData imageData, bool lazyLoading) {
   if (!lazyLoading) _initIfNeeded();
 }
 
+void OpenGLTexture::initialize(void* externalHandle) {
+  assert(false && "to be supported");
+}
+
 void OpenGLTexture::bind() {
   _initIfNeeded();
   glBindTexture(GL_TEXTURE_2D, m_textureId);
 }
-
-uint32_t OpenGLTexture::getHandle() const { return m_textureId; }

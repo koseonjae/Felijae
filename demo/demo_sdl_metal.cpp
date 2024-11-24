@@ -5,7 +5,9 @@
 #include <Graphics/Metal/MetalOutputMerger.h>
 #include <Graphics/Metal/MetalPipeline.h>
 #include <Graphics/Metal/MetalRasterizer.h>
+#include <Graphics/Metal/MetalRenderPass.h>
 #include <Graphics/Metal/MetalShader.h>
+#include <Graphics/Metal/MetalTexture.h>
 #include <Graphics/Utility/ImageFormatUtil.h>
 #include <Graphics/Utility/MetalRef.h>
 
@@ -92,9 +94,7 @@ int main(int argc, char** argv) {
   Object obj = Triangle::load();
   auto vertexBuffer = std::make_shared<MetalBuffer>(device.get(), obj);
   metalPipelineDesc.buffer = vertexBuffer;
-
   metalPipelineDesc.format = getImageFormat(layer->pixelFormat());
-
   metalPipeline->initialize(metalPipelineDesc);
 
   auto queue = MetalRef(device->getMTLDevice()->newCommandQueue());
@@ -113,19 +113,25 @@ int main(int argc, char** argv) {
     }
 
     auto drawable = MetalRef(layer->nextDrawable());
+    auto texture = std::make_shared<MetalTexture>();
+    texture->initialize((void*) drawable->texture());
 
-    auto pass = MetalRef(MTL::RenderPassDescriptor::renderPassDescriptor());
-
-    auto colorAttachment = pass->colorAttachments()->object(0);
-    colorAttachment->setLoadAction(MTL::LoadAction::LoadActionClear);
-    colorAttachment->setStoreAction(MTL::StoreAction::StoreActionStore);
-    colorAttachment->setClearColor(MTL::ClearColor(0.0, 0.0, 1.0, 1.0));
-    colorAttachment->setTexture(drawable->texture());
+    auto renderPass = std::make_shared<MetalRenderPass>();
+    std::vector<Attachment> attachments;
+    attachments.emplace_back(Attachment{
+      .type = AttachmentType::Color,
+      .loadFunc = LoadFunc::Clear,
+      .storeFunc = StoreFunc::Store,
+      .clear = ClearColor{1.0f, 0.0f, 0.0f, 1.0f},
+      .texture = std::move(texture),
+    });
+    renderPass->setAttachments(std::move(attachments));
+    metalPipeline->setRenderPass(renderPass);
 
     auto cmdBuf = MetalRef(queue->commandBuffer());
 
     // encoding
-    auto encoder = MetalRef(cmdBuf->renderCommandEncoder(pass.get()));
+    auto encoder = MetalRef(cmdBuf->renderCommandEncoder(renderPass->getPass()));
     encoder->setRenderPipelineState(metalPipeline->getPipeline());
     encoder->setVertexBuffer(vertexBuffer->getVertexHandle(), 0, AAPLVertexInputIndexVertices);
     encoder->drawIndexedPrimitives(MTL::PrimitiveType::PrimitiveTypeTriangle,
