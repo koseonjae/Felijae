@@ -9,7 +9,8 @@ using namespace goala;
 OpenGLTexture::~OpenGLTexture() {
   if (!m_initialized)
     return;
-  glDeleteTextures(1, &m_textureId);
+  auto handle = getHandle<GLuint>();
+  glDeleteTextures(1, &handle);
 }
 
 void OpenGLTexture::_initIfNeeded() {
@@ -57,7 +58,7 @@ void OpenGLTexture::initialize(ImageData imageData, bool lazyLoading) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    m_textureId = textureId;
+    m_handle = textureId;
     m_initialized = true;
   };
 
@@ -66,5 +67,6 @@ void OpenGLTexture::initialize(ImageData imageData, bool lazyLoading) {
 
 void OpenGLTexture::bind() {
   _initIfNeeded();
-  glBindTexture(GL_TEXTURE_2D, m_textureId);
+  glBindTexture(GL_TEXTURE_2D, getHandle<GLuint>());
+  static_assert(std::is_same<GLuint, uint32_t>::value, "GLuint is not the same as uint32_t");
 }

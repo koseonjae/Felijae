@@ -31,7 +31,6 @@ class OpenGLTexture final : public Texture, std::enable_shared_from_this<OpenGLT
 
  private:
   bool m_initialized = false;
-  GLuint m_textureId = 0;
   std::function<void()> m_initializer;
 };
 
