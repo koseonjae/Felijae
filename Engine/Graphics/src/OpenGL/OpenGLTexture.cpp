@@ -7,6 +7,8 @@
 using namespace goala;
 
 OpenGLTexture::~OpenGLTexture() {
+  if (m_externalHandleInitialized)
+    return;
   if (!m_initialized)
     return;
   auto handle = getHandle<GLuint>();
@@ -14,6 +16,8 @@ OpenGLTexture::~OpenGLTexture() {
 }
 
 void OpenGLTexture::_initIfNeeded() {
+  if (m_externalHandleInitialized)
+    return;
   if (m_initialized)
     return;
   if (!m_initializer) assert(false && "Texture is not initialized");
@@ -39,11 +43,12 @@ void OpenGLTexture::initialize(int width, int height, ImageFormat format, bool l
 
 void OpenGLTexture::initialize(ImageData imageData, bool lazyLoading) {
   assert(!m_initializer && "Texture is initialized twice");
+  assert(!m_externalHandleInitialized && "Already initialized with external handle");
 
   m_initializer = [=, image = std::move(imageData)]() {
     assert(!m_initialized);
 
-    GLint format = getGLFormat(image.format);
+    GLuint format = getGLFormat(image.format);
     auto data = image.pixel.empty() ? nullptr : image.pixel.data();
 
     GLuint textureId = 0;
@@ -68,5 +73,5 @@ void OpenGLTexture::initialize(ImageData imageData, bool lazyLoading) {
 void OpenGLTexture::bind() {
   _initIfNeeded();
   glBindTexture(GL_TEXTURE_2D, getHandle<GLuint>());
-  static_assert(std::is_same<GLuint, uint32_t>::value, "GLuint is not the same as uint32_t");
+  static_assert(std::is_same<GLuint, uint32_t>::value, "GLuint type is not same with uint32_t");
 }
