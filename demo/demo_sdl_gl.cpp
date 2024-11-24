@@ -148,15 +148,16 @@ int main() {
   }
 
   // Scene
-  Scene scene;
-  scene.setRenderer(std::make_unique<ForwardRenderer>());
+  auto scene = std::make_shared<Scene>();
+  auto renderer = std::make_unique<ForwardRenderer>();
+  renderer->setScene(scene);
 
   // Light
   {
     Light light{};
     light.setLightColor({1.0f, 1.0f, 1.0f});
     light.setLightDirection({0.0f, 0.0f, 1.0f});
-    scene.setLight(light);
+    scene->setLight(light);
   }
 
   // Camera
@@ -174,14 +175,14 @@ int main() {
     Camera camera{};
     camera.setCamera(eye, at, up);
     camera.setProjection(fovy, aspectRatio, n, f);
-    scene.setCamera(camera);
+    scene->setCamera(camera);
   }
 
   // Model
   {
     auto model = std::make_shared<Model>();
     model->setPipeline(pipeline);
-    scene.addModel(std::move(model));
+    scene->addModel(std::move(model));
   }
 
   bool running = true;
@@ -197,8 +198,8 @@ int main() {
       }
     }
 
-    scene.update();
-    scene.render();
+    renderer->update();
+    renderer->render();
 
     auto openGLRenderPass = dynamic_cast<OpenGLRenderPass*>(pipeline->getRenderPass());
     assert(openGLRenderPass != nullptr && "Failed to cast to openGLRenderPass");

@@ -1,7 +1,10 @@
-#include <Engine/Model/Model.h>
 #include <Engine/Renderer/ForwardRenderer.h>
+
 #include <Graphics/Model/Pipeline.h>
 #include <Graphics/Model/Program.h>
+
+#include <Engine/Model/Model.h>
+#include <Engine/Model/Scene.h>
 
 using namespace goala;
 

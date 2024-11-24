@@ -1,10 +1,10 @@
 #pragma once
 
-#include <Engine/Model/Scene.h>
-
 #include <memory>
 
 namespace goala {
+
+class Scene;
 
 class Renderer {
  public:
@@ -14,10 +14,10 @@ class Renderer {
 
   virtual void render() = 0;
 
-  void setScene(Scene* scene) { m_scene = scene; }
+  void setScene(std::shared_ptr<Scene> scene);
 
  protected:
-  Scene* m_scene = nullptr;
+  std::shared_ptr<Scene> m_scene;
 };
 
 } // namespace goala

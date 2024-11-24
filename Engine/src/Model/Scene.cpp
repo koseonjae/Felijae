@@ -1,14 +1,11 @@
-#include <Engine/Model/Model.h>
 #include <Engine/Model/Scene.h>
-#include <Engine/Renderer/Renderer.h>
+
 #include <Graphics/Model/Pipeline.h>
-#include <Graphics/Model/Program.h>
+
+#include <Engine/Model/Model.h>
+#include <Engine/Renderer/Renderer.h>
 
 using namespace goala;
-
-void Scene::update() { m_renderer->update(); }
-
-void Scene::render() { m_renderer->render(); }
 
 void Scene::setLight(const Light& light) {
   static_assert(std::is_trivially_copyable_v<Light> && "Light must be trivially copyable");
@@ -18,11 +15,6 @@ void Scene::setLight(const Light& light) {
 void Scene::setCamera(const Camera& camera) {
   static_assert(std::is_trivially_copyable_v<Camera> && "Camera must be trivially copyable");
   m_camera = camera;
-}
-
-void Scene::setRenderer(std::unique_ptr<Renderer> renderer) {
-  m_renderer = std::move(renderer);
-  m_renderer->setScene(this);
 }
 
 void Scene::addModel(std::shared_ptr<Model> model) {
