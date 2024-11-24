@@ -11,6 +11,9 @@ void MetalRenderPass::bind() {
 }
 
 void MetalRenderPass::_updateRenderPass() {
+  if (!m_dirty)
+    return;
+
   for (const auto& attachment : m_attachments) {
     assert(attachment.type != AttachmentType::Undefined && "AttachmentType is not defined");
     assert(attachment.loadFunc != LoadFunc::Undefined && "LoadFunc is not defined");

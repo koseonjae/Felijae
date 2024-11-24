@@ -6,6 +6,7 @@
 namespace MTL {
 class RenderPassDescriptor;
 }
+
 namespace goala {
 
 class MetalRenderPass : public RenderPass {

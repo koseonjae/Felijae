@@ -49,6 +49,7 @@ void MetalPipeline::initialize(const PipelineDescription& description) {
 }
 
 void MetalPipeline::update() {
+  m_renderPass->bind();
 }
 
 void MetalPipeline::render() {

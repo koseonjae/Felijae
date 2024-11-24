@@ -24,8 +24,6 @@ class OpenGLTexture final : public Texture, std::enable_shared_from_this<OpenGLT
 
   void initialize(ImageData imageData, bool lazyLoading = false) override;
 
-  void initialize(void* externalHandle) override;
-
   void bind() override;
 
  private:

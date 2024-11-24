@@ -64,10 +64,6 @@ void OpenGLTexture::initialize(ImageData imageData, bool lazyLoading) {
   if (!lazyLoading) _initIfNeeded();
 }
 
-void OpenGLTexture::initialize(void* externalHandle) {
-  assert(false && "to be supported");
-}
-
 void OpenGLTexture::bind() {
   _initIfNeeded();
   glBindTexture(GL_TEXTURE_2D, m_textureId);

@@ -97,6 +97,10 @@ int main(int argc, char** argv) {
   metalPipelineDesc.format = getImageFormat(layer->pixelFormat());
   metalPipeline->initialize(metalPipelineDesc);
 
+  // RenderPass
+  auto renderPass = std::make_shared<MetalRenderPass>();
+  metalPipeline->setRenderPass(renderPass);
+
   auto queue = MetalRef(device->getMTLDevice()->newCommandQueue());
 
   bool quit = false;
@@ -114,19 +118,20 @@ int main(int argc, char** argv) {
 
     auto drawable = MetalRef(layer->nextDrawable());
     auto texture = std::make_shared<MetalTexture>();
-    texture->initialize((void*) drawable->texture());
+    texture->initializeExternal(drawable->texture());
 
-    auto renderPass = std::make_shared<MetalRenderPass>();
     std::vector<Attachment> attachments;
     attachments.emplace_back(Attachment{
       .type = AttachmentType::Color,
       .loadFunc = LoadFunc::Clear,
       .storeFunc = StoreFunc::Store,
-      .clear = ClearColor{1.0f, 0.0f, 0.0f, 1.0f},
+      .clear = ClearColor{0.0f, 0.0f, 1.0f, 1.0f},
       .texture = std::move(texture),
     });
     renderPass->setAttachments(std::move(attachments));
-    metalPipeline->setRenderPass(renderPass);
+
+    metalPipeline->update();
+    metalPipeline->render();
 
     auto cmdBuf = MetalRef(queue->commandBuffer());
 

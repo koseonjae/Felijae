@@ -18,11 +18,6 @@ void MetalTexture::initialize(ImageData imageData, bool lazyLoading) {
   assert(false && "To be supported");
 }
 
-void MetalTexture::initialize(void* externalHandle) {
-  m_externalHandle = static_cast<MTL::Texture*>(externalHandle);
-  m_externalHandleInitialized;
-}
-
 void MetalTexture::bind() {
   assert(false && "To be supported");
 }

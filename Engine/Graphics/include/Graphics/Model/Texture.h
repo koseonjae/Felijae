@@ -25,7 +25,11 @@ class Texture {
 
   virtual void initialize(ImageData imageData, bool lazyLoading) = 0;
 
-  virtual void initialize(void* externalHandle) = 0;
+  template <typename T>
+  void initializeExternal(T externalHandle) {
+    m_handle = externalHandle;
+    m_externalHandleInitialized = true;
+  }
 
   virtual void bind() = 0;
 
@@ -36,6 +40,7 @@ class Texture {
 
  protected:
   TextureHandle m_handle{};
+  bool m_externalHandleInitialized = false;
 };
 
 } // namespace goala
