@@ -1,13 +1,13 @@
-#include <Base/Utility/FileReader.h>
 #include <Base/Object/Object.h>
 #include <Base/Object/Triangle.h>
-#include <Graphics/Utility/MetalRef.h>
+#include <Base/Utility/FileReader.h>
 #include <Graphics/Metal/MetalBuffer.h>
 #include <Graphics/Metal/MetalShader.h>
+#include <Graphics/Utility/MetalRef.h>
 
 #include <Foundation/Foundation.hpp>
-#include <Metal/triangle_types.h>
 #include <Metal/Metal.hpp>
+#include <Metal/triangle_types.h>
 #include <QuartzCore/QuartzCore.hpp>
 #include <SDL.h>
 
