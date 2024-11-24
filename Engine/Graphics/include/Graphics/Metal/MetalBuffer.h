@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Graphics/Metal/MetalDevice.h>
+#include <Graphics/Model/Buffer.h>
 #include <Graphics/Utility/MetalRef.h>
 
 #include <Metal/MTLBuffer.hpp>
@@ -9,10 +9,19 @@
 namespace goala {
 
 class Object;
+class MetalDevice;
 
-class MetalBuffer {
+class MetalBuffer : public Buffer {
  public:
   MetalBuffer(MetalDevice* device, const Object& obj);
+
+  void initialize(const Object& obj) override;
+
+  void release() override;
+
+  void bind() override;
+
+  void draw() override;
 
   MTL::Buffer* getVertexHandle() const;
   MTL::Buffer* getIndexHandle() const;

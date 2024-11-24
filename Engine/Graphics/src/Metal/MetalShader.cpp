@@ -8,8 +8,8 @@ inline NS::String* getNSString(std::string_view str) {
 }
 } // namespace
 
-MetalShader::MetalShader(MetalDevice* device, std::string_view source,
-                         ShaderType type) {
+MetalShader::MetalShader(MetalDevice* device, std::string_view source, ShaderType type)
+    : Shader(type) {
   NS::Error* err = nil;
 
   auto library =
@@ -31,4 +31,4 @@ MetalShader::MetalShader(MetalDevice* device, std::string_view source,
   m_func = MetalRef(library->newFunction(funcName));
 }
 
-MTL::Function* MetalShader::get() const { return m_func.get(); }
+MTL::Function* MetalShader::getFunction() const { return m_func.get(); }

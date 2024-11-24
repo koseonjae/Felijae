@@ -6,6 +6,22 @@
 
 using namespace goala;
 
+void MetalBuffer::initialize(const Object& obj) {
+  assert(false && "todo: implement");
+}
+
+void MetalBuffer::release() {
+  assert(false && "todo: implement");
+}
+
+void MetalBuffer::bind() {
+  assert(false && "todo: implement");
+}
+
+void MetalBuffer::draw() {
+  assert(false && "draw에서 encoding을 해야하나?");
+}
+
 MetalBuffer::MetalBuffer(MetalDevice* device, const Object& obj) {
   auto resourceOption = MTL::ResourceCPUCacheModeDefaultCache;
 

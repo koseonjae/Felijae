@@ -2,8 +2,11 @@
 #include <Base/Object/Triangle.h>
 #include <Base/Utility/FileReader.h>
 #include <Graphics/Metal/MetalBuffer.h>
+#include <Graphics/Metal/MetalOutputMerger.h>
 #include <Graphics/Metal/MetalPipeline.h>
+#include <Graphics/Metal/MetalRasterizer.h>
 #include <Graphics/Metal/MetalShader.h>
+#include <Graphics/Utility/ImageFormatUtil.h>
 #include <Graphics/Utility/MetalRef.h>
 
 #include <Foundation/Foundation.hpp>
@@ -41,24 +44,58 @@ int main(int argc, char** argv) {
   layer->setDevice(device->getMTLDevice());
   layer->setPixelFormat(MTL::PixelFormatBGRA8Unorm);
 
-  Object obj = Triangle::load();
-  MetalBuffer vertexBuffer(device.get(), obj);
-
-  MetalShader vertexFunc(device.get(), readFile(File("asset://shader/metal_triangle.vert").getPath()), ShaderType::VERTEX);
-  MetalShader fragmentFunc(device.get(), readFile(File("asset://shader/metal_triangle.frag").getPath()), ShaderType::FRAGMENT);
-
+  // Shader
+  auto vertexFunc = std::make_shared<MetalShader>(device.get(), readFile(File("asset://shader/metal_triangle.vert").getPath()), ShaderType::VERTEX);
+  auto fragmentFunc = std::make_shared<MetalShader>(device.get(), readFile(File("asset://shader/metal_triangle.frag").getPath()), ShaderType::FRAGMENT);
   auto metalPipeline = std::make_shared<MetalPipeline>(device.get());
+  PipelineDescription metalPipelineDesc{};
+  metalPipelineDesc.shaders.push_back(vertexFunc);
+  metalPipelineDesc.shaders.push_back(fragmentFunc);
 
-  auto pipelineDesc = MetalRef(MTL::RenderPipelineDescriptor::alloc()->init());
-  pipelineDesc->setVertexFunction(vertexFunc.get());
-  pipelineDesc->setFragmentFunction(fragmentFunc.get());
-  pipelineDesc->setVertexDescriptor(vertexBuffer.getVertexDescriptor());
+  // Rasterizer
+  Culling culling = {
+    .enable = true,
+    .frontFace = Culling::FrontFace::CCW,
+    .cullMode = Culling::CullMode::Back,
+  };
+  Viewport pipelineViewport = {
+    .minX = 0,
+    .minY = 0,
+    .width = viewport[0],
+    .height = viewport[1],
+    .minZ = 0.0f,
+    .maxZ = 1.0f,
+  };
+  auto rasterizer = std::make_shared<MetalRasterizer>();
+  rasterizer->setCulling(culling);
+  rasterizer->setViewport(pipelineViewport);
+  metalPipelineDesc.rasterizer = rasterizer;
 
-  auto colorAttachmentDesc = pipelineDesc->colorAttachments()->object(0);
-  colorAttachmentDesc->setPixelFormat(layer->pixelFormat());
+  // OutputMerger
+  DepthTest depthTest = {
+    .enable = true,
+    .depthFunc = DepthTest::DepthTestFunc::Less,
+    .updateDepthMask = true,
+  };
+  AlphaBlend alphaBlend = {
+    .enable = true,
+    .fragmentBlendFunc = AlphaBlend::BlendFunc::SRC_ALPHA,
+    .pixelBlendFunc = AlphaBlend::BlendFunc::ONE_MINUS_SRC_ALPHA,
+    .blendEquation = AlphaBlend::BlendEquation::Add,
+  };
+  auto outputMerger = std::make_shared<MetalOutputMerger>();
+  outputMerger->setDepthTest(depthTest);
+  outputMerger->setAlphaBlend(alphaBlend);
+  metalPipelineDesc.outputMerger = outputMerger;
 
-  auto pipeline = MetalRef(device->getMTLDevice()->newRenderPipelineState(pipelineDesc.get(), &err));
-  assert(pipeline && "Failed to create pipeline");
+  // Buffer
+  Object obj = Triangle::load();
+  auto vertexBuffer = std::make_shared<MetalBuffer>(device.get(), obj);
+  metalPipelineDesc.buffer = vertexBuffer;
+
+  metalPipelineDesc.format = getImageFormat(layer->pixelFormat());
+
+  metalPipeline->initialize(metalPipelineDesc);
 
   auto queue = MetalRef(device->getMTLDevice()->newCommandQueue());
 
@@ -85,21 +122,21 @@ int main(int argc, char** argv) {
     colorAttachment->setClearColor(MTL::ClearColor(0.0, 0.0, 1.0, 1.0));
     colorAttachment->setTexture(drawable->texture());
 
-    auto buffer = MetalRef(queue->commandBuffer());
+    auto cmdBuf = MetalRef(queue->commandBuffer());
 
     // encoding
-    auto encoder = MetalRef(buffer->renderCommandEncoder(pass.get()));
-    encoder->setRenderPipelineState(pipeline.get());
-    encoder->setVertexBuffer(vertexBuffer.getVertexHandle(), 0, AAPLVertexInputIndexVertices);
+    auto encoder = MetalRef(cmdBuf->renderCommandEncoder(pass.get()));
+    encoder->setRenderPipelineState(metalPipeline->getPipeline());
+    encoder->setVertexBuffer(vertexBuffer->getVertexHandle(), 0, AAPLVertexInputIndexVertices);
     encoder->drawIndexedPrimitives(MTL::PrimitiveType::PrimitiveTypeTriangle,
                                    obj.indices.size(),
                                    MTL::IndexTypeUInt32,
-                                   vertexBuffer.getIndexHandle(),
+                                   vertexBuffer->getIndexHandle(),
                                    0);
     encoder->endEncoding();
 
-    buffer->presentDrawable(drawable.get());
-    buffer->commit();
+    cmdBuf->presentDrawable(drawable.get());
+    cmdBuf->commit();
   }
 
   SDL_Metal_DestroyView(view);

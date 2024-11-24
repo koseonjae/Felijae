@@ -1,8 +1,6 @@
-
+#pragma once
 
 namespace goala {
-
-#pragma once
 
 class Object;
 
