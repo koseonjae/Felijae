@@ -13,7 +13,7 @@ MetalShader::MetalShader(MetalDevice* device, std::string_view source,
   NS::Error* err = nil;
 
   auto library =
-    MetalRef(device->get()->newLibrary(getNSString(source), nullptr, &err));
+    MetalRef(device->getMTLDevice()->newLibrary(getNSString(source), nullptr, &err));
   assert(library && "Failed to create library");
 
   std::string shaderTypeStr;

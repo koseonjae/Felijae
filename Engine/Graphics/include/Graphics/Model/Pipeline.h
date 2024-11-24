@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Graphics/Model/Buffer.h>
+#include <Graphics/Model/Device.h>
 #include <Graphics/Model/OutputMerger.h>
 #include <Graphics/Model/Program.h>
 #include <Graphics/Model/Rasterizer.h>

@@ -2,6 +2,7 @@
 #include <Base/Object/Triangle.h>
 #include <Base/Utility/FileReader.h>
 #include <Graphics/Metal/MetalBuffer.h>
+#include <Graphics/Metal/MetalPipeline.h>
 #include <Graphics/Metal/MetalShader.h>
 #include <Graphics/Utility/MetalRef.h>
 
@@ -12,6 +13,7 @@
 #include <SDL.h>
 
 #include <iostream>
+#include <memory>
 
 using namespace goala;
 
@@ -32,18 +34,20 @@ int main(int argc, char** argv) {
   SDL_InitSubSystem(SDL_INIT_VIDEO);
   SDL_Window* window = SDL_CreateWindow("SDL Metal", -1, -1, viewport[0], viewport[1], SDL_WINDOW_ALLOW_HIGHDPI);
 
-  MetalDevice device(MTL::CreateSystemDefaultDevice());
+  auto device = std::make_unique<MetalDevice>(MTL::CreateSystemDefaultDevice());
 
   SDL_MetalView view = SDL_Metal_CreateView(window);
   auto layer = static_cast<CA::MetalLayer*>(SDL_Metal_GetLayer(view)); // swapchain
-  layer->setDevice(device.get());
+  layer->setDevice(device->getMTLDevice());
   layer->setPixelFormat(MTL::PixelFormatBGRA8Unorm);
 
   Object obj = Triangle::load();
-  MetalBuffer vertexBuffer(&device, obj);
+  MetalBuffer vertexBuffer(device.get(), obj);
 
-  MetalShader vertexFunc(&device, readFile(File("asset://shader/metal_triangle.vert").getPath()), ShaderType::VERTEX);
-  MetalShader fragmentFunc(&device, readFile(File("asset://shader/metal_triangle.frag").getPath()), ShaderType::FRAGMENT);
+  MetalShader vertexFunc(device.get(), readFile(File("asset://shader/metal_triangle.vert").getPath()), ShaderType::VERTEX);
+  MetalShader fragmentFunc(device.get(), readFile(File("asset://shader/metal_triangle.frag").getPath()), ShaderType::FRAGMENT);
+
+  auto metalPipeline = std::make_shared<MetalPipeline>(device.get());
 
   auto pipelineDesc = MetalRef(MTL::RenderPipelineDescriptor::alloc()->init());
   pipelineDesc->setVertexFunction(vertexFunc.get());
@@ -53,10 +57,10 @@ int main(int argc, char** argv) {
   auto colorAttachmentDesc = pipelineDesc->colorAttachments()->object(0);
   colorAttachmentDesc->setPixelFormat(layer->pixelFormat());
 
-  auto pipeline = MetalRef(device.get()->newRenderPipelineState(pipelineDesc.get(), &err));
+  auto pipeline = MetalRef(device->getMTLDevice()->newRenderPipelineState(pipelineDesc.get(), &err));
   assert(pipeline && "Failed to create pipeline");
 
-  auto queue = MetalRef(device.get()->newCommandQueue());
+  auto queue = MetalRef(device->getMTLDevice()->newCommandQueue());
 
   bool quit = false;
   SDL_Event e;
