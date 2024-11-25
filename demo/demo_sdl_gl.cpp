@@ -142,7 +142,6 @@ int main() {
 
     auto renderPass = std::make_shared<OpenGLRenderPass>();
     renderPass->setAttachments(std::move(attachments));
-    pipeline->setRenderPass(renderPass); // todo: pipeline은 렌더패스 가지지 않고, renderer만 가지도록 변경하자
     renderer->setRenderPass(renderPass);
   }
 
@@ -200,7 +199,7 @@ int main() {
     renderer->update();
     renderer->render(cmdBuf);
 
-    auto openGLRenderPass = dynamic_cast<OpenGLRenderPass*>(pipeline->getRenderPass());
+    auto openGLRenderPass = dynamic_cast<OpenGLRenderPass*>(renderer->getRenderPass());
     assert(openGLRenderPass != nullptr && "Failed to cast to openGLRenderPass");
     glBindFramebuffer(GL_READ_FRAMEBUFFER, openGLRenderPass->getFrameBuffer(0).getHandle());
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);

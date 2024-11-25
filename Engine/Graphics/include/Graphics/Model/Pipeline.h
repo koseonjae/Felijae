@@ -33,7 +33,6 @@ class Pipeline {
  public:
   void setBuffer(std::shared_ptr<Buffer> buffer) { m_buffer = std::move(buffer); }
   void setProgram(std::shared_ptr<Program> program) { m_program = std::move(program); }
-  void setRenderPass(std::shared_ptr<RenderPass> renderPass) { m_renderPass = std::move(renderPass); }
   void setRasterizer(std::shared_ptr<Rasterizer> rasterizer) { m_rasterizer = std::move(rasterizer); }
   void setOutputMerger(std::shared_ptr<OutputMerger> outputMerger) { m_outputMerger = std::move(outputMerger); }
 
@@ -49,14 +48,10 @@ class Pipeline {
   const OutputMerger* getOutputMerger() const { return m_outputMerger.get(); }
   OutputMerger* getOutputMerger() { return m_outputMerger.get(); }
 
-  const RenderPass* getRenderPass() const { return m_renderPass.get(); }
-  RenderPass* getRenderPass() { return m_renderPass.get(); }
-
  protected:
   std::shared_ptr<Buffer> m_buffer;
   std::vector<std::shared_ptr<Shader>> m_shaders;
   std::shared_ptr<Program> m_program;
-  std::shared_ptr<RenderPass> m_renderPass;
   std::shared_ptr<Rasterizer> m_rasterizer;
   std::shared_ptr<OutputMerger> m_outputMerger;
 };

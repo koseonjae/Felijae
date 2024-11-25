@@ -2,6 +2,7 @@
 
 namespace goala {
 
+class RenderPass;
 class Pipeline;
 class Texture;
 
@@ -9,7 +10,7 @@ class CommandBuffer {
  public:
   virtual ~CommandBuffer() = default;
 
-  virtual void encode(Pipeline* pipeline) = 0;
+  virtual void encode(RenderPass* renderPass, Pipeline* pipeline) = 0;
 
   virtual void present(Texture* texture) = 0;
 

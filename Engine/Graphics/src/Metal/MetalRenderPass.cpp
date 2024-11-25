@@ -7,7 +7,7 @@ using namespace goala;
 
 MetalRenderPass::MetalRenderPass() : m_pass(MTL::RenderPassDescriptor::renderPassDescriptor()) {}
 
-void MetalRenderPass::bind() {
+void MetalRenderPass::update() {
   _updateRenderPass();
 }
 

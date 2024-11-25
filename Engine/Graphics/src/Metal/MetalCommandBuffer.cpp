@@ -14,10 +14,10 @@ MetalCommandBuffer::MetalCommandBuffer(MTL::CommandBuffer* cmdBuf) {
   m_cmdBuf = MetalRef(cmdBuf);
 }
 
-void MetalCommandBuffer::encode(Pipeline* pipeline) {
+void MetalCommandBuffer::encode(RenderPass* renderPass, Pipeline* pipeline) {
   // todo: dynamic_cast 너무 구리다..
   auto metalPipeline = dynamic_cast<MetalPipeline*>(pipeline);
-  auto metalRenderPass = dynamic_cast<MetalRenderPass*>(pipeline->getRenderPass());
+  auto metalRenderPass = dynamic_cast<MetalRenderPass*>(renderPass);
   auto metalBuffer = dynamic_cast<MetalBuffer*>(metalPipeline->getBuffer());
 
   auto encoder = m_cmdBuf->renderCommandEncoder(metalRenderPass->getPass());

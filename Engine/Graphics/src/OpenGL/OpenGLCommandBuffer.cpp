@@ -4,7 +4,7 @@
 
 using namespace goala;
 
-void OpenGLCommandBuffer::encode(Pipeline* pipeline) {
+void OpenGLCommandBuffer::encode(RenderPass* renderPass, Pipeline* pipeline) {
   m_encoded = [pipeline]() {
     pipeline->render();
   };

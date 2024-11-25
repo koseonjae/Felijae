@@ -13,7 +13,7 @@ class MetalCommandBuffer : public CommandBuffer {
  public:
   explicit MetalCommandBuffer(MTL::CommandBuffer* cmdBuf);
 
-  void encode(Pipeline* pipeline) override;
+  void encode(RenderPass* renderPass, Pipeline* pipeline) override;
 
   void present(Texture* texture) override;
 

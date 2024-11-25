@@ -106,7 +106,6 @@ int main(int argc, char** argv) {
 
   // RenderPass
   auto renderPass = std::make_shared<MetalRenderPass>();
-  metalPipeline->setRenderPass(renderPass); // todo: pipeline, renderer 중 renderpass를 누가 가져야 하나
   renderer->setRenderPass(renderPass);
 
   // Queue

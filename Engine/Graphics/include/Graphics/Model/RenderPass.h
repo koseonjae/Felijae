@@ -52,7 +52,7 @@ class RenderPass {
  public:
   virtual ~RenderPass() = default;
 
-  virtual void bind() = 0;
+  virtual void update() = 0;
 
   void setAttachments(std::vector<Attachment> attachments) {
     m_attachments = std::move(attachments);

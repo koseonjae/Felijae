@@ -8,7 +8,7 @@ namespace goala {
 
 class OpenGLCommandBuffer : public CommandBuffer {
  public:
-  void encode(Pipeline* pipeline) override;
+  void encode(RenderPass* renderPass, Pipeline* pipeline) override;
 
   void present(Texture* texture) override;
 

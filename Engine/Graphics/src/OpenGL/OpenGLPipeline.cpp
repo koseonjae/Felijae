@@ -2,11 +2,11 @@
 
 using namespace goala;
 
-void OpenGLPipeline::update() {}
+void OpenGLPipeline::update() {
+}
 
 void OpenGLPipeline::render() {
-  assert(m_renderPass && m_rasterizer && m_outputMerger && m_program && m_buffer && "There is empty pipeline");
-  m_renderPass->bind();
+  assert(m_rasterizer && m_outputMerger && m_program && m_buffer && "There is empty pipeline");
   m_rasterizer->bind();
   m_outputMerger->bind();
   m_program->bind();

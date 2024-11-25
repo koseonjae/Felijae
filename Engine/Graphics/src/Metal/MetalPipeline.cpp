@@ -49,13 +49,11 @@ void MetalPipeline::initialize(const PipelineDescription& description) {
 
   m_buffer = description.buffer; // pipeline에서 descripion을 통째로 저장하고 있도록 하자
   m_shaders = description.shaders;
-  m_renderPass = description.renderPass;
   m_rasterizer = description.rasterizer;
   m_outputMerger = description.outputMerger;
 }
 
 void MetalPipeline::update() {
-  m_renderPass->bind();
 }
 
 void MetalPipeline::render() {

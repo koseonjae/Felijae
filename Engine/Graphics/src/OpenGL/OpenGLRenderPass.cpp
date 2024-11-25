@@ -24,7 +24,7 @@ void OpenGLRenderPass::_updateFrameBuffers() {
   m_dirty = false;
 }
 
-void OpenGLRenderPass::bind() {
+void OpenGLRenderPass::update() {
   _updateFrameBuffers();
   for (auto& frameBuffer : m_frameBuffers)
     frameBuffer.bind();

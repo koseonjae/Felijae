@@ -3,6 +3,7 @@
 #include <Graphics/Model/Pipeline.h>
 #include <Graphics/Model/Program.h>
 #include <Graphics/Model/CommandBuffer.h>
+#include <Graphics/Model/RenderPass.h>
 
 #include <Engine/Model/Model.h>
 #include <Engine/Model/Scene.h>
@@ -33,12 +34,14 @@ void ForwardRenderer::update() {
     }
     model->update();
   }
+
+  m_renderPass->update();
 }
 
 void ForwardRenderer::render(std::shared_ptr<CommandBuffer> cmdBuf) {
   auto& models = m_scene->getModels();
   for (auto& model : models)
-    cmdBuf->encode(model->getPipeline());
-  cmdBuf->present(m_renderPass->getAttachments()[0].texture.get()); // todo: pipeline에선 renderpass 빼고, renderer가 가지고 있게 하자
+    cmdBuf->encode(getRenderPass(), model->getPipeline());
+  cmdBuf->present(m_renderPass->getAttachments()[0].texture.get());
   cmdBuf->commit();
 }
