@@ -4,6 +4,8 @@
 
 namespace goala {
 
+class CommandEncoder;
+
 struct Culling {
   enum class CullMode {
     Front,
@@ -38,7 +40,8 @@ class Rasterizer {
   // scan conversion
 
  public:
-  virtual void bind() = 0;
+  virtual void bind(void* descriptor) = 0;
+  virtual void encode(CommandEncoder* encoder) = 0;
 
  public:
   virtual ~Rasterizer() = default;

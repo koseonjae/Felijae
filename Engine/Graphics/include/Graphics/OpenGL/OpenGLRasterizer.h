@@ -6,7 +6,8 @@ namespace goala {
 
 class OpenGLRasterizer : public Rasterizer {
  public:
-  void bind() override;
+  void bind(void* descriptor) override;
+  void encode(CommandEncoder* encoder) override;
 
  private:
   void _bindCulling();

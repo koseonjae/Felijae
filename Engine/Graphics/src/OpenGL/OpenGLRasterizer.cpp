@@ -1,13 +1,18 @@
 #include <Graphics/OpenGL/OpenGLRasterizer.h>
+#include <Graphics/OpenGL/OpenGLCommandEncoder.h>
+
 #include <OpenGL/gl3.h>
 
 #include <cassert>
 
 using namespace goala;
 
-void OpenGLRasterizer::bind() {
+void OpenGLRasterizer::bind(void* descriptor) {
   _bindCulling();
   _bindViewport();
+}
+
+void OpenGLRasterizer::encode(CommandEncoder* encoder) {
 }
 
 void OpenGLRasterizer::_bindCulling() {

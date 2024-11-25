@@ -5,6 +5,7 @@
 
 namespace MTL {
 class RenderPipelineState;
+class RenderPipelineDescriptor;
 }
 
 namespace goala {
@@ -24,8 +25,13 @@ class MetalPipeline : public Pipeline {
   MTL::RenderPipelineState* getPipeline() const;
 
  private:
+  void _updateRasterizer();
+  void _updateOutputMerger();
+
+ private:
   MetalDevice* m_device = nullptr;
   MetalRef<MTL::RenderPipelineState> m_pipeline;
+  MetalRef<MTL::RenderPipelineDescriptor> m_pipelineDesc;
 };
 
 } // namespace goala
