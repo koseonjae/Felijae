@@ -1,10 +1,12 @@
 #pragma once
 
+#include <Engine/Model/Node.h>
+
 #include <glm/glm.hpp>
 
 namespace goala {
 
-class Camera final {
+class Camera : public Node {
  public:
   void setCamera(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& up);
   void setProjection(float fovy, float aspectRatio, float near, float far);

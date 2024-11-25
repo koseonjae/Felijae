@@ -1,10 +1,12 @@
 #pragma once
 
+#include <Engine/Model/Node.h>
+
 #include <glm/glm.hpp>
 
 namespace goala {
 
-class Light final {
+class Light : public Node {
  public:
   void setLightColor(const glm::vec3& color) { m_lightColor = color; }
   void setLightDirection(const glm::vec3& dir) { m_lightDir = dir; }

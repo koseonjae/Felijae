@@ -11,6 +11,8 @@
 #include <Graphics/Utility/ImageFormatUtil.h>
 #include <Graphics/Utility/MetalRef.h>
 #include <Engine/Model/Model.h>
+#include <Engine/Model/Scene.h>
+#include <Engine/Renderer/ForwardRenderer.h>
 
 #include <Foundation/Foundation.hpp>
 #include <Metal/Metal.hpp>
@@ -109,6 +111,14 @@ int main(int argc, char** argv) {
   auto model = std::make_shared<Model>();
   model->setPipeline(metalPipeline);
 
+  // Scene
+  auto scene = std::make_shared<Scene>();
+  scene->addModel(std::move(model));
+
+  // Renderer
+  auto renderer = std::make_shared<ForwardRenderer>();
+  renderer->setScene(std::move(scene));
+
   bool quit = false;
   SDL_Event e;
 
@@ -136,8 +146,8 @@ int main(int argc, char** argv) {
     });
     renderPass->setAttachments(std::move(attachments));
 
-    model->update();
-    model->render();
+    renderer->update();
+    renderer->render();
 
     auto cmdBuf = MetalRef(queue->commandBuffer());
 
