@@ -62,16 +62,12 @@ void MetalPipeline::update() {
 void MetalPipeline::render() {
 }
 
-MTL::RenderPipelineState* MetalPipeline::getPipeline() const {
+MTL::RenderPipelineState* MetalPipeline::getPipeline() {
   return m_pipeline.get();
 }
 
-void MetalPipeline::_updateRasterizer() {
-
-}
-
-void MetalPipeline::_updateOutputMerger() {
-
+const MTL::RenderPipelineState* MetalPipeline::getPipeline() const {
+  return m_pipeline.get();
 }
 
 } // namespace goala

@@ -1,4 +1,4 @@
-#pragma one
+#pragma once
 
 #include <Graphics/Model/Pipeline.h>
 #include <Graphics/Utility/MetalRef.h>
@@ -22,11 +22,9 @@ class MetalPipeline : public Pipeline {
 
   void render() override;
 
-  MTL::RenderPipelineState* getPipeline() const;
+  MTL::RenderPipelineState* getPipeline();
 
- private:
-  void _updateRasterizer();
-  void _updateOutputMerger();
+  const MTL::RenderPipelineState* getPipeline() const;
 
  private:
   MetalDevice* m_device = nullptr;
