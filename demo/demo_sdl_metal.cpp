@@ -17,11 +17,9 @@
 
 #include <Foundation/Foundation.hpp>
 #include <Metal/Metal.hpp>
-#include <Metal/triangle_types.h>
 #include <QuartzCore/QuartzCore.hpp>
 #include <SDL.h>
 
-#include <iostream>
 #include <memory>
 
 using namespace goala;
@@ -36,8 +34,6 @@ inline NS::String* getNSString(std::string_view str) {
 
 int main(int argc, char** argv) {
   File::registerPath("../../demo/asset", "asset://");
-
-  NS::Error* err = nil;
 
   SDL_SetHint(SDL_HINT_RENDER_DRIVER, "metal");
   SDL_InitSubSystem(SDL_INIT_VIDEO);
@@ -96,7 +92,7 @@ int main(int argc, char** argv) {
     .pixelBlendFunc = AlphaBlend::BlendFunc::ONE_MINUS_SRC_ALPHA,
     .blendEquation = AlphaBlend::BlendEquation::Add,
   };
-  auto outputMerger = std::make_shared<MetalOutputMerger>();
+  auto outputMerger = std::make_shared<MetalOutputMerger>(device.get());
   outputMerger->setDepthTest(depthTest);
   outputMerger->setAlphaBlend(alphaBlend);
   metalPipelineDesc.outputMerger = outputMerger;

@@ -49,7 +49,7 @@ void MetalPipeline::initialize(const PipelineDescription& description) {
   colorAttachmentDesc->setPixelFormat(getMetalImageFormat(description.format));
 
   m_rasterizer->bind(m_pipelineDesc.get());
-  m_outputMerger->bind();
+  m_outputMerger->bind(m_pipelineDesc.get());
 
   NS::Error* err = nil;
   m_pipeline = MetalRef(m_device->getMTLDevice()->newRenderPipelineState(m_pipelineDesc.get(), &err));

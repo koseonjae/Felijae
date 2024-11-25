@@ -3,7 +3,6 @@
 #include <Graphics/Metal/MetalTexture.h>
 #include <Graphics/Metal/MetalPipeline.h>
 #include <Graphics/Metal/MetalRenderPass.h>
-#include <Graphics/Metal/MetalBuffer.h>
 
 #include <Metal/Metal.hpp>
 #include <QuartzCore/CAMetalDrawable.hpp>

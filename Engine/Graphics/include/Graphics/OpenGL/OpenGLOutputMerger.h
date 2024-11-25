@@ -6,7 +6,8 @@ namespace goala {
 
 class OpenGLOutputMerger : public OutputMerger {
  public:
-  void bind() override;
+  void bind(void* descriptor) override;
+  void encode(CommandEncoder* encoder) override;
 
  private:
   void _bindDepthTest();

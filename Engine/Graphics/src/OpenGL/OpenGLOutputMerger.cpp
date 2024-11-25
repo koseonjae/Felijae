@@ -5,9 +5,12 @@
 
 using namespace goala;
 
-void OpenGLOutputMerger::bind() {
+void OpenGLOutputMerger::bind(void* descriptor) {
   _bindDepthTest();
   _bindAlphaBlending();
+}
+
+void OpenGLOutputMerger::encode(CommandEncoder* encoder) {
 }
 
 void OpenGLOutputMerger::_bindDepthTest() {

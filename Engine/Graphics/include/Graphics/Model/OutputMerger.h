@@ -4,6 +4,8 @@
 
 namespace goala {
 
+class CommandEncoder;
+
 struct DepthTest {
   enum class DepthTestFunc {
     Less,
@@ -31,7 +33,8 @@ static_assert(std::is_trivially_copyable_v<AlphaBlend>);
 
 class OutputMerger {
  public:
-  virtual void bind() = 0;
+  virtual void bind(void* descriptor) = 0;
+  virtual void encode(CommandEncoder* encoder) = 0;
 
  public:
   virtual ~OutputMerger() = default;

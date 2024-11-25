@@ -6,9 +6,6 @@
 using namespace goala;
 
 void MetalRasterizer::bind(void* descriptor) {
-  auto metalDescriptor = static_cast<MTL::RenderPipelineDescriptor*>(descriptor);
-
-  metalDescriptor->setRasterizationEnabled(true);
 }
 
 void MetalRasterizer::encode(CommandEncoder* encoder) {

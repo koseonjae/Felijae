@@ -15,6 +15,7 @@ void MetalCommandEncoder::encode(Pipeline* pipeline) {
   auto metalBuffer = dynamic_cast<MetalBuffer*>(metalPipeline->getBuffer());
 
   pipeline->getRasterizer()->encode(this);
+  pipeline->getOutputMerger()->encode(this);
 
   m_encoder->setRenderPipelineState(metalPipeline->getPipeline());
   m_encoder->setVertexBuffer(metalBuffer->getVertexHandle(), 0, AAPLVertexInputIndexVertices);
