@@ -1,6 +1,7 @@
 #include <Graphics/Metal/MetalRenderPass.h>
 
 #include <Metal/Metal.hpp>
+#include <QuartzCore/CAMetalDrawable.hpp>
 
 using namespace goala;
 
@@ -71,9 +72,11 @@ void MetalRenderPass::_updateRenderPass() {
     else
       assert(false && "Undefined store function");
 
-    auto textureHandle = attachment.texture->getHandle<MTL::Texture*>();
-    colorAttachment->setTexture(textureHandle); // todo: move
+    CA::MetalDrawable* textureHandle = attachment.texture->getHandle<CA::MetalDrawable*>();
+    colorAttachment->setTexture(textureHandle->texture()); // todo: move
   }
+
+  m_dirty = false;
 }
 
 MTL::RenderPassDescriptor* MetalRenderPass::getPass() const {

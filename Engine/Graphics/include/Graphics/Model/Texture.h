@@ -11,9 +11,13 @@ namespace MTL {
 class Texture;
 }
 
+namespace CA {
+class MetalDrawable;
+}
+
 namespace goala {
 
-using TextureHandle = std::variant<uint32_t, MTL::Texture*>;
+using TextureHandle = std::variant<uint32_t, MTL::Texture*, CA::MetalDrawable*>; // todo: texture만 받도록 하자
 
 class Texture {
  public:

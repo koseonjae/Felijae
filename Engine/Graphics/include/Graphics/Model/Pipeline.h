@@ -54,7 +54,7 @@ class Pipeline {
 
  protected:
   std::shared_ptr<Buffer> m_buffer;
-  std::vector<Shader> shaders;
+  std::vector<std::shared_ptr<Shader>> m_shaders;
   std::shared_ptr<Program> m_program;
   std::shared_ptr<RenderPass> m_renderPass;
   std::shared_ptr<Rasterizer> m_rasterizer;

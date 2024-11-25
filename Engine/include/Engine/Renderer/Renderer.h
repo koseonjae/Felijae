@@ -5,6 +5,8 @@
 namespace goala {
 
 class Scene;
+class CommandBuffer;
+class RenderPass;
 
 class Renderer : public std::enable_shared_from_this<Renderer> {
  public:
@@ -12,7 +14,9 @@ class Renderer : public std::enable_shared_from_this<Renderer> {
 
   virtual void update() = 0;
 
-  virtual void render() = 0;
+  virtual void render(std::shared_ptr<CommandBuffer> cmdBuf) = 0;
+
+  void setRenderPass(std::shared_ptr<RenderPass> renderPass);
 
   void setScene(std::shared_ptr<Scene> scene);
 
@@ -20,8 +24,13 @@ class Renderer : public std::enable_shared_from_this<Renderer> {
 
   const Scene* getScene() const;
 
+  RenderPass* getRenderPass();
+
+  const RenderPass* getRenderPass() const;
+
  protected:
   std::shared_ptr<Scene> m_scene;
+  std::shared_ptr<RenderPass> m_renderPass;
 };
 
 } // namespace goala

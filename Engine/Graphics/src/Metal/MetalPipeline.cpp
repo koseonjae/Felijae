@@ -46,6 +46,12 @@ void MetalPipeline::initialize(const PipelineDescription& description) {
   NS::Error* err = nil;
   m_pipeline = MetalRef(m_device->getMTLDevice()->newRenderPipelineState(pipelineDesc.get(), &err));
   assert(m_pipeline && "Failed to create pipeline");
+
+  m_buffer = description.buffer; // pipeline에서 descripion을 통째로 저장하고 있도록 하자
+  m_shaders = description.shaders;
+  m_renderPass = description.renderPass;
+  m_rasterizer = description.rasterizer;
+  m_outputMerger = description.outputMerger;
 }
 
 void MetalPipeline::update() {

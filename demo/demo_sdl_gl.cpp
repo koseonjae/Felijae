@@ -5,6 +5,7 @@
 #include <Engine/Model/Scene.h>
 #include <Engine/Renderer/ForwardRenderer.h>
 #include <Graphics/OpenGL/OpenGLBuffer.h>
+#include <Graphics/OpenGL/OpenGLCommandBuffer.h>
 #include <Graphics/OpenGL/OpenGLOutputMerger.h>
 #include <Graphics/OpenGL/OpenGLPipeline.h>
 #include <Graphics/OpenGL/OpenGLProgram.h>
@@ -123,6 +124,8 @@ int main() {
     pipeline->setBuffer(std::move(buffer));
   }
 
+  auto renderer = std::make_shared<ForwardRenderer>();
+
   // Render Pass
   {
     auto colorTexture = std::make_shared<OpenGLTexture>();
@@ -139,12 +142,12 @@ int main() {
 
     auto renderPass = std::make_shared<OpenGLRenderPass>();
     renderPass->setAttachments(std::move(attachments));
-    pipeline->setRenderPass(std::move(renderPass));
+    pipeline->setRenderPass(renderPass); // todo: pipeline은 렌더패스 가지지 않고, renderer만 가지도록 변경하자
+    renderer->setRenderPass(renderPass);
   }
 
   // Scene
   auto scene = std::make_shared<Scene>();
-  auto renderer = std::make_shared<ForwardRenderer>();
   renderer->setScene(scene);
 
   // Light
@@ -193,8 +196,9 @@ int main() {
       }
     }
 
+    auto cmdBuf = std::make_shared<OpenGLCommandBuffer>();
     renderer->update();
-    renderer->render();
+    renderer->render(cmdBuf);
 
     auto openGLRenderPass = dynamic_cast<OpenGLRenderPass*>(pipeline->getRenderPass());
     assert(openGLRenderPass != nullptr && "Failed to cast to openGLRenderPass");

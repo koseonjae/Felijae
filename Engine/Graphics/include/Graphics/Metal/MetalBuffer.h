@@ -26,11 +26,14 @@ class MetalBuffer : public Buffer {
   MTL::Buffer* getVertexHandle() const;
   MTL::Buffer* getIndexHandle() const;
   MTL::VertexDescriptor* getVertexDescriptor() const;
+  int getIndicesSize() const;
 
  private:
   MetalRef<MTL::Buffer> m_vertexHandle;
   MetalRef<MTL::Buffer> m_indexHandle;
   MetalRef<MTL::VertexDescriptor> m_vertexDesc;
+
+  int m_indicesSize = 0;
 };
 
 } // namespace goala

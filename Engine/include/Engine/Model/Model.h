@@ -14,9 +14,7 @@ class Buffer;
 
 class Model final {
  public:
-  void update();
-
-  void render();
+  void update(); // todo: model이 update만 있다 render는 없다. render는 pipeline 객체를 가져와서 하는중. 구조 정리하자
 
   void setPipeline(std::shared_ptr<Pipeline> pipeline) { m_pipeline = std::move(pipeline); }
 

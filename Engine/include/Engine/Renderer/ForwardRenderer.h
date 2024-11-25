@@ -8,7 +8,7 @@ class ForwardRenderer : public Renderer {
  public:
   void update() override;
 
-  void render() override;
+  void render(std::shared_ptr<CommandBuffer> cmdBuf) override;
 };
 
 } // namespace goala

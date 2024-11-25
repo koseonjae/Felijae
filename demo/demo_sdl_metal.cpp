@@ -1,6 +1,7 @@
 #include <Base/Object/Object.h>
 #include <Base/Object/Triangle.h>
 #include <Base/Utility/FileReader.h>
+#include <Graphics/Metal/MetalCommandBuffer.h>
 #include <Graphics/Metal/MetalBuffer.h>
 #include <Graphics/Metal/MetalOutputMerger.h>
 #include <Graphics/Metal/MetalPipeline.h>
@@ -48,6 +49,9 @@ int main(int argc, char** argv) {
   auto layer = static_cast<CA::MetalLayer*>(SDL_Metal_GetLayer(view)); // swapchain
   layer->setDevice(device->getMTLDevice());
   layer->setPixelFormat(MTL::PixelFormatBGRA8Unorm);
+
+  // Renderer
+  auto renderer = std::make_shared<ForwardRenderer>();
 
   // Shader
   auto vertexFunc = std::make_shared<MetalShader>(device.get(), readFile(File("asset://shader/metal_triangle.vert").getPath()), ShaderType::VERTEX);
@@ -102,7 +106,8 @@ int main(int argc, char** argv) {
 
   // RenderPass
   auto renderPass = std::make_shared<MetalRenderPass>();
-  metalPipeline->setRenderPass(renderPass);
+  metalPipeline->setRenderPass(renderPass); // todo: pipeline, renderer 중 renderpass를 누가 가져야 하나
+  renderer->setRenderPass(renderPass);
 
   // Queue
   auto queue = MetalRef(device->getMTLDevice()->newCommandQueue());
@@ -114,9 +119,6 @@ int main(int argc, char** argv) {
   // Scene
   auto scene = std::make_shared<Scene>();
   scene->addModel(std::move(model));
-
-  // Renderer
-  auto renderer = std::make_shared<ForwardRenderer>();
   renderer->setScene(std::move(scene));
 
   bool quit = false;
@@ -132,9 +134,9 @@ int main(int argc, char** argv) {
       }
     }
 
-    auto drawable = MetalRef(layer->nextDrawable());
+    auto drawable = layer->nextDrawable();
     auto texture = std::make_shared<MetalTexture>();
-    texture->initializeExternal(drawable->texture());
+    texture->initializeExternal(drawable);
 
     std::vector<Attachment> attachments;
     attachments.emplace_back(Attachment{
@@ -146,24 +148,10 @@ int main(int argc, char** argv) {
     });
     renderPass->setAttachments(std::move(attachments));
 
+    auto cmdBuf = std::make_shared<MetalCommandBuffer>(queue->commandBuffer());
+
     renderer->update();
-    renderer->render();
-
-    auto cmdBuf = MetalRef(queue->commandBuffer());
-
-    // encoding
-    auto encoder = MetalRef(cmdBuf->renderCommandEncoder(renderPass->getPass()));
-    encoder->setRenderPipelineState(metalPipeline->getPipeline());
-    encoder->setVertexBuffer(vertexBuffer->getVertexHandle(), 0, AAPLVertexInputIndexVertices);
-    encoder->drawIndexedPrimitives(MTL::PrimitiveType::PrimitiveTypeTriangle,
-                                   obj.indices.size(),
-                                   MTL::IndexTypeUInt32,
-                                   vertexBuffer->getIndexHandle(),
-                                   0);
-    encoder->endEncoding();
-
-    cmdBuf->presentDrawable(drawable.get());
-    cmdBuf->commit();
+    renderer->render(cmdBuf);
   }
 
   SDL_Metal_DestroyView(view);

@@ -1,5 +1,6 @@
 add_library(Graphics STATIC
     src/Utility/ImageFormatUtil.cpp
+    src/OpenGL/OpenGLCommandBuffer.cpp
     src/OpenGL/OpenGLPipeline.cpp
     src/OpenGL/OpenGLRasterizer.cpp
     src/OpenGL/OpenGLOutputMerger.cpp
@@ -9,6 +10,7 @@ add_library(Graphics STATIC
     src/OpenGL/OpenGLFrameBuffer.cpp
     src/OpenGL/OpenGLRenderPass.cpp
     src/OpenGL/OpenGLUtils.cpp
+    src/Metal/MetalCommandBuffer.cpp
     src/Metal/MetalDevice.cpp
     src/Metal/MetalRasterizer.cpp
     src/Metal/MetalOutputMerger.cpp
@@ -20,6 +22,7 @@ add_library(Graphics STATIC
 
     include/Graphics/Utility/ImageFormatUtil.h
     include/Graphics/Utility/MetalRef.h
+    include/Graphics/Model/CommandBuffer.h
     include/Graphics/Model/Device.h
     include/Graphics/Model/Shader.h
     include/Graphics/Model/Program.h
@@ -27,6 +30,7 @@ add_library(Graphics STATIC
     include/Graphics/Model/OutputMerger.h
     include/Graphics/Model/RenderPass.h
     include/Graphics/Model/Texture.h
+    include/Graphics/OpenGL/OpenGLCommandBuffer.h
     include/Graphics/OpenGL/OpenGLPipeline.h
     include/Graphics/OpenGL/OpenGLRasterizer.h
     include/Graphics/OpenGL/OpenGLOutputMerger.h
@@ -36,6 +40,7 @@ add_library(Graphics STATIC
     include/Graphics/OpenGL/OpenGLFrameBuffer.h
     include/Graphics/OpenGL/OpenGLRenderPass.h
     include/Graphics/OpenGL/OpenGLUtils.h
+    include/Graphics/Metal/MetalCommandBuffer.h
     include/Graphics/Metal/MetalDevice.h
     include/Graphics/Metal/MetalBuffer.h
     include/Graphics/Metal/MetalRenderPass.h

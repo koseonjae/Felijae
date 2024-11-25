@@ -7,8 +7,3 @@ void Model::update() {
   assert(m_pipeline);
   m_pipeline->update();
 }
-
-void Model::render() {
-  assert(m_pipeline);
-  m_pipeline->render();
-}
