@@ -4,6 +4,7 @@
 
 namespace MTL {
 class RenderPipelineDescriptor;
+class RenderCommandEncoder;
 }
 
 namespace goala {
@@ -14,8 +15,8 @@ class MetalRasterizer : public Rasterizer {
   void encode(CommandEncoder* encoder) override;
 
  private:
-  void _updateCulling(MTL::RenderPipelineDescriptor* descriptor);
-  void _updateViewPort(MTL::RenderPipelineDescriptor* descriptor);
+  void _updateCulling(MTL::RenderCommandEncoder* encoder);
+  void _updateViewPort(MTL::RenderCommandEncoder* r);
 };
 
 } // namespace goala

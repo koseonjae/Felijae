@@ -14,6 +14,8 @@ void MetalCommandEncoder::encode(Pipeline* pipeline) {
   auto metalPipeline = dynamic_cast<MetalPipeline*>(pipeline);
   auto metalBuffer = dynamic_cast<MetalBuffer*>(metalPipeline->getBuffer());
 
+  pipeline->getRasterizer()->encode(this);
+
   m_encoder->setRenderPipelineState(metalPipeline->getPipeline());
   m_encoder->setVertexBuffer(metalBuffer->getVertexHandle(), 0, AAPLVertexInputIndexVertices);
   m_encoder->drawIndexedPrimitives(MTL::PrimitiveType::PrimitiveTypeTriangle,
