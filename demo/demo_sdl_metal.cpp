@@ -10,6 +10,7 @@
 #include <Graphics/Metal/MetalTexture.h>
 #include <Graphics/Utility/ImageFormatUtil.h>
 #include <Graphics/Utility/MetalRef.h>
+#include <Engine/Model/Model.h>
 
 #include <Foundation/Foundation.hpp>
 #include <Metal/Metal.hpp>
@@ -101,7 +102,12 @@ int main(int argc, char** argv) {
   auto renderPass = std::make_shared<MetalRenderPass>();
   metalPipeline->setRenderPass(renderPass);
 
+  // Queue
   auto queue = MetalRef(device->getMTLDevice()->newCommandQueue());
+
+  // Model
+  auto model = std::make_shared<Model>();
+  model->setPipeline(metalPipeline);
 
   bool quit = false;
   SDL_Event e;
@@ -130,8 +136,8 @@ int main(int argc, char** argv) {
     });
     renderPass->setAttachments(std::move(attachments));
 
-    metalPipeline->update();
-    metalPipeline->render();
+    model->update();
+    model->render();
 
     auto cmdBuf = MetalRef(queue->commandBuffer());
 

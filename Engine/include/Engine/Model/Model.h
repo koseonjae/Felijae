@@ -12,12 +12,8 @@ class Program;
 class Pipeline;
 class Buffer;
 
-class Model {
+class Model final {
  public:
-  Model() = default;
-
-  virtual ~Model() = default;
-
   void update();
 
   void render();
