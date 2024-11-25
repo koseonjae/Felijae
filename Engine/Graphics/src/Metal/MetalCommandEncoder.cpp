@@ -24,9 +24,6 @@ void MetalCommandEncoder::encode(Pipeline* pipeline) {
                                    MTL::IndexTypeUInt32,
                                    metalBuffer->getIndexHandle(),
                                    0);
-}
-
-void MetalCommandEncoder::endEncoding() {
   m_encoder->endEncoding();
 }
 

@@ -15,8 +15,6 @@ class MetalCommandEncoder : public CommandEncoder {
 
    void encode(Pipeline* pipeline) override;
 
-   void endEncoding() override;
-
   MTL::RenderCommandEncoder* getEncoder();
 
   const MTL::RenderCommandEncoder* getEncoder() const;

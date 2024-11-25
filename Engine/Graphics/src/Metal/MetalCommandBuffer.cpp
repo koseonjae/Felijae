@@ -19,7 +19,6 @@ void MetalCommandBuffer::encode(RenderPass* renderPass, Pipeline* pipeline) {
 
   auto encoder = std::make_shared<MetalCommandEncoder>(m_cmdBuf->renderCommandEncoder(metalRenderPass->getPass()));
   encoder->encode(pipeline);
-  encoder->endEncoding();
 }
 
 void MetalCommandBuffer::present(Texture* texture) {
