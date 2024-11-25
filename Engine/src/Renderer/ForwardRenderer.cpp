@@ -1,9 +1,7 @@
 #include <Engine/Renderer/ForwardRenderer.h>
 
 #include <Graphics/Model/Pipeline.h>
-#include <Graphics/Model/Program.h>
 #include <Graphics/Model/CommandBuffer.h>
-#include <Graphics/Model/RenderPass.h>
 
 #include <Engine/Model/Model.h>
 #include <Engine/Model/Scene.h>
@@ -11,26 +9,25 @@
 using namespace goala;
 
 void ForwardRenderer::update() {
-  auto updateProgram = [self = shared_from_this()](Program* program) {
+  auto updateNodes = [self = shared_from_this()](Uniforms* uniforms) {
     if (!self)
       return;
     if (auto light = self->getScene()->getNode<Light>()) {
-      program->setUniform("uLightDir", light->getLightDirection());
-      program->setUniform("uLightColor", light->getLightColor());
+      uniforms->setUniform("uLightDir", light->getLightDirection());
+      uniforms->setUniform("uLightColor", light->getLightColor());
     }
     if (auto camera = self->getScene()->getNode<Camera>()) {
-      program->setUniform("uViewMat", camera->getViewMatrix());
-      program->setUniform("uProjMat", camera->getProjMatrix());
-      program->setUniform("uCameraPosition", camera->getEye());
+      uniforms->setUniform("uViewMat", camera->getViewMatrix());
+      uniforms->setUniform("uProjMat", camera->getProjMatrix());
+      uniforms->setUniform("uCameraPosition", camera->getEye());
     }
   };
 
   auto& models = m_scene->getModels();
   for (auto& model : models) {
-    if (auto* program = model->getPipeline()->getProgram()) {
-      // todo: Pipeline에 Uniform 멤버변수 만들고, 거기에 uniform 세팅하자
-      updateProgram(program);
-      program->setUniform("uWorldMat", model->calculateWorldMat());
+    if (auto* uniforms = model->getPipeline()->getUniforms()) {
+      updateNodes(uniforms);
+      uniforms->setUniform("uWorldMat", model->calculateWorldMat());
     }
     model->update();
   }

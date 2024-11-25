@@ -1,4 +1,6 @@
 #include <Graphics/OpenGL/OpenGLProgram.h>
+#include <Graphics/Model/Uniforms.h>
+
 #include <cassert>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -70,61 +72,48 @@ OpenGLProgram::~OpenGLProgram() {
   glDeleteProgram(m_program);
 }
 
-void OpenGLProgram::bind() {
+void OpenGLProgram::bind(Uniforms* uniformVariables) {
   m_threadChecker.checkThread();
   assert(m_initialized && "OpenGLProgram is not initialized");
 
   glUseProgram(m_program);
 
-  _updateTasks();
+  auto uniforms = uniformVariables->retrieveUniforms();
+  auto textures = uniformVariables->retrieveTextures();
+
+  _updateUniforms(uniforms);
+  _updateTextures(std::move(textures));
 }
 
-void OpenGLProgram::_updateTasks() {
-  m_threadChecker.checkThread();
-  assert(m_initialized && "OpenGLProgram is not initialized");
+void OpenGLProgram::_updateUniforms(const UniformVariables& uniforms) {
+  for (const auto& [name, variable] : uniforms) {
+    GLint loc = glGetUniformLocation(m_program, name.c_str());
+    assert(loc != -1 && "Invalid uniform location");
 
-  decltype(m_generalTasks) generalTasks;
-  decltype(m_textureTasks) textureTasks;
-  {
-    std::lock_guard<std::mutex> l(m_taskLock);
-    generalTasks = std::move(m_generalTasks);
-    textureTasks = std::move(m_textureTasks);
+    std::visit([loc](auto& value) {
+      using T = std::decay_t<decltype(value)>;
+      if constexpr (std::is_same_v<T, glm::vec3>)
+        glUniform3fv(loc, 1, glm::value_ptr(value));
+      else if constexpr (std::is_same_v<T, glm::mat4>)
+        glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(value));
+    }, variable);
   }
+}
 
-  for (const auto& [name, task] : generalTasks)
-    task(name);
+void OpenGLProgram::_updateTextures(TextureVariables textures) {
+  if (textures.empty())
+    return;
+
+  for (auto& [name, texture] : textures)
+    m_textureVariables.insert_or_assign(name.data(), std::move(texture));
 
   int index = 0;
-  for (const auto& [name, task] : textureTasks)
-    task(name, index++);
-}
-
-void OpenGLProgram::setUniform(std::string_view name, const glm::vec3& vec3) {
-  std::lock_guard<std::mutex> l(m_taskLock);
-  m_generalTasks.insert({name.data(), [=](std::string_view name) {
-    GLint loc = glGetUniformLocation(m_program, name.data());
-    assert(loc != -1 && "Invalid uniform location");
-    glUniform3fv(loc, 1, glm::value_ptr(vec3));
-  }});
-}
-
-void OpenGLProgram::setUniform(std::string_view name, const glm::mat4& mat4) {
-  std::lock_guard<std::mutex> l(m_taskLock);
-  m_generalTasks.insert({name.data(), [=](std::string_view name) {
-    GLint loc = glGetUniformLocation(m_program, name.data());
-    assert(loc != -1 && "Invalid uniform location");
-    glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(mat4));
-  }});
-}
-
-void OpenGLProgram::setTexture(std::string_view name, std::shared_ptr<Texture> texture) {
-  std::lock_guard<std::mutex> l(m_taskLock);
-  m_textureTasks.insert({name.data(), [=, texture = std::move(texture)](std::string_view name, int index) mutable {
+  for (auto& [name, texture] : m_textureVariables) {
     glActiveTexture(GL_TEXTURE0 + index);
     texture->bind();
     GLint loc = glGetUniformLocation(m_program, name.data());
     assert(loc != -1 && "Invalid texture location");
     glUniform1i(loc, index);
-    m_textures.insert({name.data(), std::move(texture)}); // avoid texture destruction
-  }});
+    ++index;
+  }
 }

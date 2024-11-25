@@ -2,6 +2,7 @@
 
 #include <Base/Utility/ThreadChecker.h>
 #include <Graphics/Model/Program.h>
+#include <Graphics/Model/Uniforms.h>
 #include <Graphics/OpenGL/OpenGLTexture.h>
 
 #include <functional>
@@ -24,28 +25,18 @@ class OpenGLProgram final : public Program {
 
   void initialize(std::string_view vsPath, std::string_view fsPath) override;
 
-  void bind() override;
-
-  void setUniform(std::string_view name, const glm::vec3& vec3) override;
-
-  void setUniform(std::string_view name, const glm::mat4& mat4) override;
-
-  void setTexture(std::string_view name,
-                  std::shared_ptr<Texture> texture) override;
+  void bind(Uniforms* uniforms) override;
 
  private:
-  void _updateTasks();
+  void _updateUniforms(const UniformVariables& uniforms);
+  void _updateTextures(TextureVariables textures);
 
  private:
   GLuint m_program = 0;
   bool m_initialized = false;
-  std::mutex m_taskLock;
-  std::unordered_map<std::string, std::function<void(std::string_view)>>
-    m_generalTasks;
-  std::unordered_map<std::string, std::function<void(std::string_view, int)>>
-    m_textureTasks;
+
   ThreadChecker m_threadChecker;
-  std::unordered_map<std::string, std::shared_ptr<Texture>> m_textures;
+  TextureVariables m_textureVariables;
 };
 
 } // namespace goala

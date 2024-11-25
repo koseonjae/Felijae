@@ -1,5 +1,6 @@
 add_library(Graphics STATIC
     src/Utility/ImageFormatUtil.cpp
+    src/Model/Uniforms.cpp
     src/OpenGL/OpenGLCommandEncoder.cpp
     src/OpenGL/OpenGLCommandBuffer.cpp
     src/OpenGL/OpenGLPipeline.cpp
@@ -28,6 +29,7 @@ add_library(Graphics STATIC
     include/Graphics/Model/CommandBuffer.h
     include/Graphics/Model/Device.h
     include/Graphics/Model/Shader.h
+    include/Graphics/Model/Uniforms.h
     include/Graphics/Model/Program.h
     include/Graphics/Model/Rasterizer.h
     include/Graphics/Model/OutputMerger.h

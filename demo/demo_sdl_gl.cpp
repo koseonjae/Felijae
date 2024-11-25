@@ -105,15 +105,20 @@ int main() {
     auto fs = File("asset://shader/lighting.frag").read();
     auto program = std::make_shared<OpenGLProgram>();
     program->initialize(vs, fs);
+    pipeline->setProgram(program);
+  }
 
+  // Uniform
+  {
+    auto uniforms = std::make_shared<Uniforms>();
     glm::vec3 emitLight{0.0f, 0.0f, 0.0f};
-    program->setUniform("uEmitLight", emitLight);
+    uniforms->setUniform("uEmitLight", emitLight);
 
     auto texture = std::make_shared<OpenGLTexture>();
     texture->initialize(File("asset://model/suzanne/uvmap.jpeg"));
-    program->setTexture("uTexture", texture);
+    uniforms->setTexture("uTexture", texture);
 
-    pipeline->setProgram(program);
+    pipeline->setUniforms(std::move(uniforms));
   }
 
   // Buffer
