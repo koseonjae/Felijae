@@ -41,7 +41,11 @@ int main(int argc, char** argv) {
 
   SDL_SetHint(SDL_HINT_RENDER_DRIVER, "metal");
   SDL_InitSubSystem(SDL_INIT_VIDEO);
-  SDL_Window* window = SDL_CreateWindow("SDL Metal", -1, -1, viewport[0], viewport[1], SDL_WINDOW_ALLOW_HIGHDPI);
+  SDL_Window* window = SDL_CreateWindow("SDL Metal", -1, -1, viewport[0], viewport[1], SDL_WINDOW_METAL);
+
+  int width, height;
+  SDL_Metal_GetDrawableSize(window, &width, &height);
+  assert(viewport[0] == width && viewport[1] == height && "Created window drawable size is not same with viewport");
 
   auto device = std::make_unique<MetalDevice>(MTL::CreateSystemDefaultDevice());
 
