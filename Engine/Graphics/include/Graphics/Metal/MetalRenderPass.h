@@ -15,7 +15,7 @@ class MetalRenderPass : public RenderPass {
 
   void bind() override;
 
- MTL::RenderPassDescriptor* getPass() const;
+  MTL::RenderPassDescriptor* getPass() const;
 
  private:
   void _updateRenderPass();

@@ -9,7 +9,7 @@ inline NS::String* getNSString(std::string_view str) {
 } // namespace
 
 MetalShader::MetalShader(MetalDevice* device, std::string_view source, ShaderType type)
-    : Shader(type) {
+  : Shader(type) {
   NS::Error* err = nil;
 
   auto library =

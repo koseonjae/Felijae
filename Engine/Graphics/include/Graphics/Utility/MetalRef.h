@@ -4,7 +4,7 @@
 
 namespace goala {
 
-template<typename T>
+template <typename T>
 class MetalRef {
  public:
   MetalRef() = default;

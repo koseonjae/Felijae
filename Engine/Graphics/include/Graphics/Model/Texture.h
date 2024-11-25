@@ -33,7 +33,7 @@ class Texture {
 
   virtual void bind() = 0;
 
-  template<typename T>
+  template <typename T>
   T getHandle() const {
     return std::get<T>(m_handle);
   }

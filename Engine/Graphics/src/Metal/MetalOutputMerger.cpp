@@ -3,5 +3,5 @@
 using namespace goala;
 
 void MetalOutputMerger::bind() {
-  
+
 }

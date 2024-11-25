@@ -23,13 +23,13 @@ class Scene final {
 
   std::vector<std::shared_ptr<Model>>& getModels();
 
-  template<typename T>
+  template <typename T>
   void setNode(std::shared_ptr<T> node) {
     assert(m_nodes.find(typeid(T)) == m_nodes.end() && "Duplicate node type is not supported");
     m_nodes.insert({typeid(T), std::move(node)});
   }
 
-  template<typename T>
+  template <typename T>
   const T* getNode() const {
     auto found = m_nodes.find(typeid(T));
     if (found == m_nodes.end())

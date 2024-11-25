@@ -51,7 +51,7 @@ void OpenGLTexture::initialize(ImageData imageData, bool lazyLoading) {
     if (!self)
       return;
     assert(!self->m_initialized);
-    
+
     GLuint format = getGLFormat(image.format);
     auto data = image.pixel.empty() ? nullptr : image.pixel.data();
 

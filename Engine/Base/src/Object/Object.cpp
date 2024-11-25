@@ -24,11 +24,13 @@ Object loadObj(const File& file) {
       auto vIdx = 3 * indices[i].vertex_index;
       auto nIdx = 3 * indices[i].normal_index;
       auto uvIdx = 2 * indices[i].texcoord_index;
-      result.vertices.push_back({
-        {attributes.vertices[vIdx], attributes.vertices[vIdx + 1], attributes.vertices[vIdx + 2]},
-        {attributes.normals[nIdx], attributes.normals[nIdx + 1], attributes.normals[nIdx + 2]},
-        {attributes.texcoords[uvIdx], attributes.texcoords[uvIdx + 1]},
-      });
+      result.vertices.push_back(
+        {
+          {attributes.vertices[vIdx], attributes.vertices[vIdx + 1], attributes.vertices[vIdx + 2]},
+          {attributes.normals[nIdx], attributes.normals[nIdx + 1], attributes.normals[nIdx + 2]},
+          {attributes.texcoords[uvIdx], attributes.texcoords[uvIdx + 1]}
+        }
+      );
       newIdxMap.insert({std::move(idx), newIdx});
       result.indices.push_back(newIdx);
       ++newIdx;
