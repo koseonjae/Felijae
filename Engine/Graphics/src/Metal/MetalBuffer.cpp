@@ -27,15 +27,15 @@ MetalBuffer::MetalBuffer(MetalDevice* device, const Object& obj) {
 
   auto verticesSize =
     sizeof(decltype(obj.vertices)::value_type) * obj.vertices.size();
-  m_vertexHandle = MetalRef(device->getMTLDevice()->newBuffer(
+  m_vertexHandle = makeMetalRef(device->getMTLDevice()->newBuffer(
     (void*) obj.vertices.data(), verticesSize, resourceOption));
 
   auto indicesSize =
     sizeof(decltype(obj.indices)::value_type) * obj.indices.size();
-  m_indexHandle = MetalRef(device->getMTLDevice()->newBuffer(
+  m_indexHandle = makeMetalRef(device->getMTLDevice()->newBuffer(
     obj.indices.data(), indicesSize, resourceOption));
 
-  m_vertexDesc = MetalRef(MTL::VertexDescriptor::alloc()->init());
+  m_vertexDesc = makeMetalRef(MTL::VertexDescriptor::alloc()->init());
 
   m_vertexDesc->attributes()->object(0)->setFormat(
     MTL::VertexFormat::VertexFormatFloat3);

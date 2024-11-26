@@ -1,47 +1,17 @@
 #pragma once
 
-#include <utility>
 #include <memory>
 
 namespace goala {
 
 template <typename T>
-std::shared_ptr<T> makeSharedMetal(T* ptr) {
+using MetalRef = std::shared_ptr<T>;
+
+template <typename T>
+MetalRef<T> makeMetalRef(T* ptr) {
   ptr->retain();
   auto sharedPtr = std::shared_ptr<T>(ptr, [](T* ptr) { ptr->release(); });
   return sharedPtr;
 }
-
-template <typename T>
-class MetalRef {
- public:
-  MetalRef() = default;
-  explicit MetalRef(T* ptr) : m_ptr(ptr) { m_ptr->retain(); }
-
-  ~MetalRef() {
-    if (!m_ptr) return;
-    m_ptr->release();
-  }
-
-  MetalRef(const MetalRef<T>& rhs) = delete;
-
-  MetalRef& operator=(const MetalRef<T>& rhs) = delete;
-
-  MetalRef(MetalRef<T>&& rhs) noexcept { *this = std::move(rhs); }
-
-  MetalRef& operator=(MetalRef<T>&& rhs) noexcept {
-    if (this != &rhs) std::swap(m_ptr, rhs.m_ptr);
-    return *this;
-  }
-
-  auto operator->() { return m_ptr; }
-  auto operator->() const { return m_ptr; }
-  explicit operator bool() const { return m_ptr; }
-  [[nodiscard]] const T* get() const { return m_ptr; }
-  [[nodiscard]] T* get() { return m_ptr; }
-
- private:
-  T* m_ptr = nullptr;
-};
 
 } // namespace goala

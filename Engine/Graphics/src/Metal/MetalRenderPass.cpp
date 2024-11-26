@@ -6,7 +6,7 @@
 
 using namespace goala;
 
-MetalRenderPass::MetalRenderPass() : m_pass(MTL::RenderPassDescriptor::renderPassDescriptor()) {}
+MetalRenderPass::MetalRenderPass() : m_pass(makeMetalRef(MTL::RenderPassDescriptor::renderPassDescriptor())) {}
 
 void MetalRenderPass::update() {
   _updateRenderPass();

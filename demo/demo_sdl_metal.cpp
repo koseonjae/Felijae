@@ -109,7 +109,7 @@ int main(int argc, char** argv) {
   renderer->setRenderPass(renderPass);
 
   // Queue
-  auto queue = MetalRef(device->getMTLDevice()->newCommandQueue());
+  auto queue = makeMetalRef(device->getMTLDevice()->newCommandQueue());
 
   // Model
   auto model = std::make_shared<Model>();

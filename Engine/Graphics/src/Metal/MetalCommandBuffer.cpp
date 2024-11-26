@@ -11,9 +11,8 @@
 using namespace goala;
 
 MetalCommandBuffer::MetalCommandBuffer(MetalDevice* device, MTL::CommandBuffer* cmdBuf)
-  : m_device(device) {
-  m_cmdBuf = MetalRef(cmdBuf);
-}
+  : m_device(device)
+  , m_cmdBuf(makeMetalRef(cmdBuf)) {}
 
 void MetalCommandBuffer::encode(RenderPass* renderPass, Pipeline* pipeline) {
   auto encoder = std::make_shared<MetalCommandEncoder>(this, renderPass);

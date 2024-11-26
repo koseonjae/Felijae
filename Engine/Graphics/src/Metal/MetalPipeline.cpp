@@ -2,7 +2,6 @@
 #include <Graphics/Metal/MetalPipeline.h>
 #include <Graphics/Metal/MetalShader.h>
 #include <Graphics/Utility/ImageFormatUtil.h>
-#include <Graphics/Utility/MetalRef.h>
 
 #include <Metal/Metal.hpp>
 
@@ -51,7 +50,7 @@ MetalPipeline::MetalPipeline(MetalDevice* device, const PipelineDescription& des
   m_outputMerger->bind(pipelineDesc);
 
   NS::Error* err = nil;
-  m_pipeline = makeSharedMetal(device->getMTLDevice()->newRenderPipelineState(pipelineDesc, &err));
+  m_pipeline = makeMetalRef(device->getMTLDevice()->newRenderPipelineState(pipelineDesc, &err));
   assert(m_pipeline && "Failed to create pipeline");
 }
 

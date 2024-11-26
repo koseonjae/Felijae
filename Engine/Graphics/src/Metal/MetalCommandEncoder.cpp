@@ -14,7 +14,7 @@ MetalCommandEncoder::MetalCommandEncoder(CommandBuffer* commandBuffer, RenderPas
   auto metalCommandBuffer = dynamic_cast<MetalCommandBuffer*>(commandBuffer);
   auto metalRenderPass = dynamic_cast<MetalRenderPass*>(renderPass);
   auto encoder = metalCommandBuffer->getCommandBuffer()->renderCommandEncoder(metalRenderPass->getPass());
-  m_encoder = MetalRef(encoder);
+  m_encoder = makeMetalRef(encoder);
 }
 
 void MetalCommandEncoder::encode(Pipeline* pipeline) {

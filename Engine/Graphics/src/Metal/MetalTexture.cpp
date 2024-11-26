@@ -37,7 +37,7 @@ void MetalTexture::initialize(int width, int height, ImageFormat format, bool la
   desc->setStorageMode(MTL::StorageModePrivate);
 
   // todo: default 쓰레기값이니 이후에 초기화 옵션 파라미터 추가
-  auto texture = MetalRef(m_device->getMTLDevice()->newTexture(desc));
+  auto texture = makeMetalRef(m_device->getMTLDevice()->newTexture(desc));
   assert(texture.get() && "Failed to create Metal texture");
 
   m_texture = std::move(texture);

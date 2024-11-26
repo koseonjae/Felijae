@@ -3,7 +3,7 @@
 
 using namespace goala;
 
-MetalDevice::MetalDevice(MTL::Device* device) : m_device{device} {}
+MetalDevice::MetalDevice(MTL::Device* device) : m_device(makeMetalRef(device)) {}
 
 std::shared_ptr<Pipeline> MetalDevice::createPipeline(const PipelineDescription& desc) {
   auto pipeline = std::make_shared<MetalPipeline>(this, desc);

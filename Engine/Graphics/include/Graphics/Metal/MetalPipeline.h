@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Graphics/Model/Pipeline.h>
+#include <Graphics/Utility/MetalRef.h>
 
 namespace MTL {
 class RenderPipelineState;
@@ -24,7 +25,7 @@ class MetalPipeline : public Pipeline {
   const MTL::RenderPipelineState* getPipeline() const;
 
  private:
-  std::shared_ptr<MTL::RenderPipelineState> m_pipeline;
+  MetalRef<MTL::RenderPipelineState> m_pipeline;
 };
 
 } // namespace goala

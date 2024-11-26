@@ -12,8 +12,7 @@ MetalShader::MetalShader(MetalDevice* device, std::string_view source, ShaderTyp
   : Shader(type) {
   NS::Error* err = nil;
 
-  auto library =
-    MetalRef(device->getMTLDevice()->newLibrary(getNSString(source), nullptr, &err));
+  auto library = makeMetalRef(device->getMTLDevice()->newLibrary(getNSString(source), nullptr, &err));
   assert(library && "Failed to create library");
 
   std::string shaderTypeStr;
@@ -26,9 +25,8 @@ MetalShader::MetalShader(MetalDevice* device, std::string_view source, ShaderTyp
   else
     assert(false && "undefined shader type");
 
-  auto funcName =
-    NS::String::string(shaderTypeStr.data(), NS::ASCIIStringEncoding);
-  m_func = MetalRef(library->newFunction(funcName));
+  auto funcName = NS::String::string(shaderTypeStr.data(), NS::ASCIIStringEncoding);
+  m_func = makeMetalRef(library->newFunction(funcName));
 }
 
 MTL::Function* MetalShader::getFunction() { return m_func.get(); }
