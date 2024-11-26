@@ -10,6 +10,7 @@
 #include <Graphics/Metal/MetalShader.h>
 #include <Graphics/Metal/MetalTexture.h>
 #include <Graphics/Utility/ImageFormatUtil.h>
+#include <Graphics/Utility/MetalBlitCopy.h>
 #include <Graphics/Utility/MetalRef.h>
 #include <Engine/Model/Model.h>
 #include <Engine/Model/Scene.h>
@@ -120,6 +121,10 @@ int main(int argc, char** argv) {
   scene->addModel(std::move(model));
   renderer->setScene(std::move(scene));
 
+  // Texture
+  auto texture = std::make_shared<MetalTexture>(device.get());
+  texture->initialize(width, height, getImageFormat(MTL::PixelFormatBGRA8Unorm), false);
+
   bool quit = false;
   SDL_Event e;
 
@@ -134,8 +139,6 @@ int main(int argc, char** argv) {
     }
 
     auto drawable = layer->nextDrawable();
-    auto texture = std::make_shared<MetalTexture>();
-    texture->initializeExternal(drawable);
 
     std::vector<Attachment> attachments;
     attachments.emplace_back(Attachment{
@@ -143,7 +146,7 @@ int main(int argc, char** argv) {
       .loadFunc = LoadFunc::Clear,
       .storeFunc = StoreFunc::Store,
       .clear = ClearColor{0.0f, 0.0f, 1.0f, 1.0f},
-      .texture = std::move(texture),
+      .texture = texture,
     });
     renderPass->setAttachments(std::move(attachments));
 
@@ -151,6 +154,9 @@ int main(int argc, char** argv) {
 
     renderer->update();
     renderer->render(cmdBuf);
+
+    // Draw offscreen texture to window swap chain
+    blitTextureToDrawable(texture->getHandle(), drawable, queue.get());
   }
 
   SDL_Metal_DestroyView(view);

@@ -26,10 +26,15 @@ class OpenGLTexture final : public Texture, public std::enable_shared_from_this<
 
   void bind() override;
 
+  GLuint getHandle() const {
+    return m_handle;
+  }
+
  private:
   void _initIfNeeded();
 
  private:
+  GLuint m_handle = 0;
   bool m_initialized = false;
   std::function<void()> m_initializer;
 };

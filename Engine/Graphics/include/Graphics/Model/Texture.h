@@ -7,17 +7,7 @@
 #include <string_view>
 #include <variant>
 
-namespace MTL {
-class Texture;
-}
-
-namespace CA {
-class MetalDrawable;
-}
-
 namespace goala {
-
-using TextureHandle = std::variant<uint32_t, MTL::Texture*, CA::MetalDrawable*>; // todo: texture만 받도록 하자
 
 class Texture {
  public:
@@ -29,22 +19,7 @@ class Texture {
 
   virtual void initialize(ImageData imageData, bool lazyLoading) = 0;
 
-  template <typename T>
-  void initializeExternal(T externalHandle) {
-    m_handle = externalHandle;
-    m_externalHandleInitialized = true;
-  }
-
   virtual void bind() = 0;
-
-  template <typename T>
-  T getHandle() const {
-    return std::get<T>(m_handle);
-  }
-
- protected:
-  TextureHandle m_handle{};
-  bool m_externalHandleInitialized = false;
 };
 
 } // namespace goala

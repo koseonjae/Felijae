@@ -1,5 +1,6 @@
 add_library(Graphics STATIC
     src/Utility/ImageFormatUtil.cpp
+    src/Utility/MetalBlitCopy.cpp
     src/Model/Uniforms.cpp
     src/OpenGL/OpenGLCommandEncoder.cpp
     src/OpenGL/OpenGLCommandBuffer.cpp
@@ -24,6 +25,7 @@ add_library(Graphics STATIC
     src/Metal/MetalPipeline.cpp
 
     include/Graphics/Utility/ImageFormatUtil.h
+    include/Graphics/Utility/MetalBlitCopy.h
     include/Graphics/Utility/MetalRef.h
     include/Graphics/Model/CommandEncoder.h
     include/Graphics/Model/CommandBuffer.h

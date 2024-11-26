@@ -22,7 +22,9 @@ void MetalCommandBuffer::encode(RenderPass* renderPass, Pipeline* pipeline) {
 }
 
 void MetalCommandBuffer::present(Texture* texture) {
-  m_cmdBuf->presentDrawable(texture->getHandle<CA::MetalDrawable*>());
+  assert(false && "Only offscreen rendering is supported");
+  // auto metalTexture = dynamic_cast<MetalTexture*>(texture);
+  // m_cmdBuf->presentDrawable(metalTexture->getHandle());
 }
 
 void MetalCommandBuffer::commit() {

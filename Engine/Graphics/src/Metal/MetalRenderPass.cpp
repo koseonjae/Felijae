@@ -1,4 +1,5 @@
 #include <Graphics/Metal/MetalRenderPass.h>
+#include <Graphics/Metal/MetalTexture.h>
 
 #include <Metal/Metal.hpp>
 #include <QuartzCore/CAMetalDrawable.hpp>
@@ -72,8 +73,8 @@ void MetalRenderPass::_updateRenderPass() {
     else
       assert(false && "Undefined store function");
 
-    CA::MetalDrawable* textureHandle = attachment.texture->getHandle<CA::MetalDrawable*>();
-    colorAttachment->setTexture(textureHandle->texture()); // todo: move
+    MTL::Texture* textureHandle = static_pointer_cast<MetalTexture>(attachment.texture)->getHandle();
+    colorAttachment->setTexture(textureHandle); // todo: move
   }
 
   m_dirty = false;

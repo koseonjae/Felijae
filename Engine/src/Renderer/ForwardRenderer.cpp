@@ -39,6 +39,9 @@ void ForwardRenderer::render(std::shared_ptr<CommandBuffer> cmdBuf) {
   auto& models = m_scene->getModels();
   for (auto& model : models)
     cmdBuf->encode(getRenderPass(), model->getPipeline());
-  cmdBuf->present(m_renderPass->getAttachments()[0].texture.get());
+
+  // offscreen 렌더링하면서 present 호출하지 않도록 변경
+  // cmdBuf->present(m_renderPass->getAttachments()[0].texture.get());
+
   cmdBuf->commit();
 }

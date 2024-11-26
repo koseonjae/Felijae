@@ -1,4 +1,5 @@
 #include <Graphics/OpenGL/OpenGLFrameBuffer.h>
+#include <Graphics/OpenGL/OpenGLTexture.h>
 
 #include <cassert>
 
@@ -11,10 +12,12 @@ OpenGLFrameBuffer::~OpenGLFrameBuffer() {
 
 void OpenGLFrameBuffer::initialize(const std::shared_ptr<Texture>& texture,
                                    GLuint attachmentIdx) {
+  auto glTexture = static_pointer_cast<OpenGLTexture>(texture);
+
   GLuint handle;
   glGenFramebuffers(1, &handle);
   glBindFramebuffer(GL_FRAMEBUFFER, handle);
-  glFramebufferTexture2D(GL_FRAMEBUFFER, attachmentIdx, GL_TEXTURE_2D, texture->getHandle<uint32_t>(), 0);
+  glFramebufferTexture2D(GL_FRAMEBUFFER, attachmentIdx, GL_TEXTURE_2D, static_pointer_cast<OpenGLTexture>(texture)->getHandle(), 0);
 
   if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
     assert(false && "Failed to create frame buffer");
