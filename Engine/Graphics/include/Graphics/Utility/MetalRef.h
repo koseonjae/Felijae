@@ -1,8 +1,16 @@
 #pragma once
 
 #include <utility>
+#include <memory>
 
 namespace goala {
+
+template <typename T>
+std::shared_ptr<T> makeSharedMetal(T* ptr) {
+  ptr->retain();
+  auto sharedPtr = std::shared_ptr<T>(ptr, [](T* ptr) { ptr->release(); });
+  return sharedPtr;
+}
 
 template <typename T>
 class MetalRef {

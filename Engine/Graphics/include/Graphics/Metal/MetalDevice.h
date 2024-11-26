@@ -10,6 +10,9 @@ namespace goala {
 class MetalDevice : public Device {
  public:
   explicit MetalDevice(MTL::Device* device);
+
+  std::shared_ptr<Pipeline> createPipeline(const PipelineDescription& desc) override;
+
   MTL::Device* getMTLDevice();
   const MTL::Device* getMTLDevice() const;
 

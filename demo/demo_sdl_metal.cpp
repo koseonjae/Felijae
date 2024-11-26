@@ -57,7 +57,6 @@ int main(int argc, char** argv) {
   // Shader
   auto vertexFunc = std::make_shared<MetalShader>(device.get(), readFile(File("asset://shader/metal_triangle.vert").getPath()), ShaderType::VERTEX);
   auto fragmentFunc = std::make_shared<MetalShader>(device.get(), readFile(File("asset://shader/metal_triangle.frag").getPath()), ShaderType::FRAGMENT);
-  auto metalPipeline = std::make_shared<MetalPipeline>(device.get());
   PipelineDescription metalPipelineDesc{};
   metalPipelineDesc.shaders.push_back(vertexFunc);
   metalPipelineDesc.shaders.push_back(fragmentFunc);
@@ -103,7 +102,7 @@ int main(int argc, char** argv) {
   auto vertexBuffer = std::make_shared<MetalBuffer>(device.get(), obj);
   metalPipelineDesc.buffer = vertexBuffer;
   metalPipelineDesc.format = getImageFormat(layer->pixelFormat());
-  metalPipeline->initialize(metalPipelineDesc);
+  auto metalPipeline = device->createPipeline(metalPipelineDesc);
 
   // RenderPass
   auto renderPass = std::make_shared<MetalRenderPass>();

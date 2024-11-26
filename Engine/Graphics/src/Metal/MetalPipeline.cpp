@@ -2,33 +2,32 @@
 #include <Graphics/Metal/MetalPipeline.h>
 #include <Graphics/Metal/MetalShader.h>
 #include <Graphics/Utility/ImageFormatUtil.h>
+#include <Graphics/Utility/MetalRef.h>
 
 #include <Metal/Metal.hpp>
 
+#include <memory>
+
 namespace goala {
 
-MetalPipeline::MetalPipeline(MetalDevice* device) : m_device(device) {
-  assert(device && "Device must not be null");
-}
-
-void MetalPipeline::initialize(const PipelineDescription& description) {
+MetalPipeline::MetalPipeline(MetalDevice* device, const PipelineDescription& description) {
   m_buffer = description.buffer; // pipeline에서 descripion을 통째로 저장하고 있도록 하자
   m_shaders = description.shaders;
   m_rasterizer = description.rasterizer;
   m_outputMerger = description.outputMerger;
 
-  m_pipelineDesc = MetalRef(MTL::RenderPipelineDescriptor::alloc()->init());
+  auto pipelineDesc = MTL::RenderPipelineDescriptor::alloc()->init();
 
   for (const auto& shader : description.shaders) {
     auto metalShader = std::static_pointer_cast<MetalShader>(shader);
     assert(metalShader && "Failed to cast to MetalShader");
     switch (metalShader->getShaderType()) {
       case ShaderType::VERTEX: {
-        m_pipelineDesc->setVertexFunction(metalShader->getFunction());
+        pipelineDesc->setVertexFunction(metalShader->getFunction());
         break;
       }
       case ShaderType::FRAGMENT: {
-        m_pipelineDesc->setFragmentFunction(metalShader->getFunction());
+        pipelineDesc->setFragmentFunction(metalShader->getFunction());
         break;
       }
       case ShaderType::COMPUTE: {
@@ -43,16 +42,16 @@ void MetalPipeline::initialize(const PipelineDescription& description) {
   }
 
   auto metalBuffer = std::static_pointer_cast<MetalBuffer>(description.buffer);
-  m_pipelineDesc->setVertexDescriptor(metalBuffer->getVertexDescriptor());
+  pipelineDesc->setVertexDescriptor(metalBuffer->getVertexDescriptor());
 
-  auto colorAttachmentDesc = m_pipelineDesc->colorAttachments()->object(0);
+  auto colorAttachmentDesc = pipelineDesc->colorAttachments()->object(0);
   colorAttachmentDesc->setPixelFormat(getMetalImageFormat(description.format));
 
-  m_rasterizer->bind(m_pipelineDesc.get());
-  m_outputMerger->bind(m_pipelineDesc.get());
+  m_rasterizer->bind(pipelineDesc);
+  m_outputMerger->bind(pipelineDesc);
 
   NS::Error* err = nil;
-  m_pipeline = MetalRef(m_device->getMTLDevice()->newRenderPipelineState(m_pipelineDesc.get(), &err));
+  m_pipeline = makeSharedMetal(device->getMTLDevice()->newRenderPipelineState(pipelineDesc, &err));
   assert(m_pipeline && "Failed to create pipeline");
 }
 
