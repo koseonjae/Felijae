@@ -1,5 +1,7 @@
 #include <Graphics/Metal/MetalCommandEncoder.h>
+#include <Graphics/Metal/MetalCommandBuffer.h>
 #include <Graphics/Metal/MetalPipeline.h>
+#include <Graphics/Metal/MetalRenderPass.h>
 #include <Graphics/Metal/MetalBuffer.h>
 #include <Graphics/Metal/MetalFence.h>
 
@@ -8,8 +10,12 @@
 
 using namespace goala;
 
-MetalCommandEncoder::MetalCommandEncoder(MTL::RenderCommandEncoder* encoder)
-  : m_encoder(encoder) {}
+MetalCommandEncoder::MetalCommandEncoder(CommandBuffer* commandBuffer, RenderPass* renderPass) {
+  auto metalCommandBuffer = dynamic_cast<MetalCommandBuffer*>(commandBuffer);
+  auto metalRenderPass = dynamic_cast<MetalRenderPass*>(renderPass);
+  auto encoder = metalCommandBuffer->getCommandBuffer()->renderCommandEncoder(metalRenderPass->getPass());
+  m_encoder = MetalRef(encoder);
+}
 
 void MetalCommandEncoder::encode(Pipeline* pipeline) {
   auto metalPipeline = dynamic_cast<MetalPipeline*>(pipeline);

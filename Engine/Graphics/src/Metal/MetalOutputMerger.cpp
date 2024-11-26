@@ -15,9 +15,7 @@ void MetalOutputMerger::bind(void* descriptor) {
 }
 
 void MetalOutputMerger::encode(CommandEncoder* encoder) {
-  auto metalEncoder = dynamic_cast<MetalCommandEncoder*>(encoder);
-  auto mtlEncoder = metalEncoder->getEncoder();
-  _updateDepthTest(mtlEncoder);
+  _updateDepthTest(encoder);
 }
 
 void MetalOutputMerger::_updateAlphaBlend(MTL::RenderPipelineDescriptor* descriptor) {
@@ -58,7 +56,7 @@ void MetalOutputMerger::_updateAlphaBlend(MTL::RenderPipelineDescriptor* descrip
     assert(false && "Undefined blend equation");
 }
 
-void MetalOutputMerger::_updateDepthTest(MTL::RenderCommandEncoder* encoder) {
+void MetalOutputMerger::_updateDepthTest(CommandEncoder* encoder) {
   auto& depthTest = getDepthTest();
 
   if (!depthTest.enable)
@@ -74,5 +72,8 @@ void MetalOutputMerger::_updateDepthTest(MTL::RenderCommandEncoder* encoder) {
   descriptor->setDepthWriteEnabled(depthTest.updateDepthMask);
 
   auto depthStencilState = m_device->getMTLDevice()->newDepthStencilState(descriptor);
-  encoder->setDepthStencilState(depthStencilState);
+
+  auto metalEncoder = dynamic_cast<MetalCommandEncoder*>(encoder);
+  auto mtlEncoder = metalEncoder->getEncoder();
+  mtlEncoder->setDepthStencilState(depthStencilState);
 }

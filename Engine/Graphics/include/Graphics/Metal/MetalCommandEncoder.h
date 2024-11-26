@@ -8,10 +8,12 @@ class RenderCommandEncoder;
 }
 
 namespace goala {
+class CommandBuffer;
+class RenderPass;
 
 class MetalCommandEncoder : public CommandEncoder {
  public:
-  explicit MetalCommandEncoder(MTL::RenderCommandEncoder* encoder);
+  MetalCommandEncoder(CommandBuffer* commandBuffer, RenderPass* renderPass);
 
   void encode(Pipeline* pipeline) override;
 

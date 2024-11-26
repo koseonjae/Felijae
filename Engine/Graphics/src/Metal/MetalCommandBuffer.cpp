@@ -16,10 +16,7 @@ MetalCommandBuffer::MetalCommandBuffer(MetalDevice* device, MTL::CommandBuffer* 
 }
 
 void MetalCommandBuffer::encode(RenderPass* renderPass, Pipeline* pipeline) {
-  // todo: dynamic_cast 너무 구리다..
-  auto metalRenderPass = dynamic_cast<MetalRenderPass*>(renderPass);
-
-  auto encoder = std::make_shared<MetalCommandEncoder>(m_cmdBuf->renderCommandEncoder(metalRenderPass->getPass()));
+  auto encoder = std::make_shared<MetalCommandEncoder>(this, renderPass);
   encoder->encode(pipeline);
   encoder->updateDependency(m_signalFences, m_waitFences);
 }
@@ -46,4 +43,12 @@ void MetalCommandBuffer::_addSignalFence(std::shared_ptr<Fence> fence) {
 
 void MetalCommandBuffer::_addWaitFence(std::shared_ptr<Fence> fence) {
   m_waitFences.push_back(std::move(fence));
+}
+
+MTL::CommandBuffer* MetalCommandBuffer::getCommandBuffer() {
+  return m_cmdBuf.get();
+}
+
+const MTL::CommandBuffer* MetalCommandBuffer::getCommandBuffer() const {
+  return m_cmdBuf.get();
 }

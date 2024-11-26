@@ -28,6 +28,10 @@ class MetalCommandBuffer : public CommandBuffer {
 
   void addDependency(CommandBuffer* before) override;
 
+  MTL::CommandBuffer* getCommandBuffer();
+
+  const MTL::CommandBuffer* getCommandBuffer() const;
+
  private:
   void _addSignalFence(std::shared_ptr<Fence> fence);
   void _addWaitFence(std::shared_ptr<Fence> fence);
