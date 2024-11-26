@@ -31,4 +31,6 @@ MetalShader::MetalShader(MetalDevice* device, std::string_view source, ShaderTyp
   m_func = MetalRef(library->newFunction(funcName));
 }
 
-MTL::Function* MetalShader::getFunction() const { return m_func.get(); }
+MTL::Function* MetalShader::getFunction() { return m_func.get(); }
+
+const MTL::Function* MetalShader::getFunction() const { return m_func.get(); }

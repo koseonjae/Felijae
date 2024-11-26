@@ -11,7 +11,8 @@ namespace goala {
 class MetalShader : public Shader {
  public:
   MetalShader(MetalDevice* device, std::string_view filePath, ShaderType type);
-  MTL::Function* getFunction() const;
+  MTL::Function* getFunction();
+  const MTL::Function* getFunction() const;
 
  private:
   MetalRef<MTL::Function> m_func;

@@ -80,6 +80,10 @@ void MetalRenderPass::_updateRenderPass() {
   m_dirty = false;
 }
 
-MTL::RenderPassDescriptor* MetalRenderPass::getPass() const {
+MTL::RenderPassDescriptor* MetalRenderPass::getPass() {
+  return m_pass.get();
+}
+
+const MTL::RenderPassDescriptor* MetalRenderPass::getPass() const {
   return m_pass.get();
 }

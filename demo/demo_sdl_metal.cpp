@@ -150,7 +150,9 @@ int main(int argc, char** argv) {
     });
     renderPass->setAttachments(std::move(attachments));
 
-    auto cmdBuf = std::make_shared<MetalCommandBuffer>(queue->commandBuffer());
+    auto cmdBuf = std::make_shared<MetalCommandBuffer>(device.get(), queue->commandBuffer());
+    auto blitCmdBuf = std::make_shared<MetalCommandBuffer>(device.get(), queue->commandBuffer());
+    blitCmdBuf->addDependency(cmdBuf.get());
 
     renderer->update();
     renderer->render(cmdBuf);

@@ -15,6 +15,8 @@ class CommandBuffer {
   virtual void present(Texture* texture) = 0;
 
   virtual void commit() = 0;
+
+  virtual void addDependency(CommandBuffer* before) = 0;
 };
 
 } // namespace goala

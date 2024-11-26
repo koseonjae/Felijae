@@ -57,15 +57,14 @@ MetalBuffer::MetalBuffer(MetalDevice* device, const Object& obj) {
   m_indicesSize = obj.indices.size();
 }
 
-MTL::Buffer* MetalBuffer::getVertexHandle() const {
-  return m_vertexHandle.get();
-}
+MTL::Buffer* MetalBuffer::getVertexHandle() { return m_vertexHandle.get(); }
+const MTL::Buffer* MetalBuffer::getVertexHandle() const { return m_vertexHandle.get(); }
 
-MTL::Buffer* MetalBuffer::getIndexHandle() const { return m_indexHandle.get(); }
+MTL::Buffer* MetalBuffer::getIndexHandle() { return m_indexHandle.get(); }
+const MTL::Buffer* MetalBuffer::getIndexHandle() const { return m_indexHandle.get(); }
 
-MTL::VertexDescriptor* MetalBuffer::getVertexDescriptor() const {
-  return m_vertexDesc.get();
-}
+MTL::VertexDescriptor* MetalBuffer::getVertexDescriptor() { return m_vertexDesc.get(); }
+const MTL::VertexDescriptor* MetalBuffer::getVertexDescriptor() const { return m_vertexDesc.get(); }
 
 int MetalBuffer::getIndicesSize() const {
   return m_indicesSize;

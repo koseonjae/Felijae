@@ -29,7 +29,8 @@ class MetalRef {
   auto operator->() { return m_ptr; }
   auto operator->() const { return m_ptr; }
   explicit operator bool() const { return m_ptr; }
-  [[nodiscard]] T* get() const { return m_ptr; }
+  [[nodiscard]] const T* get() const { return m_ptr; }
+  [[nodiscard]] T* get() { return m_ptr; }
 
  private:
   T* m_ptr = nullptr;

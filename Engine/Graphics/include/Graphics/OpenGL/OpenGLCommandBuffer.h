@@ -13,6 +13,9 @@ class OpenGLCommandBuffer : public CommandBuffer {
   void present(Texture* texture) override;
 
   void commit() override;
+
+  void addDependency(CommandBuffer* before) override;
+
  private:
   std::function<void()> m_encoded;
 };

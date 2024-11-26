@@ -16,6 +16,7 @@ add_library(Graphics STATIC
     src/Metal/MetalCommandEncoder.cpp
     src/Metal/MetalCommandBuffer.cpp
     src/Metal/MetalDevice.cpp
+    src/Metal/MetalFence.cpp
     src/Metal/MetalRasterizer.cpp
     src/Metal/MetalOutputMerger.cpp
     src/Metal/MetalBuffer.cpp
@@ -30,6 +31,7 @@ add_library(Graphics STATIC
     include/Graphics/Model/CommandEncoder.h
     include/Graphics/Model/CommandBuffer.h
     include/Graphics/Model/Device.h
+    include/Graphics/Model/Fence.h
     include/Graphics/Model/Shader.h
     include/Graphics/Model/Uniforms.h
     include/Graphics/Model/Program.h
@@ -51,6 +53,7 @@ add_library(Graphics STATIC
     include/Graphics/Metal/MetalCommandEncoder.h
     include/Graphics/Metal/MetalCommandBuffer.h
     include/Graphics/Metal/MetalDevice.h
+    include/Graphics/Metal/MetalFence.h
     include/Graphics/Metal/MetalBuffer.h
     include/Graphics/Metal/MetalRenderPass.h
     include/Graphics/Metal/MetalShader.h

@@ -13,7 +13,10 @@ class MetalCommandEncoder : public CommandEncoder {
  public:
   explicit MetalCommandEncoder(MTL::RenderCommandEncoder* encoder);
 
-   void encode(Pipeline* pipeline) override;
+  void encode(Pipeline* pipeline) override;
+
+  void updateDependency(const std::vector<std::shared_ptr<Fence>>& waitFences,
+                        const std::vector<std::shared_ptr<Fence>>& signalFences) override;
 
   MTL::RenderCommandEncoder* getEncoder();
 

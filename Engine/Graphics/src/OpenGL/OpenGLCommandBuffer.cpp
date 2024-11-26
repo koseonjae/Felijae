@@ -18,5 +18,8 @@ void OpenGLCommandBuffer::commit() {
   assert(m_encoded && "m_encoded is empty");
   m_encoded();
   m_encoded = nullptr;
+}
 
+void OpenGLCommandBuffer::addDependency(CommandBuffer* before) {
+  assert(false && "need to implement");
 }

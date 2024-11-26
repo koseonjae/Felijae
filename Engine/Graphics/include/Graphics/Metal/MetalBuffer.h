@@ -23,9 +23,14 @@ class MetalBuffer : public Buffer {
 
   void draw() override;
 
-  MTL::Buffer* getVertexHandle() const;
-  MTL::Buffer* getIndexHandle() const;
-  MTL::VertexDescriptor* getVertexDescriptor() const;
+  MTL::Buffer* getVertexHandle();
+  const MTL::Buffer* getVertexHandle() const;
+
+  MTL::Buffer* getIndexHandle();
+  const MTL::Buffer* getIndexHandle() const;
+
+  MTL::VertexDescriptor* getVertexDescriptor();
+  const MTL::VertexDescriptor* getVertexDescriptor() const;
   int getIndicesSize() const;
 
  private:

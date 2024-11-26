@@ -10,7 +10,8 @@ namespace goala {
 class MetalDevice : public Device {
  public:
   explicit MetalDevice(MTL::Device* device);
-  MTL::Device* getMTLDevice() const;
+  MTL::Device* getMTLDevice();
+  const MTL::Device* getMTLDevice() const;
 
  private:
   MetalRef<MTL::Device> m_device;
