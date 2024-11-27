@@ -31,7 +31,8 @@ void MetalCommandBuffer::commit() {
 }
 
 void MetalCommandBuffer::addDependency(CommandBuffer* cmdBuf) {
-  auto fence = std::make_shared<MetalFence>(m_device->getMTLDevice()->newFence());
+  FenceDescription fenceDesc{};
+  auto fence = m_device->createFence(std::move(fenceDesc));
   _addWaitFence(fence);
   dynamic_cast<MetalCommandBuffer*>(cmdBuf)->_addSignalFence(fence);
 }

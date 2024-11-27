@@ -9,9 +9,11 @@ class Fence;
 
 namespace goala {
 
+class MetalDevice;
+
 class MetalFence : public Fence {
  public:
-  explicit MetalFence(MTL::Fence* fence);
+  MetalFence(MetalDevice* device, FenceDescription fenceDesc);
 
   MTL::Fence* getMTLFence();
 

@@ -17,6 +17,8 @@ class MetalDevice : public Device {
 
   std::shared_ptr<Texture> createTexture(TextureDescription desc) override;
 
+  std::shared_ptr<Fence> createFence(FenceDescription desc) override;
+
   MTL::Device* getMTLDevice();
 
   const MTL::Device* getMTLDevice() const;
