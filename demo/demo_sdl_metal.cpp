@@ -123,8 +123,16 @@ int main(int argc, char** argv) {
   renderer->setScene(std::move(scene));
 
   // Texture
-  auto texture = std::make_shared<MetalTexture>(device.get());
-  texture->initialize(width, height, getImageFormat(MTL::PixelFormatBGRA8Unorm), false);
+  TextureDescription textureDesc = {
+    .imageData = {
+      .width = width,
+      .height = height,
+      .pixel = {},
+      .format = getImageFormat(MTL::PixelFormatBGRA8Unorm),
+    },
+    .loadType = TextureLoadType::EAGER,
+  };
+  auto texture = device->createTexture(textureDesc);
 
   bool quit = false;
   SDL_Event e;
@@ -159,7 +167,8 @@ int main(int argc, char** argv) {
     renderer->render(cmdBuf);
 
     // Draw offscreen texture to window swap chain
-    blitTextureToDrawable(texture->getHandle(), drawable, queue.get());
+    auto metalTexture = std::dynamic_pointer_cast<MetalTexture>(texture);
+    blitTextureToDrawable(metalTexture->getHandle(), drawable, queue.get());
   }
 
   SDL_Metal_DestroyView(view);

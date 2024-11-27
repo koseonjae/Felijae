@@ -6,6 +6,13 @@
 
 using namespace goala;
 
+OpenGLTexture::OpenGLTexture(OpenGLDevice* device, TextureDescription desc)
+  : m_imageData(std::move(desc.imageData)) {
+  if(desc.loadType==TextureLoadType::LAZY)
+    return;
+  _initialize();
+}
+
 OpenGLTexture::~OpenGLTexture() {
   if (!m_initialized)
     return;
@@ -16,56 +23,29 @@ OpenGLTexture::~OpenGLTexture() {
 void OpenGLTexture::_initIfNeeded() {
   if (m_initialized)
     return;
-  if (!m_initializer) assert(false && "Texture is not initialized");
-  m_initializer();
-  m_initializer = {};
+  _initialize();
 }
 
-void OpenGLTexture::initialize(File path, bool lazyLoading) {
-  // todo: imageData쪽에 path를 넣어서 나중에 로딩되도록 할 수 있게 해야하나?
-  auto image = ImageLoader::load(path);
-  assert(image.format == ImageFormat::RGB);
-  initialize(image, lazyLoading);
-}
+void OpenGLTexture::_initialize() {
+  GLuint format = getGLFormat(m_imageData.format);
+  auto data = m_imageData.pixel.empty() ? nullptr : m_imageData.pixel.data();
 
-void OpenGLTexture::initialize(int width, int height, ImageFormat format, bool lazyLoading) {
-  ImageData image{
-    .pixel = {},
-    .width = width,
-    .height = height,
-    .format = format};
-  initialize(image, lazyLoading);
-}
+  GLuint textureId = 0;
+  glGenTextures(1, &textureId);
+  glBindTexture(GL_TEXTURE_2D, textureId);
+  glTexImage2D(GL_TEXTURE_2D, 0, format, m_imageData.width, m_imageData.height, 0, format, GL_UNSIGNED_BYTE, data);
 
-void OpenGLTexture::initialize(ImageData imageData, bool lazyLoading) {
-  assert(!m_initializer && "Texture is initialized twice");
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-  auto weak = weak_from_this();
-  m_initializer = [weak, image = std::move(imageData)]() {
-    auto self = weak.lock();
-    if (!self)
-      return;
-    assert(!self->m_initialized);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    GLuint format = getGLFormat(image.format);
-    auto data = image.pixel.empty() ? nullptr : image.pixel.data();
+  m_handle = textureId;
 
-    GLuint textureId = 0;
-    glGenTextures(1, &textureId);
-    glBindTexture(GL_TEXTURE_2D, textureId);
-    glTexImage2D(GL_TEXTURE_2D, 0, format, image.width, image.height, 0, format, GL_UNSIGNED_BYTE, data);
+  m_imageData.pixel.clear(); // todo: Add option to keep cpu memory
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    self->m_handle = textureId;
-    self->m_initialized = true;
-  };
-
-  if (!lazyLoading) _initIfNeeded();
+  m_initialized = true;
 }
 
 void OpenGLTexture::bind() {

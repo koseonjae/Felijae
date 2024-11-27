@@ -10,7 +10,9 @@ class OpenGLDevice : public Device {
 
    std::shared_ptr<Pipeline> createPipeline(const PipelineDescription& desc) override;
 
-   std::shared_ptr<Buffer> createBuffer(const BufferDescription& desc) override;
+  std::shared_ptr<Buffer> createBuffer(const BufferDescription& desc) override;
+
+ std::shared_ptr<Texture> createTexture(TextureDescription desc) override;
 };
 
 } // namespace goala

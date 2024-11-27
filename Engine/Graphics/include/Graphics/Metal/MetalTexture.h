@@ -3,6 +3,8 @@
 #include <Graphics/Model/Texture.h>
 #include <Graphics/Utility/MetalRef.h>
 
+#include <functional>
+
 namespace MTL {
 class Texture;
 }
@@ -11,15 +13,9 @@ namespace goala {
 
 class MetalDevice;
 
-class MetalTexture : public Texture {
- public:
-  MetalTexture(MetalDevice* device);
-
-  void initialize(File path, bool lazyLoading = false) override;
-
-  void initialize(int width, int height, ImageFormat format, bool lazyLoading = false) override;
-
-  void initialize(ImageData imageData, bool lazyLoading = false) override;
+class MetalTexture : public Texture, public std::enable_shared_from_this<MetalTexture> {
+public:
+  MetalTexture(MetalDevice* device, TextureDescription textureDesc);
 
   void bind() override;
 
@@ -27,9 +23,14 @@ class MetalTexture : public Texture {
 
   const MTL::Texture* getHandle() const;
 
+private:
+  void _initIfNeeded();
+
  private:
   MetalDevice* m_device = nullptr;
-  MetalRef<MTL::Texture> m_texture; // todo: 부모 클래스의 m_handle은 없애고 각 플랫폼별로 관리하는게 나을듯
+  MetalRef<MTL::Texture> m_texture;
+  bool m_initialized = false;
+  ImageData m_imageData{};
 };
 
 } // namespace goala

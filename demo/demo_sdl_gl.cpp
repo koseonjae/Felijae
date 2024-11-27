@@ -1,10 +1,10 @@
 #include <Base/File/File.h>
 #include <Base/Object/Triangle.h>
+#include <Base/Utility/ImageLoader.h>
 #include <Engine/Model/Light.h>
 #include <Engine/Model/Model.h>
 #include <Engine/Model/Scene.h>
 #include <Engine/Renderer/ForwardRenderer.h>
-#include <Graphics/OpenGL/OpenGLBuffer.h>
 #include <Graphics/OpenGL/OpenGLCommandBuffer.h>
 #include <Graphics/OpenGL/OpenGLDevice.h>
 #include <Graphics/OpenGL/OpenGLOutputMerger.h>
@@ -16,7 +16,6 @@
 #include <SDL2/SDL.h>
 
 #include <glm/glm.hpp>
-#include <memory>
 
 using namespace goala;
 
@@ -105,8 +104,11 @@ int main() {
   glm::vec3 emitLight{0.0f, 0.0f, 0.0f};
   uniforms->setUniform("uEmitLight", emitLight);
 
-  auto texture = std::make_shared<OpenGLTexture>();
-  texture->initialize(File("asset://model/suzanne/uvmap.jpeg"));
+  TextureDescription textureDesc = {
+    .imageData = ImageLoader::load(File("asset://model/suzanne/uvmap.jpeg")),
+    .loadType = TextureLoadType::EAGER,
+  };
+  auto texture = device->createTexture(textureDesc);
   uniforms->setTexture("uTexture", texture);
 
   // Buffer
@@ -130,8 +132,16 @@ int main() {
 
   // Render Pass
   {
-    auto colorTexture = std::make_shared<OpenGLTexture>();
-    colorTexture->initialize(width, height, ImageFormat::RGBA);
+    TextureDescription colorTextureDesc = {
+      .imageData = {
+        .width = width,
+        .height = height,
+        .format = ImageFormat::RGBA,
+        .pixel = {},
+      },
+      .loadType = TextureLoadType::EAGER,
+    };
+    auto colorTexture = device->createTexture(colorTextureDesc);
 
     std::vector<Attachment> attachments;
     attachments.emplace_back(Attachment{

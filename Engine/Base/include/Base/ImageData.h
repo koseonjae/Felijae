@@ -3,6 +3,7 @@
 #include <Base/ImageFormat.h>
 
 #include <vector>
+#include <memory>
 
 namespace goala {
 

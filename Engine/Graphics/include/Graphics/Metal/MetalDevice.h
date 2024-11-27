@@ -15,7 +15,10 @@ class MetalDevice : public Device {
 
   std::shared_ptr<Buffer> createBuffer(const BufferDescription& desc) override;
 
+  std::shared_ptr<Texture> createTexture(TextureDescription desc) override;
+
   MTL::Device* getMTLDevice();
+
   const MTL::Device* getMTLDevice() const;
 
  private:
