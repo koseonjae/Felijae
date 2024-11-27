@@ -8,13 +8,13 @@ using namespace goala;
 
 MetalDevice::MetalDevice(MTL::Device* device) : m_device(makeMetalRef(device)) {}
 
-std::shared_ptr<Pipeline> MetalDevice::createPipeline(const PipelineDescription& desc) {
-  auto pipeline = std::make_shared<MetalPipeline>(this, desc);
+std::shared_ptr<Pipeline> MetalDevice::createPipeline(PipelineDescription desc) {
+  auto pipeline = std::make_shared<MetalPipeline>(this, std::move(desc));
   return pipeline;
 }
 
-std::shared_ptr<Buffer> MetalDevice::createBuffer(const BufferDescription& desc) {
-  auto buffer = std::make_shared<MetalBuffer>(this, desc);
+std::shared_ptr<Buffer> MetalDevice::createBuffer(BufferDescription desc) {
+  auto buffer = std::make_shared<MetalBuffer>(this, std::move(desc));
   return buffer;
 }
 

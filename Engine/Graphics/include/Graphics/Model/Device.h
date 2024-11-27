@@ -16,9 +16,9 @@ class Device {
  public:
   virtual ~Device() = default;
 
-  virtual std::shared_ptr<Pipeline> createPipeline(const PipelineDescription& desc) = 0;
+  virtual std::shared_ptr<Pipeline> createPipeline(PipelineDescription desc) = 0;
 
-  virtual std::shared_ptr<Buffer> createBuffer(const BufferDescription& desc) = 0;
+  virtual std::shared_ptr<Buffer> createBuffer(BufferDescription desc) = 0;
 
   virtual std::shared_ptr<Texture> createTexture(TextureDescription desc) = 0;
 };

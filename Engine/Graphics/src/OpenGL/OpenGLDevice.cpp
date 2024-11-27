@@ -5,13 +5,13 @@
 
 using namespace goala;
 
-std::shared_ptr<Pipeline> OpenGLDevice::createPipeline(const PipelineDescription& desc) {
-  auto pipeline = std::make_shared<OpenGLPipeline>(this, desc);
+std::shared_ptr<Pipeline> OpenGLDevice::createPipeline(PipelineDescription desc) {
+  auto pipeline = std::make_shared<OpenGLPipeline>(this, std::move(desc));
   return pipeline;
 }
 
-std::shared_ptr<Buffer> OpenGLDevice::createBuffer(const BufferDescription& desc) {
-  auto buffer = std::make_shared<OpenGLBuffer>(this, desc);
+std::shared_ptr<Buffer> OpenGLDevice::createBuffer(BufferDescription desc) {
+  auto buffer = std::make_shared<OpenGLBuffer>(this, std::move(desc));
   return buffer;
 }
 

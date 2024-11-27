@@ -9,7 +9,7 @@ class OpenGLDevice;
 
 class OpenGLBuffer final : public Buffer {
  public:
-  OpenGLBuffer(OpenGLDevice* device, const BufferDescription& desc);
+  OpenGLBuffer(OpenGLDevice* device, BufferDescription desc);
 
   ~OpenGLBuffer() override;
 

@@ -6,7 +6,7 @@
 
 using namespace goala;
 
-MetalBuffer::MetalBuffer(MetalDevice* device, const BufferDescription& desc) {
+MetalBuffer::MetalBuffer(MetalDevice* device, BufferDescription desc) {
   auto resourceOption = MTL::ResourceCPUCacheModeDefaultCache;
 
   auto& obj = desc.object;

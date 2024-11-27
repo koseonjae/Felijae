@@ -3,7 +3,7 @@
 
 using namespace goala;
 
-OpenGLBuffer::OpenGLBuffer(OpenGLDevice* device, const goala::BufferDescription& desc) {
+OpenGLBuffer::OpenGLBuffer(OpenGLDevice* device, BufferDescription desc) {
   auto& obj = desc.object;
 
   glGenVertexArrays(1, &m_vao);

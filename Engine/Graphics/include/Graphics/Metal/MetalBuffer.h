@@ -12,7 +12,7 @@ class MetalDevice;
 
 class MetalBuffer : public Buffer {
  public:
-  MetalBuffer(MetalDevice* device, const BufferDescription& obj);
+  MetalBuffer(MetalDevice* device, BufferDescription obj);
 
   void bind() override;
 
