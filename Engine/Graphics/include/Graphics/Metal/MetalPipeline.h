@@ -14,7 +14,7 @@ class MetalDevice;
 
 class MetalPipeline : public Pipeline {
  public:
-  explicit MetalPipeline(MetalDevice* device, const PipelineDescription& description);
+  MetalPipeline(MetalDevice* device, PipelineDescription desc);
 
   void update() override;
 

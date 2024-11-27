@@ -1,22 +1,17 @@
 #pragma once
 
-#include <Base/Object/Object.h>
 #include <Graphics/Model/Buffer.h>
 #include <OpenGL/gl3.h>
 
-#include <glm/glm.hpp>
-
 namespace goala {
+
+class OpenGLDevice;
 
 class OpenGLBuffer final : public Buffer {
  public:
-  OpenGLBuffer() = default;
+  OpenGLBuffer(OpenGLDevice* device, const BufferDescription& desc);
 
   ~OpenGLBuffer() override;
-
-  void initialize(const Object& obj) override;
-
-  void release() override;
 
   void bind() override;
 
@@ -24,7 +19,6 @@ class OpenGLBuffer final : public Buffer {
 
  private:
   bool m_initialized = false;
-  Object m_obj;
   GLuint m_vao = 0;
   GLuint m_abo = 0;
   GLuint m_eabo = 0;

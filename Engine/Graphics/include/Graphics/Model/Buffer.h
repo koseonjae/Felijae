@@ -1,16 +1,18 @@
 #pragma once
 
+#include <Base/Object/Object.h>
+
+#include <memory>
+
 namespace goala {
 
-class Object;
+struct BufferDescription {
+  Object object;
+};
 
 class Buffer {
  public:
   virtual ~Buffer() = default;
-
-  virtual void initialize(const Object& obj) = 0;
-
-  virtual void release() = 0;
 
   virtual void bind() = 0;
 

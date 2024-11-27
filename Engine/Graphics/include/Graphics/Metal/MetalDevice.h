@@ -13,6 +13,8 @@ class MetalDevice : public Device {
 
   std::shared_ptr<Pipeline> createPipeline(const PipelineDescription& desc) override;
 
+  std::shared_ptr<Buffer> createBuffer(const BufferDescription& desc) override;
+
   MTL::Device* getMTLDevice();
   const MTL::Device* getMTLDevice() const;
 

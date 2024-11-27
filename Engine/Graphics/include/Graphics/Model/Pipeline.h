@@ -17,14 +17,16 @@ namespace goala {
 struct PipelineDescription {
   std::shared_ptr<Buffer> buffer;
   std::vector<std::shared_ptr<Shader>> shaders;
-  std::shared_ptr<RenderPass> renderPass;
+  std::shared_ptr<Program> program;
   std::shared_ptr<Rasterizer> rasterizer;
   std::shared_ptr<OutputMerger> outputMerger;
+  std::shared_ptr<Uniforms> uniforms;
   ImageFormat format;
 };
 
 class Pipeline {
  public:
+  explicit Pipeline(PipelineDescription desc) : m_desc(std::move(desc)) {}
   virtual ~Pipeline() = default;
 
  public:
@@ -32,34 +34,29 @@ class Pipeline {
   virtual void render() = 0;
 
  public:
-  void setBuffer(std::shared_ptr<Buffer> buffer) { m_buffer = std::move(buffer); }
-  void setProgram(std::shared_ptr<Program> program) { m_program = std::move(program); }
-  void setRasterizer(std::shared_ptr<Rasterizer> rasterizer) { m_rasterizer = std::move(rasterizer); }
-  void setOutputMerger(std::shared_ptr<OutputMerger> outputMerger) { m_outputMerger = std::move(outputMerger); }
-  void setUniforms(std::shared_ptr<Uniforms> uniforms) { m_uniforms = std::move(uniforms); }
+//  void setBuffer(std::shared_ptr<Buffer> buffer) { m_buffer = std::move(buffer); }
+//  void setProgram(std::shared_ptr<Program> program) { m_program = std::move(program); }
+//  void setRasterizer(std::shared_ptr<Rasterizer> rasterizer) { m_rasterizer = std::move(rasterizer); }
+//  void setOutputMerger(std::shared_ptr<OutputMerger> outputMerger) { m_outputMerger = std::move(outputMerger); }
+//  void setUniforms(std::shared_ptr<Uniforms> uniforms) { m_uniforms = std::move(uniforms); }
 
-  const Buffer* getBuffer() const { return m_buffer.get(); }
-  Buffer* getBuffer() { return m_buffer.get(); }
+  const Buffer* getBuffer() const { return m_desc.buffer.get(); }
+  Buffer* getBuffer() { return m_desc.buffer.get(); }
 
-  const Program* getProgram() const { return m_program.get(); };
-  Program* getProgram() { return m_program.get(); };
+  const Program* getProgram() const { return m_desc.program.get(); };
+  Program* getProgram() { return m_desc.program.get(); };
 
-  const Rasterizer* getRasterizer() const { return m_rasterizer.get(); }
-  Rasterizer* getRasterizer() { return m_rasterizer.get(); }
+  const Rasterizer* getRasterizer() const { return m_desc.rasterizer.get(); }
+  Rasterizer* getRasterizer() { return m_desc.rasterizer.get(); }
 
-  const OutputMerger* getOutputMerger() const { return m_outputMerger.get(); }
-  OutputMerger* getOutputMerger() { return m_outputMerger.get(); }
+  const OutputMerger* getOutputMerger() const { return m_desc.outputMerger.get(); }
+  OutputMerger* getOutputMerger() { return m_desc.outputMerger.get(); }
 
-  const Uniforms* getUniforms() const { return m_uniforms.get(); }
-  Uniforms* getUniforms() { return m_uniforms.get(); }
+  const Uniforms* getUniforms() const { return m_desc.uniforms.get(); }
+  Uniforms* getUniforms() { return m_desc.uniforms.get(); }
 
  protected:
-  std::shared_ptr<Buffer> m_buffer;
-  std::vector<std::shared_ptr<Shader>> m_shaders;
-  std::shared_ptr<Program> m_program;
-  std::shared_ptr<Rasterizer> m_rasterizer;
-  std::shared_ptr<OutputMerger> m_outputMerger;
-  std::shared_ptr<Uniforms> m_uniforms;
+  PipelineDescription m_desc{};
 };
 
 } // namespace goala

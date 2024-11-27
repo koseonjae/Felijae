@@ -2,14 +2,16 @@
 
 using namespace goala;
 
-void OpenGLPipeline::update() {
-}
+OpenGLPipeline::OpenGLPipeline(OpenGLDevice* device, PipelineDescription desc)
+  : Pipeline(std::move(desc)) {}
+
+void OpenGLPipeline::update() {}
 
 void OpenGLPipeline::render() {
-  assert(m_rasterizer && m_outputMerger && m_program && m_buffer && "There is empty pipeline");
-  m_rasterizer->bind(nullptr);
-  m_outputMerger->bind(nullptr);
-  m_program->bind(m_uniforms.get());
-  m_buffer->bind();
-  m_buffer->draw();
+  assert(m_desc.rasterizer && m_desc.outputMerger && m_desc.program && m_desc.buffer && "There is empty pipeline");
+  m_desc.rasterizer->bind(nullptr);
+  m_desc.outputMerger->bind(nullptr);
+  m_desc.program->bind(m_desc.uniforms.get());
+  m_desc.buffer->bind();
+  m_desc.buffer->draw();
 }

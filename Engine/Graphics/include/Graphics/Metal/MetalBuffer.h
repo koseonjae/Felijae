@@ -8,16 +8,11 @@
 
 namespace goala {
 
-class Object;
 class MetalDevice;
 
 class MetalBuffer : public Buffer {
  public:
-  MetalBuffer(MetalDevice* device, const Object& obj);
-
-  void initialize(const Object& obj) override;
-
-  void release() override;
+  MetalBuffer(MetalDevice* device, const BufferDescription& obj);
 
   void bind() override;
 

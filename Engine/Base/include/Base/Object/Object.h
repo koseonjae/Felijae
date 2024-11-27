@@ -3,6 +3,7 @@
 #include <Base/File/File.h>
 
 #include <glm/glm.hpp>
+
 #include <vector>
 
 namespace goala {

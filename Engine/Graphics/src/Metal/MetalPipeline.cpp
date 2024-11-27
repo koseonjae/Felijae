@@ -5,19 +5,13 @@
 
 #include <Metal/Metal.hpp>
 
-#include <memory>
-
 namespace goala {
 
-MetalPipeline::MetalPipeline(MetalDevice* device, const PipelineDescription& description) {
-  m_buffer = description.buffer; // pipeline에서 descripion을 통째로 저장하고 있도록 하자
-  m_shaders = description.shaders;
-  m_rasterizer = description.rasterizer;
-  m_outputMerger = description.outputMerger;
-
+MetalPipeline::MetalPipeline(MetalDevice* device, PipelineDescription desc)
+  : Pipeline(std::move(desc)) {
   auto pipelineDesc = MTL::RenderPipelineDescriptor::alloc()->init();
 
-  for (const auto& shader : description.shaders) {
+  for (const auto& shader : m_desc.shaders) {
     auto metalShader = std::static_pointer_cast<MetalShader>(shader);
     assert(metalShader && "Failed to cast to MetalShader");
     switch (metalShader->getShaderType()) {
@@ -40,14 +34,14 @@ MetalPipeline::MetalPipeline(MetalDevice* device, const PipelineDescription& des
     }
   }
 
-  auto metalBuffer = std::static_pointer_cast<MetalBuffer>(description.buffer);
+  auto metalBuffer = std::static_pointer_cast<MetalBuffer>(m_desc.buffer);
   pipelineDesc->setVertexDescriptor(metalBuffer->getVertexDescriptor());
 
   auto colorAttachmentDesc = pipelineDesc->colorAttachments()->object(0);
-  colorAttachmentDesc->setPixelFormat(getMetalImageFormat(description.format));
+  colorAttachmentDesc->setPixelFormat(getMetalImageFormat(m_desc.format));
 
-  m_rasterizer->bind(pipelineDesc);
-  m_outputMerger->bind(pipelineDesc);
+  m_desc.rasterizer->bind(pipelineDesc);
+  m_desc.outputMerger->bind(pipelineDesc);
 
   NS::Error* err = nil;
   m_pipeline = makeMetalRef(device->getMTLDevice()->newRenderPipelineState(pipelineDesc, &err));

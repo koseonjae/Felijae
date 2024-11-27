@@ -98,8 +98,10 @@ int main(int argc, char** argv) {
   metalPipelineDesc.outputMerger = outputMerger;
 
   // Buffer
-  Object obj = Triangle::load();
-  auto vertexBuffer = std::make_shared<MetalBuffer>(device.get(), obj);
+  BufferDescription bufferDesc = {
+    .object = Triangle::load()
+  };
+  auto vertexBuffer = device->createBuffer(bufferDesc);
   metalPipelineDesc.buffer = vertexBuffer;
   metalPipelineDesc.format = getImageFormat(layer->pixelFormat());
   auto metalPipeline = device->createPipeline(metalPipelineDesc);

@@ -6,6 +6,7 @@
 #include <Engine/Renderer/ForwardRenderer.h>
 #include <Graphics/OpenGL/OpenGLBuffer.h>
 #include <Graphics/OpenGL/OpenGLCommandBuffer.h>
+#include <Graphics/OpenGL/OpenGLDevice.h>
 #include <Graphics/OpenGL/OpenGLOutputMerger.h>
 #include <Graphics/OpenGL/OpenGLPipeline.h>
 #include <Graphics/OpenGL/OpenGLProgram.h>
@@ -61,73 +62,69 @@ int main() {
   int width, height;
   SDL_GL_GetDrawableSize(window, &width, &height);
 
-  auto pipeline = std::make_shared<OpenGLPipeline>();
+  auto device = std::make_unique<OpenGLDevice>();
 
   // Rasterizer
-  {
-    Culling culling = {
-      .enable = true,
-      .frontFace = Culling::FrontFace::CCW,
-      .cullMode = Culling::CullMode::Back};
-    Viewport viewport = {
-      .minX = 0,
-      .minY = 0,
-      .width = width,
-      .height = height,
-      .minZ = 0.0f,
-      .maxZ = 1.0f};
-    auto rasterizer = std::make_shared<OpenGLRasterizer>();
-    rasterizer->setCulling(culling);
-    rasterizer->setViewport(viewport);
-    pipeline->setRasterizer(std::move(rasterizer));
-  }
+  Culling culling = {
+    .enable = true,
+    .frontFace = Culling::FrontFace::CCW,
+    .cullMode = Culling::CullMode::Back};
+  Viewport viewport = {
+    .minX = 0,
+    .minY = 0,
+    .width = width,
+    .height = height,
+    .minZ = 0.0f,
+    .maxZ = 1.0f};
+  auto rasterizer = std::make_shared<OpenGLRasterizer>();
+  rasterizer->setCulling(culling);
+  rasterizer->setViewport(viewport);
 
   // Output Merger
-  {
-    DepthTest depthTest = {
-      .enable = true,
-      .depthFunc = DepthTest::DepthTestFunc::Less,
-      .updateDepthMask = true};
-    AlphaBlend alphaBlend = {
-      .enable = true,
-      .fragmentBlendFunc = AlphaBlend::BlendFunc::SRC_ALPHA,
-      .pixelBlendFunc = AlphaBlend::BlendFunc::ONE_MINUS_SRC_ALPHA,
-      .blendEquation = AlphaBlend::BlendEquation::Add};
-    auto outputMerger = std::make_shared<OpenGLOutputMerger>();
-    outputMerger->setDepthTest(depthTest);
-    outputMerger->setAlphaBlend(alphaBlend);
-    pipeline->setOutputMerger(std::move(outputMerger));
-  }
+  DepthTest depthTest = {
+    .enable = true,
+    .depthFunc = DepthTest::DepthTestFunc::Less,
+    .updateDepthMask = true};
+  AlphaBlend alphaBlend = {
+    .enable = true,
+    .fragmentBlendFunc = AlphaBlend::BlendFunc::SRC_ALPHA,
+    .pixelBlendFunc = AlphaBlend::BlendFunc::ONE_MINUS_SRC_ALPHA,
+    .blendEquation = AlphaBlend::BlendEquation::Add};
+  auto outputMerger = std::make_shared<OpenGLOutputMerger>();
+  outputMerger->setDepthTest(depthTest);
+  outputMerger->setAlphaBlend(alphaBlend);
 
   // Program
-  {
-    auto vs = File("asset://shader/lighting.vert").read();
-    auto fs = File("asset://shader/lighting.frag").read();
-    auto program = std::make_shared<OpenGLProgram>();
-    program->initialize(vs, fs);
-    pipeline->setProgram(program);
-  }
+  auto vs = File("asset://shader/lighting.vert").read();
+  auto fs = File("asset://shader/lighting.frag").read();
+  auto program = std::make_shared<OpenGLProgram>();
+  program->initialize(vs, fs);
 
   // Uniform
-  {
-    auto uniforms = std::make_shared<Uniforms>();
-    glm::vec3 emitLight{0.0f, 0.0f, 0.0f};
-    uniforms->setUniform("uEmitLight", emitLight);
+  auto uniforms = std::make_shared<Uniforms>();
+  glm::vec3 emitLight{0.0f, 0.0f, 0.0f};
+  uniforms->setUniform("uEmitLight", emitLight);
 
-    auto texture = std::make_shared<OpenGLTexture>();
-    texture->initialize(File("asset://model/suzanne/uvmap.jpeg"));
-    uniforms->setTexture("uTexture", texture);
-
-    pipeline->setUniforms(std::move(uniforms));
-  }
+  auto texture = std::make_shared<OpenGLTexture>();
+  texture->initialize(File("asset://model/suzanne/uvmap.jpeg"));
+  uniforms->setTexture("uTexture", texture);
 
   // Buffer
-  {
-    auto obj = loadObj(File("asset://model/suzanne/suzanne.obj"));
-    auto buffer = std::make_shared<OpenGLBuffer>();
-    buffer->initialize(obj);
-    pipeline->setBuffer(std::move(buffer));
-  }
+  BufferDescription bufferDesc = {
+    .object = loadObj(File("asset://model/suzanne/suzanne.obj"))
+  };
+  auto buffer = device->createBuffer(bufferDesc);
+
+  PipelineDescription pipelineDesc = {
+    .buffer = buffer,
+    .shaders = {},
+    .program = program,
+    .rasterizer = rasterizer,
+    .outputMerger = outputMerger,
+    .uniforms = uniforms,
+    .format = ImageFormat::RGBA,
+  };
+  auto pipeline = device->createPipeline(pipelineDesc);
 
   auto renderer = std::make_shared<ForwardRenderer>();
 

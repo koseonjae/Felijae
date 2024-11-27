@@ -4,6 +4,7 @@ add_library(Graphics STATIC
     src/Model/Uniforms.cpp
     src/OpenGL/OpenGLCommandEncoder.cpp
     src/OpenGL/OpenGLCommandBuffer.cpp
+    src/OpenGL/OpenGLDevice.cpp
     src/OpenGL/OpenGLPipeline.cpp
     src/OpenGL/OpenGLRasterizer.cpp
     src/OpenGL/OpenGLOutputMerger.cpp
@@ -41,6 +42,7 @@ add_library(Graphics STATIC
     include/Graphics/Model/Texture.h
     include/Graphics/OpenGL/OpenGLCommandEncoder.h
     include/Graphics/OpenGL/OpenGLCommandBuffer.h
+    include/Graphics/OpenGL/OpenGLDevice.h
     include/Graphics/OpenGL/OpenGLPipeline.h
     include/Graphics/OpenGL/OpenGLRasterizer.h
     include/Graphics/OpenGL/OpenGLOutputMerger.h
