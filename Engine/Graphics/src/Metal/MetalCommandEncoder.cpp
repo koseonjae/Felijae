@@ -38,12 +38,12 @@ void MetalCommandEncoder::encodeDraw(Pipeline* pipeline) {
 void MetalCommandEncoder::updateDependency(const std::vector<std::shared_ptr<Fence>>& signalFences,
                                            const std::vector<std::shared_ptr<Fence>>& waitFences) {
   for (auto& fence : waitFences) {
-    auto metalFence = std::dynamic_pointer_cast<MetalFence>(fence);
+    auto metalFence = std::static_pointer_cast<MetalFence>(fence);
     m_encoder->waitForFence(metalFence->getMTLFence(), MTL::RenderStageFragment);
   }
 
   for (auto& fence : signalFences) {
-    auto metalFence = std::dynamic_pointer_cast<MetalFence>(fence);
+    auto metalFence = std::static_pointer_cast<MetalFence>(fence);
     m_encoder->updateFence(metalFence->getMTLFence(), MTL::RenderStageFragment);
   }
 }

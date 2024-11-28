@@ -73,7 +73,7 @@ void MetalOutputMerger::_updateDepthTest(CommandEncoder* encoder) {
 
   auto depthStencilState = m_device->getMTLDevice()->newDepthStencilState(descriptor);
 
-  auto metalEncoder = dynamic_cast<MetalCommandEncoder*>(encoder);
+  auto metalEncoder = static_cast<MetalCommandEncoder*>(encoder);
   auto mtlEncoder = metalEncoder->getEncoder();
   mtlEncoder->setDepthStencilState(depthStencilState);
 }

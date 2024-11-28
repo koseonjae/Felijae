@@ -8,7 +8,7 @@ using namespace goala;
 void MetalRasterizer::bind(void* descriptor) {}
 
 void MetalRasterizer::encode(CommandEncoder* encoder) {
-  auto metalEncoder = dynamic_cast<MetalCommandEncoder*>(encoder);
+  auto metalEncoder = static_cast<MetalCommandEncoder*>(encoder);
   auto mtlEncoder = metalEncoder->getEncoder();
   _updateCulling(mtlEncoder);
   _updateViewPort(mtlEncoder);

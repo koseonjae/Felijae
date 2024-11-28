@@ -168,7 +168,7 @@ int main(int argc, char** argv) {
     renderer->render(cmdBuf);
 
     // Draw offscreen texture to window swap chain
-    auto metalTexture = std::dynamic_pointer_cast<MetalTexture>(texture);
+    auto metalTexture = std::static_pointer_cast<MetalTexture>(texture);
     blitTextureToDrawable(metalTexture->getHandle(), drawable, std::static_pointer_cast<MetalCommandQueue>(queue)->getMTLCommandQueue());
   }
 

@@ -220,7 +220,7 @@ int main() {
     renderer->update();
     renderer->render(cmdBuf);
 
-    auto openGLRenderPass = dynamic_cast<OpenGLRenderPass*>(renderer->getRenderPass());
+    auto openGLRenderPass = static_cast<OpenGLRenderPass*>(renderer->getRenderPass());
     assert(openGLRenderPass != nullptr && "Failed to cast to openGLRenderPass");
     glBindFramebuffer(GL_READ_FRAMEBUFFER, openGLRenderPass->getFrameBuffer(0).getHandle());
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
