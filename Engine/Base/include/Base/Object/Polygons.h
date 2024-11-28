@@ -3,8 +3,9 @@
 #include <Base/Object/Object.h>
 
 namespace goala {
-class Triangle final {
+class Polygons final {
 public:
-  static Object load();
+  static Object triangle();
+  static Object square();
 };
 } // namespace goala

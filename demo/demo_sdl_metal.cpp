@@ -1,5 +1,5 @@
 #include <Base/Object/Object.h>
-#include <Base/Object/Triangle.h>
+#include <Base/Object/Polygons.h>
 #include <Base/Utility/FileReader.h>
 #include <Graphics/Metal/MetalCommandBuffer.h>
 #include <Graphics/Metal/MetalCommandQueue.h>
@@ -54,8 +54,8 @@ int main(int argc, char** argv) {
   auto renderer = std::make_shared<ForwardRenderer>();
 
   // Shader
-  auto vertexFunc = std::make_shared<MetalShader>(device.get(), readFile(File("asset://shader/metal_triangle.vert").getPath()), ShaderType::VERTEX);
-  auto fragmentFunc = std::make_shared<MetalShader>(device.get(), readFile(File("asset://shader/metal_triangle.frag").getPath()), ShaderType::FRAGMENT);
+  auto vertexFunc = std::make_shared<MetalShader>(device.get(), readFile(File("asset://shader/metal_color.vert").getPath()), ShaderType::VERTEX);
+  auto fragmentFunc = std::make_shared<MetalShader>(device.get(), readFile(File("asset://shader/metal_color.frag").getPath()), ShaderType::FRAGMENT);
   PipelineDescription metalPipelineDesc{};
   metalPipelineDesc.shaders.push_back(vertexFunc);
   metalPipelineDesc.shaders.push_back(fragmentFunc);
@@ -98,7 +98,7 @@ int main(int argc, char** argv) {
 
   // Buffer
   BufferDescription bufferDesc = {
-    .object = Triangle::load()
+    .object = Polygons::triangle()
   };
   auto vertexBuffer = device->createBuffer(bufferDesc);
   metalPipelineDesc.buffer = vertexBuffer;

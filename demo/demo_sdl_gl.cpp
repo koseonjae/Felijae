@@ -1,5 +1,5 @@
 #include <Base/File/File.h>
-#include <Base/Object/Triangle.h>
+#include <Base/Object/Polygons.h>
 #include <Base/Utility/ImageLoader.h>
 #include <Engine/Model/Light.h>
 #include <Engine/Model/Model.h>
@@ -99,8 +99,8 @@ int main() {
   outputMerger->setAlphaBlend(alphaBlend);
 
   // Program
-  auto vs = File("asset://shader/lighting.vert").read();
-  auto fs = File("asset://shader/lighting.frag").read();
+  auto vs = File("asset://shader/gl_lighting.vert").read();
+  auto fs = File("asset://shader/gl_lighting.frag").read();
   auto program = std::make_shared<OpenGLProgram>();
   program->initialize(vs, fs);
 
