@@ -4,12 +4,11 @@
 #include <Graphics/Model/Shader.h>
 
 #include <Metal/MTLLibrary.hpp>
-#include <string_view>
 
 namespace goala {
 class MetalShader : public Shader {
 public:
-  MetalShader(MetalDevice* device, std::string_view filePath, ShaderType type);
+  MetalShader(MetalDevice* device, ShaderDescription desc);
   MTL::Function* getFunction();
   const MTL::Function* getFunction() const;
 

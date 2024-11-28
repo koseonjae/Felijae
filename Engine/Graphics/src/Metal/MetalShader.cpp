@@ -8,19 +8,19 @@ inline NS::String* getNSString(std::string_view str) {
 }
 } // namespace
 
-MetalShader::MetalShader(MetalDevice* device, std::string_view source, ShaderType type)
-  : Shader(type) {
+MetalShader::MetalShader(MetalDevice* device, ShaderDescription desc)
+  : Shader(desc.type) {
   NS::Error* err = nil;
 
-  auto library = makeMetalRef(device->getMTLDevice()->newLibrary(getNSString(source), nullptr, &err));
+  auto library = makeMetalRef(device->getMTLDevice()->newLibrary(getNSString(desc.source), nullptr, &err));
   assert(library && "Failed to create library");
 
   std::string shaderTypeStr;
-  if (type == ShaderType::VERTEX)
+  if (desc.type == ShaderType::VERTEX)
     shaderTypeStr = "vertexShader";
-  else if (type == ShaderType::FRAGMENT)
+  else if (desc.type == ShaderType::FRAGMENT)
     shaderTypeStr = "fragmentShader";
-  else if (type == ShaderType::COMPUTE)
+  else if (desc.type == ShaderType::COMPUTE)
     shaderTypeStr = "computeShader";
   else
     assert(false && "undefined shader type");

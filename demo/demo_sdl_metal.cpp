@@ -54,11 +54,16 @@ int main(int argc, char** argv) {
   auto renderer = std::make_shared<ForwardRenderer>();
 
   // Shader
-  auto vertexFunc = std::make_shared<MetalShader>(device.get(), readFile(File("asset://shader/metal_color.vert").getPath()), ShaderType::VERTEX);
-  auto fragmentFunc = std::make_shared<MetalShader>(device.get(), readFile(File("asset://shader/metal_color.frag").getPath()), ShaderType::FRAGMENT);
-  PipelineDescription metalPipelineDesc{};
-  metalPipelineDesc.shaders.push_back(vertexFunc);
-  metalPipelineDesc.shaders.push_back(fragmentFunc);
+  ShaderDescription vertShaderDesc = {
+    .source = readFile(File("asset://shader/metal_color.vert").getPath()),
+    .type = ShaderType::VERTEX
+  };
+  ShaderDescription fragShaderDesc = {
+    .source = readFile(File("asset://shader/metal_color.frag").getPath()),
+    .type = ShaderType::FRAGMENT
+  };
+  auto vertexFunc = device->createShader(vertShaderDesc);
+  auto fragmentFunc = device->createShader(fragShaderDesc);
 
   // Rasterizer
   Culling culling = {
@@ -77,7 +82,6 @@ int main(int argc, char** argv) {
   auto rasterizer = std::make_shared<MetalRasterizer>();
   rasterizer->setCulling(culling);
   rasterizer->setViewport(pipelineViewport);
-  metalPipelineDesc.rasterizer = rasterizer;
 
   // OutputMerger
   DepthTest depthTest = {
@@ -94,15 +98,20 @@ int main(int argc, char** argv) {
   auto outputMerger = std::make_shared<MetalOutputMerger>(device.get());
   outputMerger->setDepthTest(depthTest);
   outputMerger->setAlphaBlend(alphaBlend);
-  metalPipelineDesc.outputMerger = outputMerger;
 
   // Buffer
   BufferDescription bufferDesc = {
     .object = Polygons::triangle()
   };
   auto vertexBuffer = device->createBuffer(bufferDesc);
-  metalPipelineDesc.buffer = vertexBuffer;
-  metalPipelineDesc.format = getImageFormat(layer->pixelFormat());
+
+  PipelineDescription metalPipelineDesc{
+    .shaders = {std::move(vertexFunc), std::move(fragmentFunc)},
+    .buffer = std::move(vertexBuffer),
+    .rasterizer = std::move(rasterizer),
+    .outputMerger = std::move(outputMerger),
+    .format = getImageFormat(layer->pixelFormat()),
+  };
   auto metalPipeline = device->createPipeline(metalPipelineDesc);
 
   // RenderPass

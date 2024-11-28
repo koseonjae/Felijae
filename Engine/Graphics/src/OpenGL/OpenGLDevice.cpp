@@ -30,3 +30,7 @@ std::shared_ptr<CommandQueue> OpenGLDevice::createCommandQueue(CommandQueueDescr
   auto queue = std::make_shared<OpenGLCommandQueue>(this, std::move(desc));
   return queue;
 }
+
+std::shared_ptr<Shader> OpenGLDevice::createShader(ShaderDescription desc) {
+  assert(false && "OpenGL Shader is not supported");
+}

@@ -16,5 +16,7 @@ public:
   std::shared_ptr<Fence> createFence(FenceDescription desc) override;
 
   std::shared_ptr<CommandQueue> createCommandQueue(CommandQueueDescription desc) override;
+
+  std::shared_ptr<Shader> createShader(ShaderDescription desc) override;
 };
 } // namespace goala

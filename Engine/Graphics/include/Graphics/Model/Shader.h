@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 namespace goala {
 enum class ShaderType {
   VERTEX,
@@ -8,9 +10,14 @@ enum class ShaderType {
   UNDEFINED
 };
 
+struct ShaderDescription {
+  std::string source;
+  ShaderType type;
+};
+
 class Shader {
 public:
-  Shader(ShaderType type) : m_type(type) {}
+  explicit Shader(ShaderType type) : m_type(type) {}
 
   virtual ~Shader() = default;
 

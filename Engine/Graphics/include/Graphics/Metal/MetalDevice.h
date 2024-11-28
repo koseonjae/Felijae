@@ -20,6 +20,8 @@ public:
 
   std::shared_ptr<CommandQueue> createCommandQueue(CommandQueueDescription desc) override;
 
+  std::shared_ptr<Shader> createShader(ShaderDescription desc) override;
+
   MTL::Device* getMTLDevice();
 
   const MTL::Device* getMTLDevice() const;

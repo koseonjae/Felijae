@@ -4,6 +4,7 @@
 #include <Graphics/Metal/MetalBuffer.h>
 #include <Graphics/Metal/MetalFence.h>
 
+#include "Graphics/Metal/MetalShader.h"
 #include "Graphics/Metal/MetalTexture.h"
 
 using namespace goala;
@@ -33,6 +34,11 @@ std::shared_ptr<Fence> MetalDevice::createFence(FenceDescription desc) {
 std::shared_ptr<CommandQueue> MetalDevice::createCommandQueue(CommandQueueDescription desc) {
   auto commandQueue = std::make_shared<MetalCommandQueue>(this, std::move(desc));
   return commandQueue;
+}
+
+std::shared_ptr<Shader> MetalDevice::createShader(ShaderDescription desc) {
+  auto shader = std::make_shared<MetalShader>(this, std::move(desc));
+  return shader;
 }
 
 MTL::Device* MetalDevice::getMTLDevice() { return m_device.get(); }
