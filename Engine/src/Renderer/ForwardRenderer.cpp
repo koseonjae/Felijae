@@ -1,10 +1,11 @@
 #include <Engine/Renderer/ForwardRenderer.h>
-
 #include <Graphics/Model/Pipeline.h>
 #include <Graphics/Model/CommandBuffer.h>
-
+#include <Graphics/Metal/MetalCommandEncoder.h>
 #include <Engine/Model/Model.h>
 #include <Engine/Model/Scene.h>
+
+#include "Graphics/Model/CommandEncoder.h"
 
 using namespace goala;
 
@@ -37,8 +38,12 @@ void ForwardRenderer::update() {
 
 void ForwardRenderer::render(std::shared_ptr<CommandBuffer> cmdBuf) {
   auto& models = m_scene->getModels();
-  for (auto& model : models)
-    cmdBuf->encode(getRenderPass(), model->getPipeline());
+  for (auto& model : models) {
+    CommandEncoderDescription encoderDesc{};
+    auto encoder = cmdBuf->createCommandEncoder(getRenderPass(), encoderDesc);
+    encoder->encodeDraw(model->getPipeline());
+    encoder->endEncoding();
+  }
 
   // offscreen 렌더링하면서 present 호출하지 않도록 변경
   // cmdBuf->present(m_renderPass->getAttachments()[0].texture.get());

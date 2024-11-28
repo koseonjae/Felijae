@@ -8,14 +8,23 @@ class RenderCommandEncoder;
 }
 
 namespace goala {
-class CommandBuffer;
-class RenderPass;
+class MetalCommandBuffer;
+class MetalRenderPass;
 
 class MetalCommandEncoder : public CommandEncoder {
 public:
-  MetalCommandEncoder(CommandBuffer* commandBuffer, RenderPass* renderPass);
+  MetalCommandEncoder(MetalCommandBuffer* commandBuffer, MetalRenderPass* renderPass, CommandEncoderDescription desc);
 
-  void encode(Pipeline* pipeline) override;
+  // void encode(Pipeline* pipeline) override;
+  //
+  // void draw() override;
+  //
+  // void updateDependency(const std::vector<std::shared_ptr<Fence>>& waitFences,
+  //                       const std::vector<std::shared_ptr<Fence>>& signalFences) override;
+
+  void endEncoding() override;
+
+  void encodeDraw(Pipeline* pipeline) override;
 
   void updateDependency(const std::vector<std::shared_ptr<Fence>>& waitFences,
                         const std::vector<std::shared_ptr<Fence>>& signalFences) override;

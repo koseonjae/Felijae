@@ -10,16 +10,18 @@
 
 using namespace goala;
 
-MetalCommandEncoder::MetalCommandEncoder(CommandBuffer* commandBuffer, RenderPass* renderPass) {
-  auto metalCommandBuffer = dynamic_cast<MetalCommandBuffer*>(commandBuffer);
-  auto metalRenderPass = dynamic_cast<MetalRenderPass*>(renderPass);
-  auto encoder = metalCommandBuffer->getCommandBuffer()->renderCommandEncoder(metalRenderPass->getPass());
+MetalCommandEncoder::MetalCommandEncoder(MetalCommandBuffer* commandBuffer, MetalRenderPass* renderPass, CommandEncoderDescription desc) {
+  auto encoder = commandBuffer->getCommandBuffer()->renderCommandEncoder(renderPass->getPass());
   m_encoder = makeMetalRef(encoder);
 }
 
-void MetalCommandEncoder::encode(Pipeline* pipeline) {
-  auto metalPipeline = dynamic_cast<MetalPipeline*>(pipeline);
-  auto metalBuffer = dynamic_cast<MetalBuffer*>(metalPipeline->getBuffer());
+void MetalCommandEncoder::endEncoding() {
+  m_encoder->endEncoding();
+}
+
+void MetalCommandEncoder::encodeDraw(Pipeline* pipeline) {
+  auto metalPipeline = static_cast<MetalPipeline*>(pipeline);
+  auto metalBuffer = static_cast<MetalBuffer*>(metalPipeline->getBuffer());
 
   pipeline->getRasterizer()->encode(this);
   pipeline->getOutputMerger()->encode(this);
@@ -31,7 +33,6 @@ void MetalCommandEncoder::encode(Pipeline* pipeline) {
                                    MTL::IndexTypeUInt32,
                                    metalBuffer->getIndexHandle(),
                                    0);
-  m_encoder->endEncoding();
 }
 
 void MetalCommandEncoder::updateDependency(const std::vector<std::shared_ptr<Fence>>& signalFences,

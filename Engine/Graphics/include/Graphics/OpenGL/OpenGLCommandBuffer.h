@@ -8,20 +8,21 @@ namespace goala {
 class OpenGLDevice;
 class OpenGLCommandQueue;
 
-class OpenGLCommandBuffer : public CommandBuffer {
+class OpenGLCommandBuffer : public CommandBuffer, public std::enable_shared_from_this<OpenGLCommandBuffer> {
 public:
   OpenGLCommandBuffer(OpenGLDevice* device, OpenGLCommandQueue* queue, CommandBufferDescription desc);
-  void encode(RenderPass* renderPass, Pipeline* pipeline) override;
 
   void present(Texture* texture) override;
 
   void commit() override;
 
-  void addDependency(CommandBuffer* before) override;
+  std::shared_ptr<CommandEncoder> createCommandEncoder(RenderPass* renderPass, CommandEncoderDescription desc) override;
 
 private:
   OpenGLDevice* m_device = nullptr;
   OpenGLCommandQueue* m_queue = nullptr;
-  std::function<void()> m_encoded;
+  std::vector<std::function<void()>> m_encodedCommands;
+  std::mutex m_cmdMutex;
+  std::atomic<int> m_encoderCnt = 0;
 };
 } // namespace goala

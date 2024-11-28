@@ -4,6 +4,7 @@
 #include <Graphics/Metal/MetalDevice.h>
 #include <Graphics/Metal/MetalFence.h>
 #include <Graphics/Metal/MetalPipeline.h>
+#include <Graphics/Metal/MetalRenderPass.h>
 
 #include <Metal/Metal.hpp>
 
@@ -14,35 +15,18 @@ MetalCommandBuffer::MetalCommandBuffer(MetalDevice* device, MetalCommandQueue* q
   , m_queue(queue)
   , m_cmdBuf(makeMetalRef(queue->getMTLCommandQueue()->commandBuffer())) {}
 
-void MetalCommandBuffer::encode(RenderPass* renderPass, Pipeline* pipeline) {
-  auto encoder = std::make_shared<MetalCommandEncoder>(this, renderPass);
-  encoder->encode(pipeline);
-  encoder->updateDependency(m_signalFences, m_waitFences);
-}
-
 void MetalCommandBuffer::present(Texture* texture) {
   assert(false && "Only offscreen rendering is supported");
-  // auto metalTexture = dynamic_cast<MetalTexture*>(texture);
-  // m_cmdBuf->presentDrawable(metalTexture->getHandle());
 }
 
 void MetalCommandBuffer::commit() {
   m_cmdBuf->commit();
 }
 
-void MetalCommandBuffer::addDependency(CommandBuffer* cmdBuf) {
-  FenceDescription fenceDesc{};
-  auto fence = m_device->createFence(std::move(fenceDesc));
-  _addWaitFence(fence);
-  dynamic_cast<MetalCommandBuffer*>(cmdBuf)->_addSignalFence(fence);
-}
-
-void MetalCommandBuffer::_addSignalFence(std::shared_ptr<Fence> fence) {
-  m_signalFences.push_back(std::move(fence));
-}
-
-void MetalCommandBuffer::_addWaitFence(std::shared_ptr<Fence> fence) {
-  m_waitFences.push_back(std::move(fence));
+std::shared_ptr<CommandEncoder> MetalCommandBuffer::createCommandEncoder(RenderPass* renderPass, CommandEncoderDescription desc) {
+  auto metalRenderPass = static_cast<MetalRenderPass*>(renderPass);
+  auto commandEncoder = std::make_shared<MetalCommandEncoder>(this, metalRenderPass, std::move(desc));
+  return commandEncoder;
 }
 
 MTL::CommandBuffer* MetalCommandBuffer::getCommandBuffer() {
