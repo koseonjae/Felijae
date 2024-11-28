@@ -3,7 +3,6 @@
 #include <memory>
 
 namespace goala {
-
 class Buffer;
 class Fence;
 class Pipeline;
@@ -15,7 +14,7 @@ struct PipelineDescription;
 struct TextureDescription;
 
 class Device {
- public:
+public:
   virtual ~Device() = default;
 
   virtual std::shared_ptr<Pipeline> createPipeline(PipelineDescription desc) = 0;

@@ -8,21 +8,19 @@ class RenderCommandEncoder;
 }
 
 namespace goala {
-
 class MetalDevice;
 
 class MetalOutputMerger : public OutputMerger {
- public:
+public:
   MetalOutputMerger(MetalDevice* device);
   void bind(void* descriptor) override;
   void encode(CommandEncoder* encoder) override;
 
- private:
+private:
   void _updateAlphaBlend(MTL::RenderPipelineDescriptor* encoder);
   void _updateDepthTest(CommandEncoder* encoder);
 
- private:
+private:
   MetalDevice* m_device = nullptr;
 };
-
 } // namespace goala

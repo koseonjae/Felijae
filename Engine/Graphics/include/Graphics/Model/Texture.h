@@ -3,7 +3,6 @@
 #include <Base/ImageData.h>
 
 namespace goala {
-
 enum class TextureLoadType {
   EAGER, LAZY
 };
@@ -14,9 +13,9 @@ struct TextureDescription {
 };
 
 class Texture {
-  public:
-    virtual ~Texture() = default;
+public:
+  virtual ~Texture() = default;
 
-    virtual void bind() = 0;
+  virtual void bind() = 0;
 };
 } // namespace goala

@@ -8,7 +8,7 @@ using namespace goala;
 
 OpenGLTexture::OpenGLTexture(OpenGLDevice* device, TextureDescription desc)
   : m_imageData(std::move(desc.imageData)) {
-  if(desc.loadType==TextureLoadType::LAZY)
+  if (desc.loadType == TextureLoadType::LAZY)
     return;
   _initialize();
 }

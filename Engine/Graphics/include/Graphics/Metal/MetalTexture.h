@@ -10,7 +10,6 @@ class Texture;
 }
 
 namespace goala {
-
 class MetalDevice;
 
 class MetalTexture : public Texture, public std::enable_shared_from_this<MetalTexture> {
@@ -26,11 +25,10 @@ public:
 private:
   void _initIfNeeded();
 
- private:
+private:
   MetalDevice* m_device = nullptr;
   MetalRef<MTL::Texture> m_texture;
   bool m_initialized = false;
   ImageData m_imageData{};
 };
-
 } // namespace goala

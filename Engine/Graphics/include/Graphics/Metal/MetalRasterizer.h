@@ -8,15 +8,13 @@ class RenderCommandEncoder;
 }
 
 namespace goala {
-
 class MetalRasterizer : public Rasterizer {
- public:
+public:
   void bind(void* descriptor) override;
   void encode(CommandEncoder* encoder) override;
 
- private:
+private:
   void _updateCulling(MTL::RenderCommandEncoder* encoder);
   void _updateViewPort(MTL::RenderCommandEncoder* r);
 };
-
 } // namespace goala

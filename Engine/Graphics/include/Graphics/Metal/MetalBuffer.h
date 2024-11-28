@@ -7,11 +7,10 @@
 #include <Metal/MTLVertexDescriptor.hpp>
 
 namespace goala {
-
 class MetalDevice;
 
 class MetalBuffer : public Buffer {
- public:
+public:
   MetalBuffer(MetalDevice* device, BufferDescription obj);
 
   void bind() override;
@@ -28,12 +27,11 @@ class MetalBuffer : public Buffer {
   const MTL::VertexDescriptor* getVertexDescriptor() const;
   int getIndicesSize() const;
 
- private:
+private:
   MetalRef<MTL::Buffer> m_vertexHandle;
   MetalRef<MTL::Buffer> m_indexHandle;
   MetalRef<MTL::VertexDescriptor> m_vertexDesc;
 
   int m_indicesSize = 0;
 };
-
 } // namespace goala

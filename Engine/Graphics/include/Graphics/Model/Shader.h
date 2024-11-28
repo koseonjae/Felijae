@@ -1,7 +1,6 @@
 #pragma once
 
 namespace goala {
-
 enum class ShaderType {
   VERTEX,
   FRAGMENT,
@@ -10,7 +9,7 @@ enum class ShaderType {
 };
 
 class Shader {
- public:
+public:
   Shader(ShaderType type) : m_type(type) {}
 
   virtual ~Shader() = default;
@@ -19,8 +18,7 @@ class Shader {
     return m_type;
   }
 
- protected:
+protected:
   ShaderType m_type = ShaderType::UNDEFINED;
 };
-
 } // namespace goala

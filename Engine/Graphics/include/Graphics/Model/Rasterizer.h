@@ -3,7 +3,6 @@
 #include <tuple>
 
 namespace goala {
-
 class CommandEncoder;
 
 struct Culling {
@@ -11,14 +10,17 @@ struct Culling {
     Front,
     Back
   };
+
   enum class FrontFace {
     CCW,
     CW
   };
+
   bool enable = true;
   FrontFace frontFace = FrontFace::CCW;
   CullMode cullMode = CullMode::Back;
 };
+
 static_assert(std::is_trivially_copyable_v<Culling>);
 
 struct Viewport {
@@ -29,6 +31,7 @@ struct Viewport {
   float minZ = -1.0f;
   float maxZ = -1.0f;
 };
+
 static_assert(std::is_trivially_copyable_v<Viewport>);
 
 class Rasterizer {
@@ -39,11 +42,11 @@ class Rasterizer {
   // viewport transform
   // scan conversion
 
- public:
+public:
   virtual void bind(void* descriptor) = 0;
   virtual void encode(CommandEncoder* encoder) = 0;
 
- public:
+public:
   virtual ~Rasterizer() = default;
 
   void setCulling(const Culling& culling) { m_culling = culling; };
@@ -52,9 +55,8 @@ class Rasterizer {
   const Culling& getCulling() const { return m_culling; }
   const Viewport& getViewport() const { return m_viewport; }
 
- private:
+private:
   Culling m_culling;
   Viewport m_viewport;
 };
-
 } // namespace goala

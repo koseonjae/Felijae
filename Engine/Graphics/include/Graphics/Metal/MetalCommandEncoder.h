@@ -12,7 +12,7 @@ class CommandBuffer;
 class RenderPass;
 
 class MetalCommandEncoder : public CommandEncoder {
- public:
+public:
   MetalCommandEncoder(CommandBuffer* commandBuffer, RenderPass* renderPass);
 
   void encode(Pipeline* pipeline) override;
@@ -24,8 +24,7 @@ class MetalCommandEncoder : public CommandEncoder {
 
   const MTL::RenderCommandEncoder* getEncoder() const;
 
- private:
+private:
   MetalRef<MTL::RenderCommandEncoder> m_encoder;
 };
-
 } // namespace goala

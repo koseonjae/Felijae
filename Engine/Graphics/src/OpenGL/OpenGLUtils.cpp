@@ -11,8 +11,7 @@ GLuint getGLFormat(ImageFormat format) {
       return GL_RGBA;
     case ImageFormat::BGRA:
       return GL_BGRA;
-    default: {
-    }
+    default: {}
   }
   assert(false && "Undefined format");
   return GL_RGB;

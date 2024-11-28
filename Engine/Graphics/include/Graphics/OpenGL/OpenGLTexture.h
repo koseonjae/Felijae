@@ -7,11 +7,10 @@
 #include <string_view>
 
 namespace goala {
-
 class OpenGLDevice;
 
 class OpenGLTexture final : public Texture, public std::enable_shared_from_this<OpenGLTexture> {
- public:
+public:
   OpenGLTexture(OpenGLDevice* device, TextureDescription desc);
   ~OpenGLTexture() override;
 
@@ -21,14 +20,13 @@ class OpenGLTexture final : public Texture, public std::enable_shared_from_this<
     return m_handle;
   }
 
- private:
+private:
   void _initialize();
   void _initIfNeeded();
 
- private:
+private:
   GLuint m_handle = 0;
   bool m_initialized = false;
   ImageData m_imageData{};
 };
-
 } // namespace goala

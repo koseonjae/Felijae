@@ -6,14 +6,13 @@
 #include <memory>
 
 namespace goala {
-
 class Object;
 class Program;
 class Pipeline;
 class Buffer;
 
 class Model final {
- public:
+public:
   void update(); // todo: model이 update만 있다 render는 없다. render는 pipeline 객체를 가져와서 하는중. 구조 정리하자
 
   void setPipeline(std::shared_ptr<Pipeline> pipeline) { m_pipeline = std::move(pipeline); }
@@ -21,7 +20,7 @@ class Model final {
   const Pipeline* getPipeline() const { return m_pipeline.get(); }
   Pipeline* getPipeline() { return m_pipeline.get(); }
 
- public:
+public:
   void translate(glm::vec3 translate) {
     // todo: implement
     m_dirty = true;
@@ -46,15 +45,14 @@ class Model final {
     return m_worldMat;
   }
 
- protected:
+protected:
   std::shared_ptr<Pipeline> m_pipeline;
 
- private:
+private:
   glm::vec3 m_translate{};
   glm::vec3 m_scale{};
   glm::vec4 m_rotate{};
   glm::mat4 m_worldMat = glm::mat4(1.0f);
   bool m_dirty = false;
 };
-
 } // namespace goala

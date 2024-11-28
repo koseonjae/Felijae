@@ -9,11 +9,10 @@ class RenderPipelineDescriptor;
 }
 
 namespace goala {
-
 class MetalDevice;
 
 class MetalPipeline : public Pipeline {
- public:
+public:
   MetalPipeline(MetalDevice* device, PipelineDescription desc);
 
   void update() override;
@@ -24,8 +23,7 @@ class MetalPipeline : public Pipeline {
 
   const MTL::RenderPipelineState* getPipeline() const;
 
- private:
+private:
   MetalRef<MTL::RenderPipelineState> m_pipeline;
 };
-
 } // namespace goala

@@ -6,7 +6,6 @@
 #include <Metal/Metal.hpp>
 
 namespace goala {
-
 MetalPipeline::MetalPipeline(MetalDevice* device, PipelineDescription desc)
   : Pipeline(std::move(desc)) {
   auto pipelineDesc = MTL::RenderPipelineDescriptor::alloc()->init();
@@ -48,11 +47,9 @@ MetalPipeline::MetalPipeline(MetalDevice* device, PipelineDescription desc)
   assert(m_pipeline && "Failed to create pipeline");
 }
 
-void MetalPipeline::update() {
-}
+void MetalPipeline::update() {}
 
-void MetalPipeline::render() {
-}
+void MetalPipeline::render() {}
 
 MTL::RenderPipelineState* MetalPipeline::getPipeline() {
   return m_pipeline.get();
@@ -61,5 +58,4 @@ MTL::RenderPipelineState* MetalPipeline::getPipeline() {
 const MTL::RenderPipelineState* MetalPipeline::getPipeline() const {
   return m_pipeline.get();
 }
-
 } // namespace goala

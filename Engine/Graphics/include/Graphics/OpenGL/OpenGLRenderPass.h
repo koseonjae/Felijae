@@ -4,20 +4,19 @@
 #include <Graphics/OpenGL/OpenGLFrameBuffer.h>
 
 namespace goala {
-
 class OpenGLRenderPass : public RenderPass {
- public:
+public:
   void update() override;
+
   const OpenGLFrameBuffer& getFrameBuffer(int idx) const {
     return m_frameBuffers[idx];
   }
 
- private:
+private:
   void _updateFrameBuffers();
   void _updateRenderPass();
 
- private:
+private:
   std::vector<OpenGLFrameBuffer> m_frameBuffers;
 };
-
 } // namespace goala

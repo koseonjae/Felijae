@@ -10,13 +10,12 @@
 #include <functional>
 
 namespace goala {
-
 using UniformType = std::variant<glm::vec3, glm::mat4>;
 using UniformVariables = std::unordered_map<std::string, UniformType>;
 using TextureVariables = std::unordered_map<std::string, std::shared_ptr<Texture>>;
 
 class Uniforms {
- public:
+public:
   void setUniform(std::string_view name, UniformType variable);
 
   void setTexture(std::string_view name, std::shared_ptr<Texture> texture);
@@ -25,11 +24,10 @@ class Uniforms {
 
   std::unordered_map<std::string, std::shared_ptr<Texture>> retrieveTextures();
 
- private:
+private:
   std::mutex m_uniformsLock;
   std::mutex m_texturesLock;
   UniformVariables m_uniforms;
   TextureVariables m_textures;
 };
-
 } // namespace goala

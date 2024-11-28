@@ -8,19 +8,17 @@ class Fence;
 }
 
 namespace goala {
-
 class MetalDevice;
 
 class MetalFence : public Fence {
- public:
+public:
   MetalFence(MetalDevice* device, FenceDescription fenceDesc);
 
   MTL::Fence* getMTLFence();
 
   const MTL::Fence* getMTLFence() const;
 
- private:
+private:
   MetalRef<MTL::Fence> m_fence;
 };
-
 } // namespace goala

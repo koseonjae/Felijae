@@ -3,15 +3,13 @@
 #include <thread>
 
 namespace goala {
-
 class ThreadChecker final {
- public:
+public:
   ThreadChecker();
 
   void checkThread() const;
 
- private:
+private:
   std::thread::id m_threadId; // 생성자 쓰레드 ID
 };
-
 } // namespace goala

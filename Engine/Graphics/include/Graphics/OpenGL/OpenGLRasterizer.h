@@ -3,15 +3,13 @@
 #include <Graphics/Model/Rasterizer.h>
 
 namespace goala {
-
 class OpenGLRasterizer : public Rasterizer {
- public:
+public:
   void bind(void* descriptor) override;
   void encode(CommandEncoder* encoder) override;
 
- private:
+private:
   void _bindCulling();
   void _bindViewport();
 };
-
 } // namespace goala

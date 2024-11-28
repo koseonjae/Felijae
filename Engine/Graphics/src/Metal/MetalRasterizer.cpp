@@ -5,8 +5,7 @@
 
 using namespace goala;
 
-void MetalRasterizer::bind(void* descriptor) {
-}
+void MetalRasterizer::bind(void* descriptor) {}
 
 void MetalRasterizer::encode(CommandEncoder* encoder) {
   auto metalEncoder = dynamic_cast<MetalCommandEncoder*>(encoder);

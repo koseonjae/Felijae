@@ -3,13 +3,12 @@
 #include <memory>
 
 namespace goala {
-
 class Scene;
 class CommandBuffer;
 class RenderPass;
 
 class Renderer : public std::enable_shared_from_this<Renderer> {
- public:
+public:
   virtual ~Renderer() = default;
 
   virtual void update() = 0;
@@ -28,9 +27,8 @@ class Renderer : public std::enable_shared_from_this<Renderer> {
 
   const RenderPass* getRenderPass() const;
 
- protected:
+protected:
   std::shared_ptr<Scene> m_scene;
   std::shared_ptr<RenderPass> m_renderPass;
 };
-
 } // namespace goala

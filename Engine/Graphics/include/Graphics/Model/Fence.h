@@ -1,13 +1,10 @@
 #pragma once
 
 namespace goala {
-
-struct FenceDescription {
-};
+struct FenceDescription {};
 
 class Fence {
- public:
+public:
   virtual ~Fence() = default;
 };
-
 } // namespace

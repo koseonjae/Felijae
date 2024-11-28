@@ -12,8 +12,7 @@ void OpenGLRasterizer::bind(void* descriptor) {
   _bindViewport();
 }
 
-void OpenGLRasterizer::encode(CommandEncoder* encoder) {
-}
+void OpenGLRasterizer::encode(CommandEncoder* encoder) {}
 
 void OpenGLRasterizer::_bindCulling() {
   const auto& culling = getCulling();

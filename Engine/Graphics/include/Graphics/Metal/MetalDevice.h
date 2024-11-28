@@ -6,9 +6,8 @@
 #include <Metal/MTLDevice.hpp>
 
 namespace goala {
-
 class MetalDevice : public Device {
- public:
+public:
   explicit MetalDevice(MTL::Device* device);
 
   std::shared_ptr<Pipeline> createPipeline(PipelineDescription desc) override;
@@ -23,8 +22,7 @@ class MetalDevice : public Device {
 
   const MTL::Device* getMTLDevice() const;
 
- private:
+private:
   MetalRef<MTL::Device> m_device;
 };
-
 } // namespace goala

@@ -1,13 +1,12 @@
 #pragma once
 
 namespace goala {
-
 class RenderPass;
 class Pipeline;
 class Texture;
 
 class CommandBuffer {
- public:
+public:
   virtual ~CommandBuffer() = default;
 
   virtual void encode(RenderPass* renderPass, Pipeline* pipeline) = 0;
@@ -18,5 +17,4 @@ class CommandBuffer {
 
   virtual void addDependency(CommandBuffer* before) = 0;
 };
-
 } // namespace goala

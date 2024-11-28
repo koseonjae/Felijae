@@ -12,11 +12,10 @@
 #include <vector>
 
 namespace goala {
-
 class Model;
 
 class Scene final {
- public:
+public:
   void addModel(std::shared_ptr<Model> model);
 
   const std::vector<std::shared_ptr<Model>>& getModels() const;
@@ -38,9 +37,8 @@ class Scene final {
     return ptr;
   }
 
- private:
+private:
   std::unordered_map<std::type_index, std::shared_ptr<Node>> m_nodes;
   std::vector<std::shared_ptr<Model>> m_models;
 };
-
 } // namespace goala

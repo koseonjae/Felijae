@@ -4,12 +4,11 @@
 #include <string_view>
 
 namespace goala {
-
 class Texture;
 class Uniforms;
 
 class Program {
- public:
+public:
   Program() = default;
   virtual ~Program() = default;
 
@@ -17,5 +16,4 @@ class Program {
 
   virtual void bind(Uniforms* uniforms) = 0;
 };
-
 } // namespace goala

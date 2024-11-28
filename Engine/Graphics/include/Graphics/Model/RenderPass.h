@@ -5,7 +5,6 @@
 #include <vector>
 
 namespace goala {
-
 enum class AttachmentType {
   Color,
   Depth,
@@ -49,7 +48,7 @@ struct Attachment {
 };
 
 class RenderPass {
- public:
+public:
   virtual ~RenderPass() = default;
 
   virtual void update() = 0;
@@ -61,9 +60,8 @@ class RenderPass {
 
   const std::vector<Attachment>& getAttachments() const { return m_attachments; }
 
- protected:
+protected:
   std::vector<Attachment> m_attachments;
   bool m_dirty = false;
 };
-
 } // namespace goala

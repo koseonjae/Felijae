@@ -5,9 +5,8 @@
 #include <unordered_map>
 
 namespace goala {
-
 class File {
- public:
+public:
   static void registerPath(const std::string& assetPath, std::string prefix);
 
   explicit File(std::string_view path);
@@ -16,9 +15,8 @@ class File {
 
   std::string getPath() const;
 
- private:
+private:
   static std::unordered_map<std::string, std::string> m_assetPaths;
   std::string m_path;
 };
-
 } // namespace goala

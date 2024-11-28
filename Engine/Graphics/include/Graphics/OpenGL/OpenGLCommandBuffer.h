@@ -5,9 +5,8 @@
 #include <functional>
 
 namespace goala {
-
 class OpenGLCommandBuffer : public CommandBuffer {
- public:
+public:
   void encode(RenderPass* renderPass, Pipeline* pipeline) override;
 
   void present(Texture* texture) override;
@@ -16,8 +15,7 @@ class OpenGLCommandBuffer : public CommandBuffer {
 
   void addDependency(CommandBuffer* before) override;
 
- private:
+private:
   std::function<void()> m_encoded;
 };
-
 } // namespace goala

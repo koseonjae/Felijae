@@ -6,8 +6,7 @@
 using namespace goala;
 
 MetalFence::MetalFence(MetalDevice* device, FenceDescription desc)
-  : m_fence(makeMetalRef(device->getMTLDevice()->newFence())) {
-}
+  : m_fence(makeMetalRef(device->getMTLDevice()->newFence())) {}
 
 MTL::Fence* MetalFence::getMTLFence() {
   return m_fence.get();

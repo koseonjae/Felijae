@@ -12,12 +12,11 @@ class Fence;
 }
 
 namespace goala {
-
 class MetalDevice;
 class Fence;
 
 class MetalCommandBuffer : public CommandBuffer {
- public:
+public:
   explicit MetalCommandBuffer(MetalDevice* device, MTL::CommandBuffer* cmdBuf);
 
   void encode(RenderPass* renderPass, Pipeline* pipeline) override;
@@ -32,15 +31,14 @@ class MetalCommandBuffer : public CommandBuffer {
 
   const MTL::CommandBuffer* getCommandBuffer() const;
 
- private:
+private:
   void _addSignalFence(std::shared_ptr<Fence> fence);
   void _addWaitFence(std::shared_ptr<Fence> fence);
 
- private:
+private:
   MetalDevice* m_device = nullptr;
   MetalRef<MTL::CommandBuffer> m_cmdBuf;
   std::vector<std::shared_ptr<Fence>> m_waitFences;
   std::vector<std::shared_ptr<Fence>> m_signalFences;
 };
-
 } // namespace goala

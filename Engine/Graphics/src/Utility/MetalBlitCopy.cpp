@@ -4,7 +4,6 @@
 #include <QuartzCore/QuartzCore.hpp>
 
 namespace goala {
-
 void blitTextureToDrawable(MTL::Texture* texture, CA::MetalDrawable* drawable, MTL::CommandQueue* commandQueue) {
   MTL::Texture* drawableTexture = drawable->texture();
   MTL::CommandBuffer* commandBuffer = commandQueue->commandBuffer();
@@ -23,5 +22,4 @@ void blitTextureToDrawable(MTL::Texture* texture, CA::MetalDrawable* drawable, M
 
   commandBuffer->waitUntilCompleted();
 }
-
 }

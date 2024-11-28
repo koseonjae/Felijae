@@ -6,10 +6,8 @@
 #include <string_view>
 
 namespace goala {
-
 class ImageLoader {
- public:
+public:
   static ImageData load(File path);
 };
-
 } // namespace goala

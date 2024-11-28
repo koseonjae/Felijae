@@ -2,7 +2,6 @@
 #include <tiny_obj_loader.h>
 
 namespace goala {
-
 Object loadObj(const File& file) {
   tinyobj::ObjReader reader;
   tinyobj::ObjReaderConfig config{};
@@ -42,5 +41,4 @@ Object loadObj(const File& file) {
 
   return result;
 }
-
 } // namespace goala

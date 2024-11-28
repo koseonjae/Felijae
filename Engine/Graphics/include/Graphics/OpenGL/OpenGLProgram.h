@@ -11,9 +11,8 @@
 #include <unordered_map>
 
 namespace goala {
-
 class OpenGLProgram final : public Program {
- public:
+public:
   OpenGLProgram() = default;
   ~OpenGLProgram() override;
 
@@ -27,16 +26,15 @@ class OpenGLProgram final : public Program {
 
   void bind(Uniforms* uniforms) override;
 
- private:
+private:
   void _updateUniforms(const UniformVariables& uniforms);
   void _updateTextures(TextureVariables textures);
 
- private:
+private:
   GLuint m_program = 0;
   bool m_initialized = false;
 
   ThreadChecker m_threadChecker;
   TextureVariables m_textureVariables;
 };
-
 } // namespace goala
