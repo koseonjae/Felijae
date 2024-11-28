@@ -23,8 +23,3 @@ void OpenGLCommandEncoder::encodeDraw(Pipeline* pipeline) {
     pipeline->render();
   };
 }
-
-void OpenGLCommandEncoder::updateDependency(const std::vector<std::shared_ptr<Fence>>& waitFences,
-                                            const std::vector<std::shared_ptr<Fence>>& signalFences) {
-  assert(false && "todo: implement");
-}

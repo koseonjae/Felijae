@@ -7,13 +7,11 @@
 
 namespace MTL {
 class CommandBuffer;
-class Fence;
 }
 
 namespace goala {
 class MetalDevice;
 class MetalCommandQueue;
-class Fence;
 class RenderPass;
 
 class MetalCommandBuffer : public CommandBuffer {

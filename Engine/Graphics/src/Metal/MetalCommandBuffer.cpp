@@ -1,8 +1,6 @@
 #include <Graphics/Metal/MetalCommandBuffer.h>
 #include <Graphics/Metal/MetalCommandEncoder.h>
 #include <Graphics/Metal/MetalCommandQueue.h>
-#include <Graphics/Metal/MetalDevice.h>
-#include <Graphics/Metal/MetalFence.h>
 #include <Graphics/Metal/MetalPipeline.h>
 #include <Graphics/Metal/MetalRenderPass.h>
 

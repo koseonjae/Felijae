@@ -3,7 +3,6 @@
 #include <Graphics/Metal/MetalPipeline.h>
 #include <Graphics/Metal/MetalRenderPass.h>
 #include <Graphics/Metal/MetalBuffer.h>
-#include <Graphics/Metal/MetalFence.h>
 
 #include <Metal/triangle_types.h>
 #include <Metal/Metal.hpp>
@@ -33,19 +32,6 @@ void MetalCommandEncoder::encodeDraw(Pipeline* pipeline) {
                                    MTL::IndexTypeUInt32,
                                    metalBuffer->getIndexHandle(),
                                    0);
-}
-
-void MetalCommandEncoder::updateDependency(const std::vector<std::shared_ptr<Fence>>& signalFences,
-                                           const std::vector<std::shared_ptr<Fence>>& waitFences) {
-  for (auto& fence : waitFences) {
-    auto metalFence = std::static_pointer_cast<MetalFence>(fence);
-    m_encoder->waitForFence(metalFence->getMTLFence(), MTL::RenderStageFragment);
-  }
-
-  for (auto& fence : signalFences) {
-    auto metalFence = std::static_pointer_cast<MetalFence>(fence);
-    m_encoder->updateFence(metalFence->getMTLFence(), MTL::RenderStageFragment);
-  }
 }
 
 MTL::RenderCommandEncoder* MetalCommandEncoder::getEncoder() {

@@ -26,9 +26,6 @@ public:
 
   void encodeDraw(Pipeline* pipeline) override;
 
-  void updateDependency(const std::vector<std::shared_ptr<Fence>>& waitFences,
-                        const std::vector<std::shared_ptr<Fence>>& signalFences) override;
-
   MTL::RenderCommandEncoder* getEncoder();
 
   const MTL::RenderCommandEncoder* getEncoder() const;
