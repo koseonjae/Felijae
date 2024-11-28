@@ -19,7 +19,6 @@ add_library(Engine STATIC
 target_include_directories(Engine PUBLIC
     include)
 
-add_subdirectory(external)
 add_subdirectory(Base)
 add_subdirectory(Graphics)
 

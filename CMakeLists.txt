@@ -4,5 +4,6 @@ project(goala)
 
 set(CMAKE_CXX_STANDARD 20)
 
+add_subdirectory(external)
 add_subdirectory(Engine)
 add_subdirectory(demo)
