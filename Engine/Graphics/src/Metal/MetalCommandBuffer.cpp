@@ -1,18 +1,18 @@
 #include <Graphics/Metal/MetalCommandBuffer.h>
 #include <Graphics/Metal/MetalCommandEncoder.h>
+#include <Graphics/Metal/MetalCommandQueue.h>
 #include <Graphics/Metal/MetalDevice.h>
 #include <Graphics/Metal/MetalFence.h>
-#include <Graphics/Metal/MetalTexture.h>
 #include <Graphics/Metal/MetalPipeline.h>
-#include <Graphics/Metal/MetalRenderPass.h>
 
 #include <Metal/Metal.hpp>
 
 using namespace goala;
 
-MetalCommandBuffer::MetalCommandBuffer(MetalDevice* device, MTL::CommandBuffer* cmdBuf)
+MetalCommandBuffer::MetalCommandBuffer(MetalDevice* device, MetalCommandQueue* queue, CommandBufferDescription cmdBuf)
   : m_device(device)
-  , m_cmdBuf(makeMetalRef(cmdBuf)) {}
+  , m_queue(queue)
+  , m_cmdBuf(makeMetalRef(queue->getMTLCommandQueue()->commandBuffer())) {}
 
 void MetalCommandBuffer::encode(RenderPass* renderPass, Pipeline* pipeline) {
   auto encoder = std::make_shared<MetalCommandEncoder>(this, renderPass);

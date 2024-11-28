@@ -5,6 +5,8 @@ class RenderPass;
 class Pipeline;
 class Texture;
 
+struct CommandBufferDescription {};
+
 class CommandBuffer {
 public:
   virtual ~CommandBuffer() = default;

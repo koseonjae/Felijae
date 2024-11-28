@@ -2,7 +2,7 @@
 #include <Base/Object/Triangle.h>
 #include <Base/Utility/FileReader.h>
 #include <Graphics/Metal/MetalCommandBuffer.h>
-#include <Graphics/Metal/MetalBuffer.h>
+#include <Graphics/Metal/MetalCommandQueue.h>
 #include <Graphics/Metal/MetalOutputMerger.h>
 #include <Graphics/Metal/MetalPipeline.h>
 #include <Graphics/Metal/MetalRasterizer.h>
@@ -11,7 +11,6 @@
 #include <Graphics/Metal/MetalTexture.h>
 #include <Graphics/Utility/ImageFormatUtil.h>
 #include <Graphics/Utility/MetalBlitCopy.h>
-#include <Graphics/Utility/MetalRef.h>
 #include <Engine/Model/Model.h>
 #include <Engine/Model/Scene.h>
 #include <Engine/Renderer/ForwardRenderer.h>
@@ -44,7 +43,7 @@ int main(int argc, char** argv) {
   SDL_Metal_GetDrawableSize(window, &width, &height);
   assert(viewport[0] == width && viewport[1] == height && "Created window drawable size is not same with viewport");
 
-  auto device = std::make_unique<MetalDevice>(MTL::CreateSystemDefaultDevice());
+  auto device = std::make_unique<MetalDevice>();
 
   SDL_MetalView view = SDL_Metal_CreateView(window);
   auto layer = static_cast<CA::MetalLayer*>(SDL_Metal_GetLayer(view)); // swapchain
@@ -111,7 +110,8 @@ int main(int argc, char** argv) {
   renderer->setRenderPass(renderPass);
 
   // Queue
-  auto queue = makeMetalRef(device->getMTLDevice()->newCommandQueue());
+  CommandQueueDescription queueDesc{};
+  auto queue = device->createCommandQueue(queueDesc);
 
   // Model
   auto model = std::make_shared<Model>();
@@ -159,8 +159,9 @@ int main(int argc, char** argv) {
     });
     renderPass->setAttachments(std::move(attachments));
 
-    auto cmdBuf = std::make_shared<MetalCommandBuffer>(device.get(), queue->commandBuffer());
-    auto blitCmdBuf = std::make_shared<MetalCommandBuffer>(device.get(), queue->commandBuffer());
+    CommandBufferDescription commandBufferDesc{};
+    auto cmdBuf = queue->createCommandBuffer(commandBufferDesc);
+    auto blitCmdBuf = queue->createCommandBuffer(commandBufferDesc);
     blitCmdBuf->addDependency(cmdBuf.get());
 
     renderer->update();
@@ -168,7 +169,7 @@ int main(int argc, char** argv) {
 
     // Draw offscreen texture to window swap chain
     auto metalTexture = std::dynamic_pointer_cast<MetalTexture>(texture);
-    blitTextureToDrawable(metalTexture->getHandle(), drawable, queue.get());
+    blitTextureToDrawable(metalTexture->getHandle(), drawable, std::static_pointer_cast<MetalCommandQueue>(queue)->getMTLCommandQueue());
   }
 
   SDL_Metal_DestroyView(view);

@@ -14,5 +14,7 @@ public:
   std::shared_ptr<Texture> createTexture(TextureDescription desc) override;
 
   std::shared_ptr<Fence> createFence(FenceDescription desc) override;
+
+  std::shared_ptr<CommandQueue> createCommandQueue(CommandQueueDescription desc) override;
 };
 } // namespace goala

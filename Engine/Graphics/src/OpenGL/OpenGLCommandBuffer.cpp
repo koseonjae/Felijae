@@ -1,8 +1,14 @@
 #include <Graphics/OpenGL/OpenGLCommandBuffer.h>
+#include <Graphics/OpenGL/OpenGLCommandQueue.h>
+#include <Graphics/OpenGL/OpenGLDevice.h>
 
 #include <Graphics/Model/Pipeline.h>
 
 using namespace goala;
+
+OpenGLCommandBuffer::OpenGLCommandBuffer(OpenGLDevice* device, OpenGLCommandQueue* queue, CommandBufferDescription desc)
+  : m_device(device)
+  , m_queue(queue) {}
 
 void OpenGLCommandBuffer::encode(RenderPass* renderPass, Pipeline* pipeline) {
   m_encoded = [pipeline]() {

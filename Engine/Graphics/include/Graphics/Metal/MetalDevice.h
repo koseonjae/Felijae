@@ -8,7 +8,7 @@
 namespace goala {
 class MetalDevice : public Device {
 public:
-  explicit MetalDevice(MTL::Device* device);
+  MetalDevice();
 
   std::shared_ptr<Pipeline> createPipeline(PipelineDescription desc) override;
 
@@ -17,6 +17,8 @@ public:
   std::shared_ptr<Texture> createTexture(TextureDescription desc) override;
 
   std::shared_ptr<Fence> createFence(FenceDescription desc) override;
+
+  std::shared_ptr<CommandQueue> createCommandQueue(CommandQueueDescription desc) override;
 
   MTL::Device* getMTLDevice();
 

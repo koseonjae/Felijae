@@ -1,4 +1,5 @@
 #include <Graphics/OpenGL/OpenGLDevice.h>
+#include <Graphics/OpenGL/OpenGLCommandQueue.h>
 #include <Graphics/OpenGL/OpenGLPipeline.h>
 #include <Graphics/OpenGL/OpenGLBuffer.h>
 #include <Graphics/OpenGL/OpenGLTexture.h>
@@ -23,4 +24,9 @@ std::shared_ptr<Texture> OpenGLDevice::createTexture(TextureDescription desc) {
 
 std::shared_ptr<Fence> OpenGLDevice::createFence(FenceDescription desc) {
   assert(false && "OpenGL Fence is not supported");
+}
+
+std::shared_ptr<CommandQueue> OpenGLDevice::createCommandQueue(CommandQueueDescription desc) {
+  auto queue = std::make_shared<OpenGLCommandQueue>(this, std::move(desc));
+  return queue;
 }

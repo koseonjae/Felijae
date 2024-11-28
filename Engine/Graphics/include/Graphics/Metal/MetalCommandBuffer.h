@@ -3,7 +3,6 @@
 #include <Graphics/Model/CommandBuffer.h>
 #include <Graphics/Utility/MetalRef.h>
 
-#include <memory>
 #include <vector>
 
 namespace MTL {
@@ -13,11 +12,12 @@ class Fence;
 
 namespace goala {
 class MetalDevice;
+class MetalCommandQueue;
 class Fence;
 
 class MetalCommandBuffer : public CommandBuffer {
 public:
-  explicit MetalCommandBuffer(MetalDevice* device, MTL::CommandBuffer* cmdBuf);
+  MetalCommandBuffer(MetalDevice* device, MetalCommandQueue* queue, CommandBufferDescription desc);
 
   void encode(RenderPass* renderPass, Pipeline* pipeline) override;
 
@@ -37,6 +37,7 @@ private:
 
 private:
   MetalDevice* m_device = nullptr;
+  MetalCommandQueue* m_queue = nullptr;
   MetalRef<MTL::CommandBuffer> m_cmdBuf;
   std::vector<std::shared_ptr<Fence>> m_waitFences;
   std::vector<std::shared_ptr<Fence>> m_signalFences;

@@ -6,6 +6,7 @@
 #include <Engine/Model/Scene.h>
 #include <Engine/Renderer/ForwardRenderer.h>
 #include <Graphics/OpenGL/OpenGLCommandBuffer.h>
+#include <Graphics/OpenGL/OpenGLCommandQueue.h>
 #include <Graphics/OpenGL/OpenGLDevice.h>
 #include <Graphics/OpenGL/OpenGLOutputMerger.h>
 #include <Graphics/OpenGL/OpenGLPipeline.h>
@@ -67,14 +68,16 @@ int main() {
   Culling culling = {
     .enable = true,
     .frontFace = Culling::FrontFace::CCW,
-    .cullMode = Culling::CullMode::Back};
+    .cullMode = Culling::CullMode::Back
+  };
   Viewport viewport = {
     .minX = 0,
     .minY = 0,
     .width = width,
     .height = height,
     .minZ = 0.0f,
-    .maxZ = 1.0f};
+    .maxZ = 1.0f
+  };
   auto rasterizer = std::make_shared<OpenGLRasterizer>();
   rasterizer->setCulling(culling);
   rasterizer->setViewport(viewport);
@@ -83,12 +86,14 @@ int main() {
   DepthTest depthTest = {
     .enable = true,
     .depthFunc = DepthTest::DepthTestFunc::Less,
-    .updateDepthMask = true};
+    .updateDepthMask = true
+  };
   AlphaBlend alphaBlend = {
     .enable = true,
     .fragmentBlendFunc = AlphaBlend::BlendFunc::SRC_ALPHA,
     .pixelBlendFunc = AlphaBlend::BlendFunc::ONE_MINUS_SRC_ALPHA,
-    .blendEquation = AlphaBlend::BlendEquation::Add};
+    .blendEquation = AlphaBlend::BlendEquation::Add
+  };
   auto outputMerger = std::make_shared<OpenGLOutputMerger>();
   outputMerger->setDepthTest(depthTest);
   outputMerger->setAlphaBlend(alphaBlend);
@@ -207,7 +212,11 @@ int main() {
       }
     }
 
-    auto cmdBuf = std::make_shared<OpenGLCommandBuffer>();
+    CommandQueueDescription queueDesc{};
+    auto cmdQueue = device->createCommandQueue(queueDesc);
+
+    CommandBufferDescription cmdBufDesc{};
+    auto cmdBuf = cmdQueue->createCommandBuffer(cmdBufDesc);
     renderer->update();
     renderer->render(cmdBuf);
 

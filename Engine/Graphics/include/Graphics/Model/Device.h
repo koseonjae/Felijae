@@ -7,11 +7,13 @@ class Buffer;
 class Fence;
 class Pipeline;
 class Texture;
+class CommandQueue;
 
 struct BufferDescription;
 struct FenceDescription;
 struct PipelineDescription;
 struct TextureDescription;
+struct CommandQueueDescription;
 
 class Device {
 public:
@@ -24,5 +26,7 @@ public:
   virtual std::shared_ptr<Texture> createTexture(TextureDescription desc) = 0;
 
   virtual std::shared_ptr<Fence> createFence(FenceDescription desc) = 0;
+
+  virtual std::shared_ptr<CommandQueue> createCommandQueue(CommandQueueDescription desc) = 0;
 };
 } // namespace goala

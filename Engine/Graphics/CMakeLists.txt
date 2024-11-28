@@ -3,6 +3,7 @@ add_library(Graphics STATIC
     src/Utility/MetalBlitCopy.cpp
     src/Model/Uniforms.cpp
     src/OpenGL/OpenGLCommandEncoder.cpp
+    src/OpenGL/OpenGLCommandQueue.cpp
     src/OpenGL/OpenGLCommandBuffer.cpp
     src/OpenGL/OpenGLDevice.cpp
     src/OpenGL/OpenGLPipeline.cpp
@@ -15,6 +16,7 @@ add_library(Graphics STATIC
     src/OpenGL/OpenGLRenderPass.cpp
     src/OpenGL/OpenGLUtils.cpp
     src/Metal/MetalCommandEncoder.cpp
+    src/Metal/MetalCommandQueue.cpp
     src/Metal/MetalCommandBuffer.cpp
     src/Metal/MetalDevice.cpp
     src/Metal/MetalFence.cpp
@@ -30,6 +32,7 @@ add_library(Graphics STATIC
     include/Graphics/Utility/MetalBlitCopy.h
     include/Graphics/Utility/MetalRef.h
     include/Graphics/Model/CommandEncoder.h
+    include/Graphics/Model/CommandQueue.h
     include/Graphics/Model/CommandBuffer.h
     include/Graphics/Model/Device.h
     include/Graphics/Model/Fence.h
@@ -41,6 +44,7 @@ add_library(Graphics STATIC
     include/Graphics/Model/RenderPass.h
     include/Graphics/Model/Texture.h
     include/Graphics/OpenGL/OpenGLCommandEncoder.h
+    include/Graphics/OpenGL/OpenGLCommandQueue.h
     include/Graphics/OpenGL/OpenGLCommandBuffer.h
     include/Graphics/OpenGL/OpenGLDevice.h
     include/Graphics/OpenGL/OpenGLPipeline.h
@@ -53,6 +57,7 @@ add_library(Graphics STATIC
     include/Graphics/OpenGL/OpenGLRenderPass.h
     include/Graphics/OpenGL/OpenGLUtils.h
     include/Graphics/Metal/MetalCommandEncoder.h
+    include/Graphics/Metal/MetalCommandQueue.h
     include/Graphics/Metal/MetalCommandBuffer.h
     include/Graphics/Metal/MetalDevice.h
     include/Graphics/Metal/MetalFence.h
