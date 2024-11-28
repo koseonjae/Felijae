@@ -3,6 +3,10 @@
 #include <Graphics/OpenGL/OpenGLCommandEncoder.h>
 #include <Graphics/OpenGL/OpenGLRenderPass.h>
 
+#include <OpenGL/gl3.h>
+
+#include <thread>
+
 using namespace goala;
 
 OpenGLCommandBuffer::OpenGLCommandBuffer(OpenGLDevice* device, OpenGLCommandQueue* queue, CommandBufferDescription desc)
@@ -25,6 +29,7 @@ void OpenGLCommandBuffer::commit() {
     assert(command && "command is not encoded");
     command();
   }
+  m_commandComitted = true;
 }
 
 std::shared_ptr<CommandEncoder> OpenGLCommandBuffer::createCommandEncoder(RenderPass* renderPass, CommandEncoderDescription desc) {
@@ -39,4 +44,13 @@ std::shared_ptr<CommandEncoder> OpenGLCommandBuffer::createCommandEncoder(Render
   });
   ++m_encoderCnt;
   return encoder;
+}
+
+void OpenGLCommandBuffer::waitUntilCompleted() {
+  glFinish(); // todo: fence로 대체
+}
+
+void OpenGLCommandBuffer::waitUntilScheduled() {
+  while (m_commandComitted == false)
+    std::this_thread::yield();
 }

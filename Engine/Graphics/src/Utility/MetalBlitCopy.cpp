@@ -19,7 +19,5 @@ void blitTextureToDrawable(MTL::Texture* texture, CA::MetalDrawable* drawable, M
   commandBuffer->presentDrawable(drawable);
 
   commandBuffer->commit();
-
-  commandBuffer->waitUntilCompleted();
 }
 }

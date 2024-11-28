@@ -29,6 +29,14 @@ std::shared_ptr<CommandEncoder> MetalCommandBuffer::createCommandEncoder(RenderP
   return commandEncoder;
 }
 
+void MetalCommandBuffer::waitUntilCompleted() {
+  m_cmdBuf->waitUntilCompleted();
+}
+
+void MetalCommandBuffer::waitUntilScheduled() {
+  m_cmdBuf->waitUntilScheduled();
+}
+
 MTL::CommandBuffer* MetalCommandBuffer::getCommandBuffer() {
   return m_cmdBuf.get();
 }

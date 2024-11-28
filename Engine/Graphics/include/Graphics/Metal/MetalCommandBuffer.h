@@ -26,6 +26,10 @@ public:
 
   std::shared_ptr<CommandEncoder> createCommandEncoder(RenderPass* renderPass, CommandEncoderDescription desc) override;
 
+  void waitUntilCompleted() override;
+
+  void waitUntilScheduled() override;
+
   MTL::CommandBuffer* getCommandBuffer();
 
   const MTL::CommandBuffer* getCommandBuffer() const;

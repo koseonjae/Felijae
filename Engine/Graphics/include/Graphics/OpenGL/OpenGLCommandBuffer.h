@@ -18,11 +18,16 @@ public:
 
   std::shared_ptr<CommandEncoder> createCommandEncoder(RenderPass* renderPass, CommandEncoderDescription desc) override;
 
+  void waitUntilCompleted() override;
+
+  void waitUntilScheduled() override;
+
 private:
   OpenGLDevice* m_device = nullptr;
   OpenGLCommandQueue* m_queue = nullptr;
   std::vector<std::function<void()>> m_encodedCommands;
   std::mutex m_cmdMutex;
   std::atomic<int> m_encoderCnt = 0;
+  std::atomic<bool> m_commandComitted = false;
 };
 } // namespace goala

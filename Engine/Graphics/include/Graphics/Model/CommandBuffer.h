@@ -21,5 +21,9 @@ public:
   virtual void commit() = 0;
 
   virtual std::shared_ptr<CommandEncoder> createCommandEncoder(RenderPass* renderPass, CommandEncoderDescription desc) = 0;
+
+  virtual void waitUntilScheduled() = 0;
+
+  virtual void waitUntilCompleted() = 0;
 };
 } // namespace goala
