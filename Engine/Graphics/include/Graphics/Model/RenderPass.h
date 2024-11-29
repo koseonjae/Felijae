@@ -47,21 +47,12 @@ struct Attachment {
   std::shared_ptr<Texture> texture;
 };
 
+struct RenderPassDescription {
+  std::vector<Attachment> attachments;
+};
+
 class RenderPass {
 public:
   virtual ~RenderPass() = default;
-
-  virtual void update() = 0;
-
-  void setAttachments(std::vector<Attachment> attachments) {
-    m_attachments = std::move(attachments);
-    m_dirty = true;
-  }
-
-  const std::vector<Attachment>& getAttachments() const { return m_attachments; }
-
-protected:
-  std::vector<Attachment> m_attachments;
-  bool m_dirty = false;
 };
 } // namespace goala

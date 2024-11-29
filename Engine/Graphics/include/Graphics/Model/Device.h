@@ -9,6 +9,7 @@ class Pipeline;
 class Texture;
 class CommandQueue;
 class Shader;
+class RenderPass;
 
 struct BufferDescription;
 struct FenceDescription;
@@ -16,6 +17,7 @@ struct PipelineDescription;
 struct TextureDescription;
 struct CommandQueueDescription;
 struct ShaderDescription;
+struct RenderPassDescription;
 
 class Device {
 public:
@@ -32,5 +34,7 @@ public:
   virtual std::shared_ptr<CommandQueue> createCommandQueue(CommandQueueDescription desc) = 0;
 
   virtual std::shared_ptr<Shader> createShader(ShaderDescription desc) = 0;
+
+  virtual std::shared_ptr<RenderPass> createRenderPass(RenderPassDescription desc) = 0;
 };
 } // namespace goala

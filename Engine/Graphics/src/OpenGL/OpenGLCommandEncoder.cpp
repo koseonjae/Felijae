@@ -1,11 +1,13 @@
 #include <Graphics/OpenGL/OpenGLCommandEncoder.h>
+#include <Graphics/OpenGL/OpenGLRenderPass.h>
 #include <Graphics/Model/Pipeline.h>
 
 #include <cassert>
 
 using namespace goala;
 
-OpenGLCommandEncoder::OpenGLCommandEncoder(OpenGLCommandBuffer* commandBuffer, OpenGLRenderPass* renderPass, CommandEncoderDescription) {}
+OpenGLCommandEncoder::OpenGLCommandEncoder(OpenGLCommandBuffer* commandBuffer, OpenGLRenderPass* renderPass, CommandEncoderDescription desc)
+  : m_renderPass(renderPass) {}
 
 void OpenGLCommandEncoder::setEncodedCallback(std::function<void(std::function<void()>)>&& callback) {
   assert(!m_encodedCallback && "Encoded callback can not be set twice");
@@ -19,7 +21,8 @@ void OpenGLCommandEncoder::endEncoding() {
 }
 
 void OpenGLCommandEncoder::encodeDraw(Pipeline* pipeline) {
-  m_encoded = [pipeline]() {
+  m_encoded = [renderPass = m_renderPass, pipeline]() {
+    renderPass->bind();
     pipeline->render();
   };
 }

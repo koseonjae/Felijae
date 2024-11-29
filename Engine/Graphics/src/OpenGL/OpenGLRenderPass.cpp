@@ -5,12 +5,22 @@
 
 using namespace goala;
 
-void OpenGLRenderPass::_updateFrameBuffers() {
-  if (!m_dirty)
-    return;
+OpenGLRenderPass::OpenGLRenderPass(OpenGLDevice* device, RenderPassDescription desc)
+  : m_device(device)
+  , m_desc(std::move(desc)) {
+  _updateFrameBuffers(m_desc);
+}
+
+void OpenGLRenderPass::bind() {
+  for (auto& frameBuffer : m_frameBuffers)
+    frameBuffer.bind();
+  _updateRenderPass(m_desc);
+}
+
+void OpenGLRenderPass::_updateFrameBuffers(const RenderPassDescription& desc) {
   m_frameBuffers.clear();
   int colorAttachmentCnt = 0;
-  for (const auto& attachment : m_attachments) {
+  for (const auto& attachment : desc.attachments) {
     auto& frameBuffer = m_frameBuffers.emplace_back();
     if (attachment.type == AttachmentType::Color)
       frameBuffer.initialize(attachment.texture, GL_COLOR_ATTACHMENT0 + colorAttachmentCnt++);
@@ -21,20 +31,12 @@ void OpenGLRenderPass::_updateFrameBuffers() {
     else
       assert(false && "Undefined attachment type");
   }
-  m_dirty = false;
 }
 
-void OpenGLRenderPass::update() {
-  _updateFrameBuffers();
-  for (auto& frameBuffer : m_frameBuffers)
-    frameBuffer.bind();
-  _updateRenderPass();
-}
-
-void OpenGLRenderPass::_updateRenderPass() {
+void OpenGLRenderPass::_updateRenderPass(const RenderPassDescription& desc) {
   GLbitfield clearBit = GL_NONE;
 
-  for (const auto& attachment : m_attachments) {
+  for (const auto& attachment : desc.attachments) {
     assert(attachment.type != AttachmentType::Undefined && "AttachmentType is not defined");
     assert(attachment.loadFunc != LoadFunc::Undefined && "LoadFunc is not defined");
     assert(attachment.storeFunc != StoreFunc::Undefined && "StoreFunc is not defined");

@@ -4,19 +4,25 @@
 #include <Graphics/OpenGL/OpenGLFrameBuffer.h>
 
 namespace goala {
+class OpenGLDevice;
+
 class OpenGLRenderPass : public RenderPass {
 public:
-  void update() override;
+  OpenGLRenderPass(OpenGLDevice* device, RenderPassDescription desc);
 
   const OpenGLFrameBuffer& getFrameBuffer(int idx) const {
     return m_frameBuffers[idx];
   }
 
-private:
-  void _updateFrameBuffers();
-  void _updateRenderPass();
+  void bind();
 
 private:
+  void _updateFrameBuffers(const RenderPassDescription& desc);
+  void _updateRenderPass(const RenderPassDescription& desc);
+
+private:
+  OpenGLDevice* m_device;
+  RenderPassDescription m_desc{};
   std::vector<OpenGLFrameBuffer> m_frameBuffers;
 };
 } // namespace goala

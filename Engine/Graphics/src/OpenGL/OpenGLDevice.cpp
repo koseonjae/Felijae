@@ -5,6 +5,8 @@
 #include <Graphics/OpenGL/OpenGLTexture.h>
 #include <Graphics/Model/Fence.h>
 
+#include "Graphics/OpenGL/OpenGLRenderPass.h"
+
 using namespace goala;
 
 std::shared_ptr<Pipeline> OpenGLDevice::createPipeline(PipelineDescription desc) {
@@ -33,4 +35,9 @@ std::shared_ptr<CommandQueue> OpenGLDevice::createCommandQueue(CommandQueueDescr
 
 std::shared_ptr<Shader> OpenGLDevice::createShader(ShaderDescription desc) {
   assert(false && "OpenGL Shader is not supported");
+}
+
+std::shared_ptr<RenderPass> OpenGLDevice::createRenderPass(RenderPassDescription desc) {
+  auto renderPass = std::make_shared<OpenGLRenderPass>(this, std::move(desc));
+  return renderPass;
 }

@@ -6,17 +6,10 @@
 
 using namespace goala;
 
-MetalRenderPass::MetalRenderPass() : m_pass(makeMetalRef(MTL::RenderPassDescriptor::renderPassDescriptor())) {}
-
-void MetalRenderPass::update() {
-  _updateRenderPass();
-}
-
-void MetalRenderPass::_updateRenderPass() {
-  if (!m_dirty)
-    return;
-
-  for (const auto& attachment : m_attachments) {
+MetalRenderPass::MetalRenderPass(MetalDevice* device, RenderPassDescription desc)
+  : m_device(device) // todo: depthTest도 desc로 받아서 depthStencilState도 여기다가 초기화하자
+  , m_pass(makeMetalRef(MTL::RenderPassDescriptor::renderPassDescriptor())) {
+  for (const auto& attachment : desc.attachments) {
     assert(attachment.type != AttachmentType::Undefined && "AttachmentType is not defined");
     assert(attachment.loadFunc != LoadFunc::Undefined && "LoadFunc is not defined");
     assert(attachment.storeFunc != StoreFunc::Undefined && "StoreFunc is not defined");
@@ -76,8 +69,6 @@ void MetalRenderPass::_updateRenderPass() {
     MTL::Texture* textureHandle = static_pointer_cast<MetalTexture>(attachment.texture)->getHandle();
     colorAttachment->setTexture(textureHandle); // todo: move
   }
-
-  m_dirty = false;
 }
 
 MTL::RenderPassDescriptor* MetalRenderPass::getPass() {

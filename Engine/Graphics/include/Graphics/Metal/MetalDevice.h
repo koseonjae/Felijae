@@ -22,6 +22,8 @@ public:
 
   std::shared_ptr<Shader> createShader(ShaderDescription desc) override;
 
+  std::shared_ptr<RenderPass> createRenderPass(RenderPassDescription desc) override;
+
   MTL::Device* getMTLDevice();
 
   const MTL::Device* getMTLDevice() const;

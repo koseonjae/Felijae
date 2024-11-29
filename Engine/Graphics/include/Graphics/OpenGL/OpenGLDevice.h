@@ -18,5 +18,7 @@ public:
   std::shared_ptr<CommandQueue> createCommandQueue(CommandQueueDescription desc) override;
 
   std::shared_ptr<Shader> createShader(ShaderDescription desc) override;
+
+  std::shared_ptr<RenderPass> createRenderPass(RenderPassDescription desc) override;
 };
 } // namespace goala

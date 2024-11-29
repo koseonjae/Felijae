@@ -114,10 +114,6 @@ int main(int argc, char** argv) {
   };
   auto metalPipeline = device->createPipeline(metalPipelineDesc);
 
-  // RenderPass
-  auto renderPass = std::make_shared<MetalRenderPass>();
-  renderer->setRenderPass(renderPass);
-
   // Queue
   CommandQueueDescription queueDesc{};
   auto queue = device->createCommandQueue(queueDesc);
@@ -143,6 +139,21 @@ int main(int argc, char** argv) {
   };
   auto texture = device->createTexture(textureDesc);
 
+  // RenderPass
+  RenderPassDescription renderPassDesc = {
+    .attachments = {
+      {
+        .type = AttachmentType::Color,
+        .loadFunc = LoadFunc::Clear,
+        .storeFunc = StoreFunc::Store,
+        .clear = ClearColor{0.0f, 0.0f, 1.0f, 1.0f},
+        .texture = texture,
+      }
+    }
+  };
+  auto renderPass = device->createRenderPass(std::move(renderPassDesc));
+  renderer->setRenderPass(renderPass);
+
   bool quit = false;
   SDL_Event e;
 
@@ -157,16 +168,6 @@ int main(int argc, char** argv) {
     }
 
     auto drawable = layer->nextDrawable();
-
-    std::vector<Attachment> attachments;
-    attachments.emplace_back(Attachment{
-      .type = AttachmentType::Color,
-      .loadFunc = LoadFunc::Clear,
-      .storeFunc = StoreFunc::Store,
-      .clear = ClearColor{0.0f, 0.0f, 1.0f, 1.0f},
-      .texture = texture,
-    });
-    renderPass->setAttachments(std::move(attachments));
 
     CommandBufferDescription commandBufferDesc{};
     auto cmdBuf = queue->createCommandBuffer(commandBufferDesc);

@@ -8,19 +8,17 @@ class RenderPassDescriptor;
 }
 
 namespace goala {
+class MetalDevice;
+
 class MetalRenderPass : public RenderPass {
 public:
-  MetalRenderPass();
-
-  void update() override;
+  MetalRenderPass(MetalDevice* device, RenderPassDescription desc);
 
   MTL::RenderPassDescriptor* getPass();
   const MTL::RenderPassDescriptor* getPass() const;
 
 private:
-  void _updateRenderPass();
-
-private:
+  MetalDevice* m_device = nullptr;
   MetalRef<MTL::RenderPassDescriptor> m_pass;
 };
 } // namespace goala

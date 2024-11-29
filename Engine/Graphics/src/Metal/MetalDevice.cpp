@@ -3,9 +3,9 @@
 #include <Graphics/Metal/MetalPipeline.h>
 #include <Graphics/Metal/MetalBuffer.h>
 #include <Graphics/Metal/MetalFence.h>
-
-#include "Graphics/Metal/MetalShader.h"
-#include "Graphics/Metal/MetalTexture.h"
+#include <Graphics/Metal/MetalRenderPass.h>
+#include <Graphics/Metal/MetalShader.h>
+#include <Graphics/Metal/MetalTexture.h>
 
 using namespace goala;
 
@@ -39,6 +39,11 @@ std::shared_ptr<CommandQueue> MetalDevice::createCommandQueue(CommandQueueDescri
 std::shared_ptr<Shader> MetalDevice::createShader(ShaderDescription desc) {
   auto shader = std::make_shared<MetalShader>(this, std::move(desc));
   return shader;
+}
+
+std::shared_ptr<RenderPass> MetalDevice::createRenderPass(RenderPassDescription desc) {
+  auto renderPass = std::make_shared<MetalRenderPass>(this, std::move(desc));
+  return renderPass;
 }
 
 MTL::Device* MetalDevice::getMTLDevice() { return m_device.get(); }

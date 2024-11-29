@@ -19,6 +19,7 @@ public:
   void setEncodedCallback(std::function<void(std::function<void()>)>&& callback);
 
 private:
+  OpenGLRenderPass* m_renderPass = nullptr;
   std::function<void(std::function<void()>)> m_encodedCallback;
   std::function<void()> m_encoded;
   bool m_isEnd = false;

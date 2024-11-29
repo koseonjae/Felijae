@@ -1,7 +1,6 @@
 #include <Engine/Renderer/ForwardRenderer.h>
 #include <Graphics/Model/Pipeline.h>
 #include <Graphics/Model/CommandBuffer.h>
-#include <Graphics/Metal/MetalCommandEncoder.h>
 #include <Engine/Model/Model.h>
 #include <Engine/Model/Scene.h>
 
@@ -33,7 +32,7 @@ void ForwardRenderer::update() {
     model->update();
   }
 
-  m_renderPass->update();
+  // m_renderPass->update();
 }
 
 void ForwardRenderer::render(std::shared_ptr<CommandBuffer> cmdBuf) {

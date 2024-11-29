@@ -18,6 +18,8 @@
 
 #include <glm/glm.hpp>
 
+#include "Base/Utility/TypeCast.h"
+
 using namespace goala;
 
 int main() {
@@ -148,17 +150,18 @@ int main() {
     };
     auto colorTexture = device->createTexture(colorTextureDesc);
 
-    std::vector<Attachment> attachments;
-    attachments.emplace_back(Attachment{
-      .type = AttachmentType::Color,
-      .loadFunc = LoadFunc::Clear,
-      .storeFunc = StoreFunc::Store,
-      .clear = ClearColor{1.0f, 1.0f, 0.0f, 1.0f},
-      .texture = std::move(colorTexture),
-    });
-
-    auto renderPass = std::make_shared<OpenGLRenderPass>();
-    renderPass->setAttachments(std::move(attachments));
+    RenderPassDescription renderPassDesc = {
+      .attachments = {
+        {
+          .type = AttachmentType::Color,
+          .loadFunc = LoadFunc::Clear,
+          .storeFunc = StoreFunc::Store,
+          .clear = ClearColor{1.0f, 1.0f, 0.0f, 1.0f},
+          .texture = std::move(colorTexture),
+        }
+      }
+    };
+    auto renderPass = device->createRenderPass(std::move(renderPassDesc));
     renderer->setRenderPass(renderPass);
   }
 
@@ -220,8 +223,7 @@ int main() {
     renderer->update();
     renderer->render(cmdBuf);
 
-    auto openGLRenderPass = static_cast<OpenGLRenderPass*>(renderer->getRenderPass());
-    assert(openGLRenderPass != nullptr && "Failed to cast to openGLRenderPass");
+    auto openGLRenderPass = SAFE_DOWN_CAST(OpenGLRenderPass*, renderer->getRenderPass());
     glBindFramebuffer(GL_READ_FRAMEBUFFER, openGLRenderPass->getFrameBuffer(0).getHandle());
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 
