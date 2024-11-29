@@ -1,5 +1,6 @@
 #include <Graphics/Metal/MetalRasterizer.h>
 #include <Graphics/Metal/MetalCommandEncoder.h>
+#include <Base/Utility/TypeCast.h>
 
 #include <Metal/Metal.hpp>
 
@@ -8,7 +9,7 @@ using namespace goala;
 void MetalRasterizer::bind(void* descriptor) {}
 
 void MetalRasterizer::encode(CommandEncoder* encoder) {
-  auto metalEncoder = static_cast<MetalCommandEncoder*>(encoder);
+  auto metalEncoder = SAFE_DOWN_CAST(MetalCommandEncoder*, encoder);
   auto mtlEncoder = metalEncoder->getEncoder();
   _updateCulling(mtlEncoder);
   _updateViewPort(mtlEncoder);

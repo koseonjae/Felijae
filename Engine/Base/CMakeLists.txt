@@ -6,6 +6,7 @@ add_library(Base STATIC
     include/Base/Utility/FileReader.h
     include/Base/Utility/ImageLoader.h
     include/Base/Utility/ThreadChecker.h
+    include/Base/Utility/TypeCast.h
     include/Base/File/File.h
 
     src/Object/Polygons.cpp

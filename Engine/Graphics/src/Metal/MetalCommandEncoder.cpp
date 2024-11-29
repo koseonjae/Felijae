@@ -3,6 +3,7 @@
 #include <Graphics/Metal/MetalPipeline.h>
 #include <Graphics/Metal/MetalRenderPass.h>
 #include <Graphics/Metal/MetalBuffer.h>
+#include <Base/Utility/TypeCast.h>
 
 #include <Metal/triangle_types.h>
 #include <Metal/Metal.hpp>
@@ -19,8 +20,8 @@ void MetalCommandEncoder::endEncoding() {
 }
 
 void MetalCommandEncoder::encodeDraw(Pipeline* pipeline) {
-  auto metalPipeline = static_cast<MetalPipeline*>(pipeline);
-  auto metalBuffer = static_cast<MetalBuffer*>(metalPipeline->getBuffer());
+  auto metalPipeline = SAFE_DOWN_CAST(MetalPipeline*, pipeline);
+  auto metalBuffer = SAFE_DOWN_CAST(MetalBuffer*, metalPipeline->getBuffer());
 
   pipeline->getRasterizer()->encode(this);
   pipeline->getOutputMerger()->encode(this);

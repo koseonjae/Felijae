@@ -1,6 +1,7 @@
 #include <Graphics/Metal/MetalOutputMerger.h>
 #include <Graphics/Metal/MetalCommandEncoder.h>
 #include <Graphics/Metal/MetalDevice.h>
+#include <Base/Utility/TypeCast.h>
 
 #include <Metal/Metal.hpp>
 
@@ -73,7 +74,7 @@ void MetalOutputMerger::_updateDepthTest(CommandEncoder* encoder) {
 
   auto depthStencilState = m_device->getMTLDevice()->newDepthStencilState(descriptor);
 
-  auto metalEncoder = static_cast<MetalCommandEncoder*>(encoder);
+  auto metalEncoder = SAFE_DOWN_CAST(MetalCommandEncoder*, encoder);
   auto mtlEncoder = metalEncoder->getEncoder();
   mtlEncoder->setDepthStencilState(depthStencilState);
 }

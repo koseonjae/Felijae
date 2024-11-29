@@ -3,6 +3,7 @@
 #include <Graphics/Metal/MetalCommandQueue.h>
 #include <Graphics/Metal/MetalPipeline.h>
 #include <Graphics/Metal/MetalRenderPass.h>
+#include <Base/Utility/TypeCast.h>
 
 #include <Metal/Metal.hpp>
 
@@ -22,7 +23,7 @@ void MetalCommandBuffer::commit() {
 }
 
 std::shared_ptr<CommandEncoder> MetalCommandBuffer::createCommandEncoder(RenderPass* renderPass, CommandEncoderDescription desc) {
-  auto metalRenderPass = static_cast<MetalRenderPass*>(renderPass);
+  auto metalRenderPass = SAFE_DOWN_CAST(MetalRenderPass*, renderPass);
   auto commandEncoder = std::make_shared<MetalCommandEncoder>(this, metalRenderPass, std::move(desc));
   return commandEncoder;
 }
