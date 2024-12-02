@@ -9,10 +9,10 @@ layout(location = 1) out vec2 v_texCoord;
 layout(location = 2) out vec3 v_viewDir;
 
 layout(set = 0, binding = 0) uniform Uniforms {
-    mat4 worldMat;
-    mat4 viewMat;
-    mat4 projMat;
-    vec3 cameraPosition;
+    mat4 uWorldMat;
+    mat4 uViewMat;
+    mat4 uProjMat;
+    vec3 uCameraPosition;
     vec3 uLightDir;
     vec3 uLightColor;
     vec3 uEmitLight;
@@ -20,16 +20,16 @@ layout(set = 0, binding = 0) uniform Uniforms {
 
 void main() {
     // Transform position to clip space
-    gl_Position = uniforms.projMat * uniforms.viewMat * uniforms.worldMat * vec4(position, 1.0);
+    gl_Position = uniforms.uProjMat * uniforms.uViewMat * uniforms.uWorldMat * vec4(position, 1.0);
 
     // Pass texture coordinates to fragment shader
     v_texCoord = texCoord;
 
     // Calculate normal matrix and transform normal
-    mat3 normalMatrix = transpose(inverse(mat3(uniforms.worldMat)));
+    mat3 normalMatrix = transpose(inverse(mat3(uniforms.uWorldMat)));
     v_normal = normalize(normalMatrix * normal);
 
     // Calculate view direction
-    vec3 worldPos = (uniforms.worldMat * vec4(position, 1.0)).xyz;
-    v_viewDir = normalize(uniforms.cameraPosition - worldPos);
+    vec3 worldPos = (uniforms.uWorldMat * vec4(position, 1.0)).xyz;
+    v_viewDir = normalize(uniforms.uCameraPosition - worldPos);
 }

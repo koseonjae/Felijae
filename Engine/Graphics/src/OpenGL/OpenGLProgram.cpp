@@ -85,7 +85,9 @@ void OpenGLProgram::bind(Uniforms* uniformVariables) {
 
 void OpenGLProgram::_updateUniforms(const UniformVariables& uniforms) {
   for (const auto& [name, variable] : uniforms) {
-    GLint loc = glGetUniformLocation(m_program, name.c_str());
+    auto modified = std::string("uniforms.") + name;
+    // auto modified = name;
+    GLint loc = glGetUniformLocation(m_program, modified.c_str());
     assert(loc != -1 && "Invalid uniform location");
 
     std::visit([loc](auto& value) {

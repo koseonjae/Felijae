@@ -7,10 +7,10 @@ layout(location = 2) in vec3 v_viewDir;
 layout(location = 0) out vec4 fragColor;
 
 layout(set = 0, binding = 0) uniform Uniforms {
-    mat4 worldMat;
-    mat4 viewMat;
-    mat4 projMat;
-    vec3 cameraPosition;
+    mat4 uWorldMat;
+    mat4 uViewMat;
+    mat4 uProjMat;
+    vec3 uCameraPosition;
     vec3 uLightDir;
     vec3 uLightColor;
     vec3 uEmitLight;
