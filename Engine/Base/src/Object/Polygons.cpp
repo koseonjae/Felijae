@@ -8,7 +8,7 @@ Object Polygons::triangle() {
 
   v.pos = glm::vec3(0.0, 1.0, 0.0);
   v.nor = glm::vec3(0.0, 0.0, 1.0);
-  v.texCoord = glm::vec2(1.0, 0.0);
+  v.texCoord = glm::vec2(0.5, 1.0);
   obj.vertices.push_back(v);
 
   v.pos = glm::vec3(-1.0, -1.0, 0.0);
@@ -18,7 +18,7 @@ Object Polygons::triangle() {
 
   v.pos = glm::vec3(1.0, -1.0, 0.0);
   v.nor = glm::vec3(0.0, 0.0, 1.0);
-  v.texCoord = glm::vec2(0.0, 1.0);
+  v.texCoord = glm::vec2(1.0, 0.0);
   obj.vertices.push_back(v);
 
   obj.indices.push_back(0);
