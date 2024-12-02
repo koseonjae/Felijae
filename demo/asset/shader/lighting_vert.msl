@@ -1,0 +1,43 @@
+#include <metal_stdlib>
+
+using namespace metal;
+
+struct AAPLVertex {
+    float3 position [[attribute(0)]];
+    float3 normal [[attribute(1)]];
+    float2 texCoord [[attribute(2)]];
+};
+
+struct RasterizerData {
+    float4 position [[position]];
+    float3 normal;
+    float2 texCoord;
+    float3 viewDir;
+};
+
+struct Uniforms {
+    float4x4 worldMat;
+    float4x4 viewMat;
+    float4x4 projMat;
+    float3 cameraPosition;
+    float3 uLightDir;     // Directional light direction
+    float3 uLightColor;   // Light color
+    float3 uEmitLight;    // Emissive light color
+};
+
+vertex RasterizerData vertexShader(AAPLVertex v [[stage_in]],
+                                   constant Uniforms& uniforms [[buffer(0)]]) {
+    RasterizerData out;
+
+    out.position = uniforms.projMat * uniforms.viewMat * uniforms.worldMat * float4(v.position, 1.0);
+
+    out.texCoord = v.texCoord;
+
+    float3x3 normalMatrix = float3x3(transpose(inverse(float3x3(uniforms.worldMat))));
+    out.normal = normalize(normalMatrix * v.normal);
+
+    float3 worldPos = (uniforms.worldMat * float4(v.position, 1.0)).xyz;
+    out.viewDir = normalize(uniforms.cameraPosition - worldPos);
+
+    return out;
+}

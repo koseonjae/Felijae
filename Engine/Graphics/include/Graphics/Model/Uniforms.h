@@ -20,14 +20,16 @@ public:
 
   void setTexture(std::string_view name, std::shared_ptr<Texture> texture);
 
-  std::unordered_map<std::string, UniformType> getUniforms();
+  std::unordered_map<std::string, UniformType>& getUniforms();
+
+  const std::unordered_map<std::string, UniformType>& getUniforms() const;
 
   const TextureVariables& getTextures() const;
 
   TextureVariables& getTextures();
 
 private:
-  std::mutex m_uniformsLock;
+  mutable std::mutex m_uniformsLock;
   mutable std::mutex m_texturesLock;
   UniformVariables m_uniforms;
   TextureVariables m_textures;

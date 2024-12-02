@@ -79,7 +79,7 @@ int main(int argc, char** argv) {
 
   // Buffer
   BufferDescription bufferDesc = {
-    .object = Polygons::triangle()
+    .object = loadObj(File("asset://model/suzanne/suzanne.obj"))
   };
   auto vertexBuffer = device->createBuffer(bufferDesc);
 
@@ -96,7 +96,7 @@ int main(int argc, char** argv) {
   auto fragmentFunc = device->createShader(fragShaderDesc);
 
   TextureDescription uniformTextureDesc = {
-    .imageData = convertRGB2BGRA(ImageLoader::load(File("asset://image/face.jpeg"))),
+    .imageData = convertRGB2BGRA(ImageLoader::load(File("asset://model/suzanne/uvmap.jpeg"))),
     .sampler = {
       .minFilter = TextureFilter::LINEAR,
       .magFilter = TextureFilter::LINEAR,
@@ -114,6 +114,8 @@ int main(int argc, char** argv) {
   // Uniforms
   auto uniforms = std::make_shared<Uniforms>();
   uniforms->setTexture("uTexture", uniformTexture);
+  glm::vec3 emitLight{0.0f, 0.0f, 0.0f};
+  uniforms->setUniform("uEmitLight", emitLight);
 
   // Pipeline
   PipelineDescription metalPipelineDesc = {
@@ -134,9 +136,23 @@ int main(int argc, char** argv) {
   auto model = std::make_shared<Model>();
   model->setPipeline(metalPipeline);
 
+  // Camera
+  glm::vec3 eye = glm::vec3(3.0, 3.0, 3.0);
+  glm::vec3 at = glm::vec3(0.0, 0.0, 0.0);
+  glm::vec3 up = glm::vec3(0.0, 1.0, 0.0);
+  auto fovy = glm::radians<float>(90);
+  auto aspectRatio = 1.f; // frustum width == height
+  float n = 0.1f;
+  float f = 100.0f;
+  auto camera = std::make_shared<Camera>();
+  camera->setCamera(eye, at, up);
+  camera->setProjection(fovy, aspectRatio, n, f);
+
   // Scene
   auto scene = std::make_shared<Scene>();
   scene->addModel(std::move(model));
+  scene->setNode(std::move(camera));
+
   renderer->setScene(std::move(scene));
 
   // Texture

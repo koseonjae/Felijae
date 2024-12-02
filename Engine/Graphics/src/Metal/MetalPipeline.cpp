@@ -65,7 +65,7 @@ const MTL::RenderPipelineState* MetalPipeline::getPipeline() const {
 
 void MetalPipeline::encode(MTL::RenderCommandEncoder* encoder) {
   auto metalBuffer = SAFE_DOWN_CAST(MetalBuffer*, getBuffer());
-  _encodeUniforms(encoder);
+  _encodeUniformTextures(encoder);
   _encodeViewport(encoder);
   _encodeCulling(encoder);
   encoder->setDepthStencilState(m_depthStencilState.get());
@@ -110,9 +110,9 @@ void MetalPipeline::_encodeCulling(MTL::RenderCommandEncoder* encoder) {
     encoder->setFrontFacingWinding(MTL::WindingClockwise);
 }
 
-void MetalPipeline::_encodeUniforms(MTL::RenderCommandEncoder* encoder) {
+void MetalPipeline::_encodeUniformTextures(MTL::RenderCommandEncoder* encoder) {
   auto& uniforms = m_desc.uniforms;
-  auto textures = uniforms->getTextures();
+  auto& textures = uniforms->getTextures();
   if (textures.empty())
     return;
 
@@ -123,6 +123,18 @@ void MetalPipeline::_encodeUniforms(MTL::RenderCommandEncoder* encoder) {
     encoder->setFragmentTexture(metalTexture->getTextureHandle(), fragSlot);
     encoder->setFragmentSamplerState(metalTexture->getSamplerHandle(), fragSlot);
     ++fragSlot;
+  }
+}
+
+void MetalPipeline::_encodeUniformVariables(MTL::RenderCommandEncoder* encoder) {
+  auto& uniforms = m_desc.uniforms;
+  auto& variables = uniforms->getUniforms();
+  if (variables.empty())
+    return;
+
+  for (const auto& [name, variable] : variables) {
+    // todo: distinguish pipeline
+    // encoder->setVertexBytes()
   }
 }
 

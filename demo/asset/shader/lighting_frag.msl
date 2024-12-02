@@ -1,0 +1,50 @@
+#include <metal_stdlib>
+
+using namespace metal;
+
+struct RasterizerData {
+    float4 position [[position]];
+    float3 normal;
+    float2 texCoord;
+    float3 viewDir;
+};
+
+struct Uniforms {
+    float4x4 worldMat;
+    float4x4 viewMat;
+    float4x4 projMat;
+    float3 cameraPosition;
+    float3 uLightDir;     // Directional light direction
+    float3 uLightColor;   // Light color
+    float3 uEmitLight;    // Emissive light color
+};
+
+fragment float4 fragmentShader(RasterizerData in [[stage_in]],
+                               constant Uniforms& uniforms [[buffer(0)]],
+                               texture2d<float> texture [[texture(0)]],
+                               sampler textureSampler [[sampler(0)]]) {
+    float3 normal = normalize(in.normal);
+    float3 view = normalize(in.viewDir);
+    float3 light = normalize(uniforms.uLightDir);
+    float3 reflectDir = normalize(reflect(-light, normal));
+
+    float3 diffuseColor = texture.sample(textureSampler, in.texCoord).rgb;
+
+    // ambient
+    float ambientConstant = 0.1;
+    float3 ambient = ambientConstant * diffuseColor;
+
+    // diffuse
+    float3 diffuse = max(dot(light, normal), 0.0) * diffuseColor;
+
+    // specular
+    float specularShiness = 10; // todo: uniform
+    float3 specular = pow(max(dot(reflectDir, view), 0.0), specularShiness) * uniforms.uLightColor;
+
+    // emissive
+    float3 emit = uniforms.uEmitLight;
+
+    float3 color = ambient + diffuse + specular + emit;
+
+    return float4(color, 1.0);
+}

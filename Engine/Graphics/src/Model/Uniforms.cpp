@@ -12,10 +12,14 @@ void Uniforms::setTexture(std::string_view name, std::shared_ptr<Texture> textur
   m_textures.insert({name.data(), std::move(texture)});
 }
 
-UniformVariables Uniforms::getUniforms() {
+UniformVariables& Uniforms::getUniforms() {
   std::lock_guard<std::mutex> l(m_uniformsLock);
-  auto uniforms = std::move(m_uniforms);
-  return uniforms;
+  return m_uniforms;
+}
+
+const std::unordered_map<std::string, UniformType>& Uniforms::getUniforms() const {
+  std::lock_guard<std::mutex> l(m_uniformsLock);
+  return m_uniforms;
 }
 
 const TextureVariables& Uniforms::getTextures() const {
