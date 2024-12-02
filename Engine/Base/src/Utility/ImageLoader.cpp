@@ -22,6 +22,7 @@ ImageData ImageLoader::load(File file) {
   assert(data != nullptr && "Failed to load imageData");
   assert(nChannels == 3);
   imageData.format = ImageFormat::RGB;
+  imageData.channels = nChannels;
 
   auto size = imageData.width * imageData.height * nChannels;
   imageData.pixel.resize(size);

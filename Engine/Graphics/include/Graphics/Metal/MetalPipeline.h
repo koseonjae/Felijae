@@ -32,6 +32,7 @@ private:
   void _initializeAlphaBlend(MTL::RenderPipelineDescriptor* descriptor);
   void _encodeViewport(MTL::RenderCommandEncoder* encoder);
   void _encodeCulling(MTL::RenderCommandEncoder* encoder);
+  void _encodeUniforms(MTL::RenderCommandEncoder* encoder);
 
 private:
   MetalDevice* m_device = nullptr;

@@ -1,6 +1,7 @@
-#include <Base/Object/Object.h>
 #include <Base/Object/Polygons.h>
 #include <Base/Utility/FileReader.h>
+#include <Base/Utility/ImageLoader.h>
+#include <Base/Utility/ImageUtil.h>
 #include <Graphics/Metal/MetalCommandBuffer.h>
 #include <Graphics/Metal/MetalCommandQueue.h>
 #include <Graphics/Metal/MetalPipeline.h>
@@ -84,23 +85,44 @@ int main(int argc, char** argv) {
 
   // Shader
   ShaderDescription vertShaderDesc = {
-    .source = readFile(File("asset://shader/color_vert.msl").getPath()),
+    .source = readFile(File("asset://shader/texture_vert.msl").getPath()),
     .type = ShaderType::VERTEX
   };
   ShaderDescription fragShaderDesc = {
-    .source = readFile(File("asset://shader/color_frag.msl").getPath()),
+    .source = readFile(File("asset://shader/texture_frag.msl").getPath()),
     .type = ShaderType::FRAGMENT
   };
   auto vertexFunc = device->createShader(vertShaderDesc);
   auto fragmentFunc = device->createShader(fragShaderDesc);
 
+  TextureDescription uniformTextureDesc = {
+    .imageData = convertRGB2BGRA(ImageLoader::load(File("asset://image/face.jpeg"))),
+    .sampler = {
+      .minFilter = TextureFilter::LINEAR,
+      .magFilter = TextureFilter::LINEAR,
+      .mipFilter = TextureFilter::LINEAR,
+      .wrapS = TextureWrap::CLAMP_TO_EDGE,
+      .wrapT = TextureWrap::CLAMP_TO_EDGE,
+    },
+    .usage = TextureUsage::READ | TextureUsage::WRITE,
+    .storage = TextureStorage::SHARED,
+    .loadType = TextureLoadType::EAGER,
+    .pipeline = TexturePipeline::FRAGMENT
+  };
+  auto uniformTexture = device->createTexture(uniformTextureDesc);
+
+  // Uniforms
+  auto uniforms = std::make_shared<Uniforms>();
+  uniforms->setTexture("uTexture", uniformTexture);
+
   // Pipeline
-  PipelineDescription metalPipelineDesc{
+  PipelineDescription metalPipelineDesc = {
     .shaders = {std::move(vertexFunc), std::move(fragmentFunc)},
     .buffer = std::move(vertexBuffer),
     .rasterizer = rasterizer,
     .outputMerger = outputMerger,
     .format = getImageFormat(layer->pixelFormat()),
+    .uniforms = uniforms,
   };
   auto metalPipeline = device->createPipeline(metalPipelineDesc);
 
@@ -169,7 +191,7 @@ int main(int argc, char** argv) {
 
     // Draw offscreen texture to window swap chain
     auto metalTexture = std::static_pointer_cast<MetalTexture>(texture);
-    blitTextureToDrawable(metalTexture->getHandle(), drawable, std::static_pointer_cast<MetalCommandQueue>(queue)->getMTLCommandQueue());
+    blitTextureToDrawable(metalTexture->getTextureHandle(), drawable, std::static_pointer_cast<MetalCommandQueue>(queue)->getMTLCommandQueue());
   }
 
   SDL_Metal_DestroyView(view);

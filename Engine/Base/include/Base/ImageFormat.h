@@ -4,6 +4,7 @@ namespace goala {
 enum class ImageFormat {
   RGB,
   RGBA,
-  BGRA
+  BGRA,
+  UNDEFINED,
 };
 } // namespace goala

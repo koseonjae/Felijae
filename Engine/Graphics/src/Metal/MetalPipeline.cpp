@@ -2,6 +2,7 @@
 #include <Graphics/Metal/MetalPipeline.h>
 #include <Graphics/Metal/MetalShader.h>
 #include <Graphics/Utility/ImageFormatUtil.h>
+#include <Graphics/Metal/MetalTexture.h>
 #include <Base/Utility/TypeCast.h>
 
 #include <Metal/Metal.hpp>
@@ -64,6 +65,7 @@ const MTL::RenderPipelineState* MetalPipeline::getPipeline() const {
 
 void MetalPipeline::encode(MTL::RenderCommandEncoder* encoder) {
   auto metalBuffer = SAFE_DOWN_CAST(MetalBuffer*, getBuffer());
+  _encodeUniforms(encoder);
   _encodeViewport(encoder);
   _encodeCulling(encoder);
   encoder->setDepthStencilState(m_depthStencilState.get());
@@ -106,6 +108,22 @@ void MetalPipeline::_encodeCulling(MTL::RenderCommandEncoder* encoder) {
     encoder->setFrontFacingWinding(MTL::WindingCounterClockwise);
   else
     encoder->setFrontFacingWinding(MTL::WindingClockwise);
+}
+
+void MetalPipeline::_encodeUniforms(MTL::RenderCommandEncoder* encoder) {
+  auto& uniforms = m_desc.uniforms;
+  auto textures = uniforms->retrieveTextures();
+  if (textures.empty())
+    return;
+
+  int fragSlot = 0;
+  for (const auto& [name, texture] : textures) {
+    // todo: distinguish pipeline
+    auto metalTexture = SAFE_DOWN_CAST(MetalTexture*, texture.get());
+    encoder->setFragmentTexture(metalTexture->getTextureHandle(), fragSlot);
+    encoder->setFragmentSamplerState(metalTexture->getSamplerHandle(), fragSlot);
+    ++fragSlot;
+  }
 }
 
 void MetalPipeline::_initializeDepthTest() {

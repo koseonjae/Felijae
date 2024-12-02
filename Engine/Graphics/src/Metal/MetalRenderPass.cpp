@@ -1,5 +1,6 @@
 #include <Graphics/Metal/MetalRenderPass.h>
 #include <Graphics/Metal/MetalTexture.h>
+#include <Base/Utility/TypeCast.h>
 
 #include <Metal/Metal.hpp>
 #include <QuartzCore/CAMetalDrawable.hpp>
@@ -66,7 +67,8 @@ MetalRenderPass::MetalRenderPass(MetalDevice* device, RenderPassDescription desc
     else
       assert(false && "Undefined store function");
 
-    MTL::Texture* textureHandle = static_pointer_cast<MetalTexture>(attachment.texture)->getHandle();
+    auto metalTexture = SAFE_DOWN_CAST(MetalTexture*, attachment.texture.get());
+    MTL::Texture* textureHandle = metalTexture->getTextureHandle();
     colorAttachment->setTexture(textureHandle); // todo: move
   }
 }

@@ -7,6 +7,7 @@
 
 namespace MTL {
 class Texture;
+class SamplerState;
 }
 
 namespace goala {
@@ -18,9 +19,12 @@ public:
 
   void bind() override;
 
-  MTL::Texture* getHandle();
+  MTL::Texture* getTextureHandle();
 
-  const MTL::Texture* getHandle() const;
+  const MTL::Texture* getTextureHandle() const;
+
+  MTL::SamplerState* getSamplerHandle();
+  const MTL::SamplerState* getSamplerHandle() const;
 
 private:
   void _initIfNeeded();
@@ -28,6 +32,7 @@ private:
 private:
   MetalDevice* m_device = nullptr;
   MetalRef<MTL::Texture> m_texture;
+  MetalRef<MTL::SamplerState> m_sampler;
   bool m_initialized = false;
   ImageData m_imageData{};
 };
