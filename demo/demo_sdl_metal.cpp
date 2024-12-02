@@ -13,7 +13,6 @@
 #include <Engine/Model/Scene.h>
 #include <Engine/Renderer/ForwardRenderer.h>
 
-#include <Foundation/Foundation.hpp>
 #include <Metal/Metal.hpp>
 #include <QuartzCore/QuartzCore.hpp>
 #include <SDL.h>
@@ -22,10 +21,6 @@ using namespace goala;
 
 namespace {
 const std::vector<int> viewport = {640, 480};
-
-inline NS::String* getNSString(std::string_view str) {
-  return NS::String::string(str.data(), NS::ASCIIStringEncoding);
-}
 } // namespace
 
 int main(int argc, char** argv) {
@@ -48,18 +43,6 @@ int main(int argc, char** argv) {
 
   // Renderer
   auto renderer = std::make_shared<ForwardRenderer>();
-
-  // Shader
-  ShaderDescription vertShaderDesc = {
-    .source = readFile(File("asset://shader/metal_color.vert").getPath()),
-    .type = ShaderType::VERTEX
-  };
-  ShaderDescription fragShaderDesc = {
-    .source = readFile(File("asset://shader/metal_color.frag").getPath()),
-    .type = ShaderType::FRAGMENT
-  };
-  auto vertexFunc = device->createShader(vertShaderDesc);
-  auto fragmentFunc = device->createShader(fragShaderDesc);
 
   // Rasterizer
   Rasterizer rasterizer = {
@@ -99,6 +82,19 @@ int main(int argc, char** argv) {
   };
   auto vertexBuffer = device->createBuffer(bufferDesc);
 
+  // Shader
+  ShaderDescription vertShaderDesc = {
+    .source = readFile(File("asset://shader/color_vert.msl").getPath()),
+    .type = ShaderType::VERTEX
+  };
+  ShaderDescription fragShaderDesc = {
+    .source = readFile(File("asset://shader/color_frag.msl").getPath()),
+    .type = ShaderType::FRAGMENT
+  };
+  auto vertexFunc = device->createShader(vertShaderDesc);
+  auto fragmentFunc = device->createShader(fragShaderDesc);
+
+  // Pipeline
   PipelineDescription metalPipelineDesc{
     .shaders = {std::move(vertexFunc), std::move(fragmentFunc)},
     .buffer = std::move(vertexBuffer),
