@@ -67,8 +67,6 @@ target_include_directories(Graphics PUBLIC
 find_package(OpenGL REQUIRED)
 
 target_link_libraries(Graphics
-    PRIVATE
-    stb
     PUBLIC
     OpenGL::GL
     MetalCpp

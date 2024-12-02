@@ -20,11 +20,12 @@ add_library(Base STATIC
 
 find_package(glm CONFIG REQUIRED)
 find_package(tinyobjloader CONFIG REQUIRED)
+find_package(Stb REQUIRED)
 
 target_include_directories(Base PUBLIC
-    include)
+    include
+    ${Stb_INCLUDE_DIR})
 
 target_link_libraries(Base PUBLIC
-    stb
     glm::glm
     tinyobjloader::tinyobjloader)
