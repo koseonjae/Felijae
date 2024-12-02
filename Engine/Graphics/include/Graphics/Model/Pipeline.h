@@ -17,7 +17,7 @@ struct PipelineDescription {
  std::shared_ptr<Buffer> buffer;
  std::vector<std::shared_ptr<Shader>> shaders;
  std::shared_ptr<Program> program;
- std::shared_ptr<Rasterizer> rasterizer;
+ Rasterizer rasterizer{};
  std::shared_ptr<OutputMerger> outputMerger;
  std::shared_ptr<Uniforms> uniforms;
  ImageFormat format;
@@ -44,9 +44,6 @@ public:
 
  const Program* getProgram() const { return m_desc.program.get(); };
  Program* getProgram() { return m_desc.program.get(); };
-
- const Rasterizer* getRasterizer() const { return m_desc.rasterizer.get(); }
- Rasterizer* getRasterizer() { return m_desc.rasterizer.get(); }
 
  const OutputMerger* getOutputMerger() const { return m_desc.outputMerger.get(); }
  OutputMerger* getOutputMerger() { return m_desc.outputMerger.get(); }

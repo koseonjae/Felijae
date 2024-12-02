@@ -11,5 +11,9 @@ public:
   ~OpenGLPipeline() override = default;
   void update() override;
   void render() override;
+
+private:
+  void _bindCulling();
+  void _bindViewport();
 };
 } // namespace goala

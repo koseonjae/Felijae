@@ -42,7 +42,6 @@ MetalPipeline::MetalPipeline(MetalDevice* device, PipelineDescription desc)
   auto colorAttachmentDesc = pipelineDesc->colorAttachments()->object(0);
   colorAttachmentDesc->setPixelFormat(getMetalImageFormat(m_desc.format));
 
-  m_desc.rasterizer->bind(pipelineDesc);
   m_desc.outputMerger->bind(pipelineDesc);
 
   _initializeDepthTest();
@@ -84,7 +83,7 @@ void MetalPipeline::encode(MTL::RenderCommandEncoder* encoder) {
 }
 
 void MetalPipeline::_encodeViewport(MTL::RenderCommandEncoder* encoder) {
-  const auto& viewport = getRasterizer()->getViewport();
+  const auto& viewport = m_desc.rasterizer.viewport;
   MTL::Viewport mltViewport = {
     .originX = static_cast<double>(viewport.minX),
     .originY = static_cast<double>(viewport.minY),
@@ -97,7 +96,7 @@ void MetalPipeline::_encodeViewport(MTL::RenderCommandEncoder* encoder) {
 }
 
 void MetalPipeline::_encodeCulling(MTL::RenderCommandEncoder* encoder) {
-  const auto& culling = getRasterizer()->getCulling();
+  const auto& culling = m_desc.rasterizer.culling;
 
   if (!culling.enable) {
     encoder->setCullMode(MTL::CullModeNone);

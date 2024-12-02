@@ -5,7 +5,6 @@
 #include <Graphics/Metal/MetalCommandQueue.h>
 #include <Graphics/Metal/MetalOutputMerger.h>
 #include <Graphics/Metal/MetalPipeline.h>
-#include <Graphics/Metal/MetalRasterizer.h>
 #include <Graphics/Metal/MetalRenderPass.h>
 #include <Graphics/Metal/MetalShader.h>
 #include <Graphics/Metal/MetalTexture.h>
@@ -19,8 +18,6 @@
 #include <Metal/Metal.hpp>
 #include <QuartzCore/QuartzCore.hpp>
 #include <SDL.h>
-
-#include <memory>
 
 using namespace goala;
 
@@ -66,22 +63,21 @@ int main(int argc, char** argv) {
   auto fragmentFunc = device->createShader(fragShaderDesc);
 
   // Rasterizer
-  Culling culling = {
-    .enable = true,
-    .frontFace = Culling::FrontFace::CCW,
-    .cullMode = Culling::CullMode::Back,
+  Rasterizer rasterizer = {
+    .culling = {
+      .enable = true,
+      .frontFace = Culling::FrontFace::CCW,
+      .cullMode = Culling::CullMode::Back,
+    },
+    .viewport = {
+      .minX = 0,
+      .minY = 0,
+      .width = viewport[0],
+      .height = viewport[1],
+      .minZ = 0.0f,
+      .maxZ = 1.0f,
+    }
   };
-  Viewport pipelineViewport = {
-    .minX = 0,
-    .minY = 0,
-    .width = viewport[0],
-    .height = viewport[1],
-    .minZ = 0.0f,
-    .maxZ = 1.0f,
-  };
-  auto rasterizer = std::make_shared<MetalRasterizer>();
-  rasterizer->setCulling(culling);
-  rasterizer->setViewport(pipelineViewport);
 
   // OutputMerger
   DepthTest depthTest = {
@@ -108,7 +104,7 @@ int main(int argc, char** argv) {
   PipelineDescription metalPipelineDesc{
     .shaders = {std::move(vertexFunc), std::move(fragmentFunc)},
     .buffer = std::move(vertexBuffer),
-    .rasterizer = std::move(rasterizer),
+    .rasterizer = rasterizer,
     .outputMerger = std::move(outputMerger),
     .format = getImageFormat(layer->pixelFormat()),
   };

@@ -34,27 +34,14 @@ struct Viewport {
 
 static_assert(std::is_trivially_copyable_v<Viewport>);
 
-class Rasterizer {
+struct Rasterizer {
   // primitive assembly
   // clipping
   // perspective division
   // culling
   // viewport transform
   // scan conversion
-
-public:
-  virtual void bind(void* descriptor) = 0;
-public:
-  virtual ~Rasterizer() = default;
-
-  void setCulling(const Culling& culling) { m_culling = culling; };
-  void setViewport(const Viewport& viewPort) { m_viewport = viewPort; }
-
-  const Culling& getCulling() const { return m_culling; }
-  const Viewport& getViewport() const { return m_viewport; }
-
-private:
-  Culling m_culling;
-  Viewport m_viewport;
+  Culling culling{};
+  Viewport viewport{};
 };
 } // namespace goala

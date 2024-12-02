@@ -12,7 +12,6 @@
 #include <Graphics/OpenGL/OpenGLOutputMerger.h>
 #include <Graphics/OpenGL/OpenGLPipeline.h>
 #include <Graphics/OpenGL/OpenGLProgram.h>
-#include <Graphics/OpenGL/OpenGLRasterizer.h>
 #include <Graphics/OpenGL/OpenGLRenderPass.h>
 #include <Graphics/OpenGL/OpenGLTexture.h>
 
@@ -66,22 +65,21 @@ int main() {
   auto device = std::make_unique<OpenGLDevice>();
 
   // Rasterizer
-  Culling culling = {
-    .enable = true,
-    .frontFace = Culling::FrontFace::CCW,
-    .cullMode = Culling::CullMode::Back
+  Rasterizer rasterizer = {
+    .culling = {
+      .enable = true,
+      .frontFace = Culling::FrontFace::CCW,
+      .cullMode = Culling::CullMode::Back,
+    },
+    .viewport = {
+      .minX = 0,
+      .minY = 0,
+      .width = width,
+      .height = height,
+      .minZ = 0.0f,
+      .maxZ = 1.0f,
+    }
   };
-  Viewport viewport = {
-    .minX = 0,
-    .minY = 0,
-    .width = width,
-    .height = height,
-    .minZ = 0.0f,
-    .maxZ = 1.0f
-  };
-  auto rasterizer = std::make_shared<OpenGLRasterizer>();
-  rasterizer->setCulling(culling);
-  rasterizer->setViewport(viewport);
 
   // Output Merger
   DepthTest depthTest = {
