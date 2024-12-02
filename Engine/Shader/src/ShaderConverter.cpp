@@ -68,8 +68,9 @@ std::string convertSpirv2glsl(const std::vector<uint32_t>& spirvData) {
     spirv_cross::CompilerGLSL compiler(spirvData);
 
     spirv_cross::CompilerGLSL::Options options = {
-      .version = 300,
-      .es = false
+      .version = 330,
+      .es = false,
+      .enable_420pack_extension = false,
     };
     compiler.set_common_options(options);
 
