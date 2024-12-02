@@ -10,8 +10,6 @@ void OpenGLOutputMerger::bind(void* descriptor) {
   _bindAlphaBlending();
 }
 
-void OpenGLOutputMerger::encode(CommandEncoder* encoder) {}
-
 void OpenGLOutputMerger::_bindDepthTest() {
   const auto& depthTest = getDepthTest();
 

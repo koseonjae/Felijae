@@ -14,11 +14,9 @@ class MetalOutputMerger : public OutputMerger {
 public:
   MetalOutputMerger(MetalDevice* device);
   void bind(void* descriptor) override;
-  void encode(CommandEncoder* encoder) override;
 
 private:
   void _updateAlphaBlend(MTL::RenderPipelineDescriptor* encoder);
-  void _updateDepthTest(CommandEncoder* encoder);
 
 private:
   MetalDevice* m_device = nullptr;

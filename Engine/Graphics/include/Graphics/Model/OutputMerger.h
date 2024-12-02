@@ -38,7 +38,6 @@ static_assert(std::is_trivially_copyable_v<AlphaBlend>);
 class OutputMerger {
 public:
   virtual void bind(void* descriptor) = 0;
-  virtual void encode(CommandEncoder* encoder) = 0;
 
 public:
   virtual ~OutputMerger() = default;

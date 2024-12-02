@@ -2,6 +2,7 @@
 
 #include <Graphics/Model/Pipeline.h>
 #include <Graphics/Utility/MetalRef.h>
+#include <Metal/MTLDepthStencil.hpp>
 
 namespace MTL {
 class RenderPipelineState;
@@ -23,7 +24,14 @@ public:
 
   const MTL::RenderPipelineState* getPipeline() const;
 
+  const MTL::DepthStencilState* getDepthStencilState() const;
+
 private:
+  void _initializeDepthTest(const DepthTest& desc);
+
+private:
+  MetalDevice* m_device = nullptr;
   MetalRef<MTL::RenderPipelineState> m_pipeline;
+  MetalRef<MTL::DepthStencilState> m_depthStencilState;
 };
 } // namespace goala

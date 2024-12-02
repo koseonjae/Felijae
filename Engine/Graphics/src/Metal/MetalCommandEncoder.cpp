@@ -24,8 +24,8 @@ void MetalCommandEncoder::encodeDraw(Pipeline* pipeline) {
   auto metalBuffer = SAFE_DOWN_CAST(MetalBuffer*, metalPipeline->getBuffer());
 
   pipeline->getRasterizer()->encode(this);
-  pipeline->getOutputMerger()->encode(this);
 
+  m_encoder->setDepthStencilState(metalPipeline->getDepthStencilState());
   m_encoder->setRenderPipelineState(metalPipeline->getPipeline());
   m_encoder->setVertexBuffer(metalBuffer->getVertexHandle(), 0, AAPLVertexInputIndexVertices);
   m_encoder->drawIndexedPrimitives(MTL::PrimitiveType::PrimitiveTypeTriangle,

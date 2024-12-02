@@ -7,7 +7,8 @@
 
 namespace goala {
 MetalPipeline::MetalPipeline(MetalDevice* device, PipelineDescription desc)
-  : Pipeline(std::move(desc)) {
+  : Pipeline(std::move(desc))
+  , m_device(device) {
   auto pipelineDesc = MTL::RenderPipelineDescriptor::alloc()->init();
 
   for (const auto& shader : m_desc.shaders) {
@@ -42,6 +43,8 @@ MetalPipeline::MetalPipeline(MetalDevice* device, PipelineDescription desc)
   m_desc.rasterizer->bind(pipelineDesc);
   m_desc.outputMerger->bind(pipelineDesc);
 
+  _initializeDepthTest(getOutputMerger()->getDepthTest());
+
   NS::Error* err = nil;
   m_pipeline = makeMetalRef(device->getMTLDevice()->newRenderPipelineState(pipelineDesc, &err));
   assert(m_pipeline && "Failed to create pipeline");
@@ -57,5 +60,25 @@ MTL::RenderPipelineState* MetalPipeline::getPipeline() {
 
 const MTL::RenderPipelineState* MetalPipeline::getPipeline() const {
   return m_pipeline.get();
+}
+
+const MTL::DepthStencilState* MetalPipeline::getDepthStencilState() const {
+  return m_depthStencilState.get();
+}
+
+void MetalPipeline::_initializeDepthTest(const DepthTest& depthTest) {
+  if (!depthTest.enable)
+    return;
+
+  auto descriptor = MTL::DepthStencilDescriptor::alloc()->init();
+
+  if (depthTest.depthFunc == DepthTest::DepthTestFunc::Less)
+    descriptor->setDepthCompareFunction(MTL::CompareFunctionLess);
+  else
+    assert(false && "Undefined depth function");
+
+  descriptor->setDepthWriteEnabled(depthTest.updateDepthMask);
+
+  m_depthStencilState = makeMetalRef(m_device->getMTLDevice()->newDepthStencilState(descriptor));
 }
 } // namespace goala
