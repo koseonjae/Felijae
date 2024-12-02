@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Texture.h"
+#include <Graphics/Model/Texture.h>
 
 #include <glm/glm.hpp>
 
@@ -20,13 +20,15 @@ public:
 
   void setTexture(std::string_view name, std::shared_ptr<Texture> texture);
 
-  std::unordered_map<std::string, UniformType> retrieveUniforms();
+  std::unordered_map<std::string, UniformType> getUniforms();
 
-  std::unordered_map<std::string, std::shared_ptr<Texture>> retrieveTextures();
+  const TextureVariables& getTextures() const;
+
+  TextureVariables& getTextures();
 
 private:
   std::mutex m_uniformsLock;
-  std::mutex m_texturesLock;
+  mutable std::mutex m_texturesLock;
   UniformVariables m_uniforms;
   TextureVariables m_textures;
 };

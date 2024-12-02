@@ -76,8 +76,8 @@ void OpenGLProgram::bind(Uniforms* uniformVariables) {
 
   glUseProgram(m_program);
 
-  auto uniforms = uniformVariables->retrieveUniforms();
-  auto textures = uniformVariables->retrieveTextures();
+  auto uniforms = uniformVariables->getUniforms();
+  auto textures = uniformVariables->getTextures();
 
   _updateUniforms(uniforms);
   _updateTextures(std::move(textures));

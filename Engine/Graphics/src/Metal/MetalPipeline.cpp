@@ -112,7 +112,7 @@ void MetalPipeline::_encodeCulling(MTL::RenderCommandEncoder* encoder) {
 
 void MetalPipeline::_encodeUniforms(MTL::RenderCommandEncoder* encoder) {
   auto& uniforms = m_desc.uniforms;
-  auto textures = uniforms->retrieveTextures();
+  auto textures = uniforms->getTextures();
   if (textures.empty())
     return;
 
