@@ -35,21 +35,8 @@ struct AlphaBlend {
 
 static_assert(std::is_trivially_copyable_v<AlphaBlend>);
 
-class OutputMerger {
-public:
-  virtual void bind(void* descriptor) = 0;
-
-public:
-  virtual ~OutputMerger() = default;
-
-  void setDepthTest(const DepthTest& depthTest) { m_depthTest = depthTest; }
-  void setAlphaBlend(const AlphaBlend& alphaBlend) { m_alphaBlend = alphaBlend; }
-
-  const DepthTest& getDepthTest() const { return m_depthTest; }
-  const AlphaBlend& getAlphaBlend() const { return m_alphaBlend; }
-
-private:
-  DepthTest m_depthTest;
-  AlphaBlend m_alphaBlend;
+struct OutputMerger {
+  DepthTest depthTest{};
+  AlphaBlend alphaBlend{};
 };
 } // namespace goala

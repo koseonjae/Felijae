@@ -25,8 +25,6 @@ public:
 
   const MTL::RenderPipelineState* getPipeline() const;
 
-  const MTL::DepthStencilState* getDepthStencilState() const;
-
   void encode(MTL::RenderCommandEncoder* encoder);
 
 private:

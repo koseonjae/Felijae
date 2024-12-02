@@ -3,7 +3,6 @@
 #include <Base/Utility/FileReader.h>
 #include <Graphics/Metal/MetalCommandBuffer.h>
 #include <Graphics/Metal/MetalCommandQueue.h>
-#include <Graphics/Metal/MetalOutputMerger.h>
 #include <Graphics/Metal/MetalPipeline.h>
 #include <Graphics/Metal/MetalRenderPass.h>
 #include <Graphics/Metal/MetalShader.h>
@@ -80,20 +79,19 @@ int main(int argc, char** argv) {
   };
 
   // OutputMerger
-  DepthTest depthTest = {
-    .enable = true,
-    .depthFunc = DepthTest::DepthTestFunc::Less,
-    .updateDepthMask = true,
+  OutputMerger outputMerger = {
+    .depthTest = {
+      .enable = true,
+      .depthFunc = DepthTest::DepthTestFunc::Less,
+      .updateDepthMask = true,
+    },
+    .alphaBlend = {
+      .enable = true,
+      .fragmentBlendFunc = AlphaBlend::BlendFunc::SRC_ALPHA,
+      .pixelBlendFunc = AlphaBlend::BlendFunc::ONE_MINUS_SRC_ALPHA,
+      .blendEquation = AlphaBlend::BlendEquation::Add,
+    }
   };
-  AlphaBlend alphaBlend = {
-    .enable = true,
-    .fragmentBlendFunc = AlphaBlend::BlendFunc::SRC_ALPHA,
-    .pixelBlendFunc = AlphaBlend::BlendFunc::ONE_MINUS_SRC_ALPHA,
-    .blendEquation = AlphaBlend::BlendEquation::Add,
-  };
-  auto outputMerger = std::make_shared<MetalOutputMerger>(device.get());
-  outputMerger->setDepthTest(depthTest);
-  outputMerger->setAlphaBlend(alphaBlend);
 
   // Buffer
   BufferDescription bufferDesc = {
@@ -105,7 +103,7 @@ int main(int argc, char** argv) {
     .shaders = {std::move(vertexFunc), std::move(fragmentFunc)},
     .buffer = std::move(vertexBuffer),
     .rasterizer = rasterizer,
-    .outputMerger = std::move(outputMerger),
+    .outputMerger = outputMerger,
     .format = getImageFormat(layer->pixelFormat()),
   };
   auto metalPipeline = device->createPipeline(metalPipelineDesc);

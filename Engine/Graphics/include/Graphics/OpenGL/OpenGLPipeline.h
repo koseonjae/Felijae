@@ -15,5 +15,7 @@ public:
 private:
   void _bindCulling();
   void _bindViewport();
+  void _bindDepthTest();
+  void _bindAlphaBlending();
 };
 } // namespace goala

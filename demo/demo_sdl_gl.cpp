@@ -9,7 +9,6 @@
 #include <Graphics/OpenGL/OpenGLCommandBuffer.h>
 #include <Graphics/OpenGL/OpenGLCommandQueue.h>
 #include <Graphics/OpenGL/OpenGLDevice.h>
-#include <Graphics/OpenGL/OpenGLOutputMerger.h>
 #include <Graphics/OpenGL/OpenGLPipeline.h>
 #include <Graphics/OpenGL/OpenGLProgram.h>
 #include <Graphics/OpenGL/OpenGLRenderPass.h>
@@ -82,20 +81,19 @@ int main() {
   };
 
   // Output Merger
-  DepthTest depthTest = {
-    .enable = true,
-    .depthFunc = DepthTest::DepthTestFunc::Less,
-    .updateDepthMask = true
+  OutputMerger outputMerger = {
+    .depthTest = {
+      .enable = true,
+      .depthFunc = DepthTest::DepthTestFunc::Less,
+      .updateDepthMask = true,
+    },
+    .alphaBlend = {
+      .enable = true,
+      .fragmentBlendFunc = AlphaBlend::BlendFunc::SRC_ALPHA,
+      .pixelBlendFunc = AlphaBlend::BlendFunc::ONE_MINUS_SRC_ALPHA,
+      .blendEquation = AlphaBlend::BlendEquation::Add,
+    }
   };
-  AlphaBlend alphaBlend = {
-    .enable = true,
-    .fragmentBlendFunc = AlphaBlend::BlendFunc::SRC_ALPHA,
-    .pixelBlendFunc = AlphaBlend::BlendFunc::ONE_MINUS_SRC_ALPHA,
-    .blendEquation = AlphaBlend::BlendEquation::Add
-  };
-  auto outputMerger = std::make_shared<OpenGLOutputMerger>();
-  outputMerger->setDepthTest(depthTest);
-  outputMerger->setAlphaBlend(alphaBlend);
 
   // Program
   auto vs = File("asset://shader/gl_lighting.vert").read();

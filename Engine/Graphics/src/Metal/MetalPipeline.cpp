@@ -42,8 +42,6 @@ MetalPipeline::MetalPipeline(MetalDevice* device, PipelineDescription desc)
   auto colorAttachmentDesc = pipelineDesc->colorAttachments()->object(0);
   colorAttachmentDesc->setPixelFormat(getMetalImageFormat(m_desc.format));
 
-  m_desc.outputMerger->bind(pipelineDesc);
-
   _initializeDepthTest();
   _initializeAlphaBlend(pipelineDesc);
 
@@ -64,15 +62,11 @@ const MTL::RenderPipelineState* MetalPipeline::getPipeline() const {
   return m_pipeline.get();
 }
 
-const MTL::DepthStencilState* MetalPipeline::getDepthStencilState() const {
-  return m_depthStencilState.get();
-}
-
 void MetalPipeline::encode(MTL::RenderCommandEncoder* encoder) {
   auto metalBuffer = SAFE_DOWN_CAST(MetalBuffer*, getBuffer());
   _encodeViewport(encoder);
   _encodeCulling(encoder);
-  encoder->setDepthStencilState(getDepthStencilState());
+  encoder->setDepthStencilState(m_depthStencilState.get());
   encoder->setRenderPipelineState(m_pipeline.get());
   encoder->setVertexBuffer(metalBuffer->getVertexHandle(), 0, AAPLVertexInputIndexVertices);
   encoder->drawIndexedPrimitives(MTL::PrimitiveType::PrimitiveTypeTriangle,
@@ -115,7 +109,7 @@ void MetalPipeline::_encodeCulling(MTL::RenderCommandEncoder* encoder) {
 }
 
 void MetalPipeline::_initializeDepthTest() {
-  const auto& depthTest = getOutputMerger()->getDepthTest();
+  const auto& depthTest = m_desc.outputMerger.depthTest;
   if (!depthTest.enable)
     return;
 
@@ -132,7 +126,7 @@ void MetalPipeline::_initializeDepthTest() {
 }
 
 void MetalPipeline::_initializeAlphaBlend(MTL::RenderPipelineDescriptor* descriptor) {
-  const auto& alphaBlend = getOutputMerger()->getAlphaBlend();
+  const auto& alphaBlend = m_desc.outputMerger.alphaBlend;
 
   auto* colorAttachment = descriptor->colorAttachments()->object(0);
   if (!alphaBlend.enable) {
