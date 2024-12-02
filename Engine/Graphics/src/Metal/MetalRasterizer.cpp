@@ -8,13 +8,6 @@ using namespace goala;
 
 void MetalRasterizer::bind(void* descriptor) {}
 
-void MetalRasterizer::encode(CommandEncoder* encoder) {
-  auto metalEncoder = SAFE_DOWN_CAST(MetalCommandEncoder*, encoder);
-  auto mtlEncoder = metalEncoder->getEncoder();
-  _updateCulling(mtlEncoder);
-  _updateViewPort(mtlEncoder);
-}
-
 void MetalRasterizer::_updateCulling(MTL::RenderCommandEncoder* encoder) {
   auto& culling = getCulling();
 

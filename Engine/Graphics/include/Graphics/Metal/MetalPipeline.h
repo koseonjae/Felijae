@@ -7,6 +7,7 @@
 namespace MTL {
 class RenderPipelineState;
 class RenderPipelineDescriptor;
+class RenderCommandEncoder;
 }
 
 namespace goala {
@@ -26,8 +27,13 @@ public:
 
   const MTL::DepthStencilState* getDepthStencilState() const;
 
+  void encode(MTL::RenderCommandEncoder* encoder);
+
 private:
-  void _initializeDepthTest(const DepthTest& desc);
+  void _initializeDepthTest();
+  void _initializeAlphaBlend(MTL::RenderPipelineDescriptor* descriptor);
+  void _encodeViewport(MTL::RenderCommandEncoder* encoder);
+  void _encodeCulling(MTL::RenderCommandEncoder* encoder);
 
 private:
   MetalDevice* m_device = nullptr;

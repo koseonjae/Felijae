@@ -1,6 +1,7 @@
 #include <Base/File/File.h>
 #include <Base/Object/Polygons.h>
 #include <Base/Utility/ImageLoader.h>
+#include <Base/Utility/TypeCast.h>
 #include <Engine/Model/Light.h>
 #include <Engine/Model/Model.h>
 #include <Engine/Model/Scene.h>
@@ -14,11 +15,9 @@
 #include <Graphics/OpenGL/OpenGLRasterizer.h>
 #include <Graphics/OpenGL/OpenGLRenderPass.h>
 #include <Graphics/OpenGL/OpenGLTexture.h>
+
 #include <SDL2/SDL.h>
-
 #include <glm/glm.hpp>
-
-#include "Base/Utility/TypeCast.h"
 
 using namespace goala;
 

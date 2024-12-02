@@ -11,7 +11,6 @@ namespace goala {
 class MetalRasterizer : public Rasterizer {
 public:
   void bind(void* descriptor) override;
-  void encode(CommandEncoder* encoder) override;
 
 private:
   void _updateCulling(MTL::RenderCommandEncoder* encoder);

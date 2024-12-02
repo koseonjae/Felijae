@@ -2,8 +2,10 @@
 #include <Graphics/Metal/MetalPipeline.h>
 #include <Graphics/Metal/MetalShader.h>
 #include <Graphics/Utility/ImageFormatUtil.h>
+#include <Base/Utility/TypeCast.h>
 
 #include <Metal/Metal.hpp>
+#include <Metal/triangle_types.h>
 
 namespace goala {
 MetalPipeline::MetalPipeline(MetalDevice* device, PipelineDescription desc)
@@ -43,7 +45,8 @@ MetalPipeline::MetalPipeline(MetalDevice* device, PipelineDescription desc)
   m_desc.rasterizer->bind(pipelineDesc);
   m_desc.outputMerger->bind(pipelineDesc);
 
-  _initializeDepthTest(getOutputMerger()->getDepthTest());
+  _initializeDepthTest();
+  _initializeAlphaBlend(pipelineDesc);
 
   NS::Error* err = nil;
   m_pipeline = makeMetalRef(device->getMTLDevice()->newRenderPipelineState(pipelineDesc, &err));
@@ -66,7 +69,54 @@ const MTL::DepthStencilState* MetalPipeline::getDepthStencilState() const {
   return m_depthStencilState.get();
 }
 
-void MetalPipeline::_initializeDepthTest(const DepthTest& depthTest) {
+void MetalPipeline::encode(MTL::RenderCommandEncoder* encoder) {
+  auto metalBuffer = SAFE_DOWN_CAST(MetalBuffer*, getBuffer());
+  _encodeViewport(encoder);
+  _encodeCulling(encoder);
+  encoder->setDepthStencilState(getDepthStencilState());
+  encoder->setRenderPipelineState(m_pipeline.get());
+  encoder->setVertexBuffer(metalBuffer->getVertexHandle(), 0, AAPLVertexInputIndexVertices);
+  encoder->drawIndexedPrimitives(MTL::PrimitiveType::PrimitiveTypeTriangle,
+                                 metalBuffer->getIndicesSize(),
+                                 MTL::IndexTypeUInt32,
+                                 metalBuffer->getIndexHandle(),
+                                 0);
+}
+
+void MetalPipeline::_encodeViewport(MTL::RenderCommandEncoder* encoder) {
+  const auto& viewport = getRasterizer()->getViewport();
+  MTL::Viewport mltViewport = {
+    .originX = static_cast<double>(viewport.minX),
+    .originY = static_cast<double>(viewport.minY),
+    .width = static_cast<double>(viewport.width),
+    .height = static_cast<double>(viewport.height),
+    .znear = static_cast<double>(viewport.minZ),
+    .zfar = static_cast<double>(viewport.maxZ),
+  };
+  encoder->setViewport(mltViewport);
+}
+
+void MetalPipeline::_encodeCulling(MTL::RenderCommandEncoder* encoder) {
+  const auto& culling = getRasterizer()->getCulling();
+
+  if (!culling.enable) {
+    encoder->setCullMode(MTL::CullModeNone);
+    return;
+  }
+
+  if (culling.cullMode == Culling::CullMode::Front)
+    encoder->setCullMode(MTL::CullModeFront);
+  else
+    encoder->setCullMode(MTL::CullModeBack);
+
+  if (culling.frontFace == Culling::FrontFace::CCW)
+    encoder->setFrontFacingWinding(MTL::WindingCounterClockwise);
+  else
+    encoder->setFrontFacingWinding(MTL::WindingClockwise);
+}
+
+void MetalPipeline::_initializeDepthTest() {
+  const auto& depthTest = getOutputMerger()->getDepthTest();
   if (!depthTest.enable)
     return;
 
@@ -80,5 +130,44 @@ void MetalPipeline::_initializeDepthTest(const DepthTest& depthTest) {
   descriptor->setDepthWriteEnabled(depthTest.updateDepthMask);
 
   m_depthStencilState = makeMetalRef(m_device->getMTLDevice()->newDepthStencilState(descriptor));
+}
+
+void MetalPipeline::_initializeAlphaBlend(MTL::RenderPipelineDescriptor* descriptor) {
+  const auto& alphaBlend = getOutputMerger()->getAlphaBlend();
+
+  auto* colorAttachment = descriptor->colorAttachments()->object(0);
+  if (!alphaBlend.enable) {
+    colorAttachment->setBlendingEnabled(false);
+    return;
+  }
+
+  if (alphaBlend.fragmentBlendFunc == AlphaBlend::BlendFunc::SRC_ALPHA) {
+    colorAttachment->setSourceRGBBlendFactor(MTL::BlendFactorSourceAlpha);
+    colorAttachment->setSourceAlphaBlendFactor(MTL::BlendFactorSourceAlpha);
+  }
+  else if (alphaBlend.fragmentBlendFunc == AlphaBlend::BlendFunc::ONE_MINUS_SRC_ALPHA) {
+    colorAttachment->setSourceRGBBlendFactor(MTL::BlendFactorOneMinusSourceAlpha);
+    colorAttachment->setSourceAlphaBlendFactor(MTL::BlendFactorOneMinusSourceAlpha);
+  }
+  else
+    assert(false && "Undefined fragment blend function");
+
+  if (alphaBlend.pixelBlendFunc == AlphaBlend::BlendFunc::SRC_ALPHA) {
+    colorAttachment->setDestinationRGBBlendFactor(MTL::BlendFactorSourceAlpha);
+    colorAttachment->setDestinationAlphaBlendFactor(MTL::BlendFactorSourceAlpha);
+  }
+  else if (alphaBlend.pixelBlendFunc == AlphaBlend::BlendFunc::ONE_MINUS_SRC_ALPHA) {
+    colorAttachment->setDestinationRGBBlendFactor(MTL::BlendFactorOneMinusSourceAlpha);
+    colorAttachment->setDestinationAlphaBlendFactor(MTL::BlendFactorOneMinusSourceAlpha);
+  }
+  else
+    assert(false && "Undefined pixel blend function");
+
+  if (alphaBlend.blendEquation == AlphaBlend::BlendEquation::Add) {
+    colorAttachment->setRgbBlendOperation(MTL::BlendOperationAdd);
+    colorAttachment->setAlphaBlendOperation(MTL::BlendOperationAdd);
+  }
+  else
+    assert(false && "Undefined blend equation");
 }
 } // namespace goala

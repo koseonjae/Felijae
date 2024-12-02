@@ -44,8 +44,6 @@ class Rasterizer {
 
 public:
   virtual void bind(void* descriptor) = 0;
-  virtual void encode(CommandEncoder* encoder) = 0;
-
 public:
   virtual ~Rasterizer() = default;
 
