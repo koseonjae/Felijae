@@ -201,9 +201,29 @@ void MetalPipeline::_encodeUniformVariables(MTL::RenderCommandEncoder* encoder) 
     std::memcpy(uniformBlock.data() + reflection.offset, valuePtr, reflection.size);
   }
 
+  struct alignas(16) UniformTest {
+    glm::mat4 uWorldMat;
+    glm::mat4 uViewMat;
+    glm::mat4 uProjMat;
+    glm::vec3 uCameraPosition;
+    uint8_t padding1[4];  // 패딩 4바이트 추가
+
+    glm::vec3 uLightDir;
+    uint8_t padding2[4];  // 패딩 4바이트 추가
+
+    glm::vec3 uLightColor;
+    uint8_t padding3[4];  // 패딩 4바이트 추가
+
+    glm::vec3 uEmitLight;
+    uint8_t padding4[4];  // 패딩 4바이트 추가
+  };
+  UniformTest uniformTest{};
+  static_assert(sizeof(UniformTest) == 256);
+
   for (auto& [name, uniformBlock] : uniformBlockBuffers) {
     auto buffer = m_device->getMTLDevice()->newBuffer(uniformBlock.size(), MTL::ResourceStorageModeShared);
     std::memcpy(buffer->contents(), uniformBlock.data(), uniformBlock.size());
+    std::memcpy(&uniformTest, uniformBlock.data(), uniformBlock.size());
     encoder->setVertexBuffer(buffer, 0, m_uniformBlockIdx.at(name)); // offset은 0으로 설정
     encoder->setFragmentBuffer(buffer, 0, m_uniformBlockIdx.at(name));
   }
