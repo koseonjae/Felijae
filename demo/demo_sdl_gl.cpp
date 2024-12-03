@@ -98,20 +98,20 @@ int main() {
 
   // Program
 
-  // auto vs = File("asset://shader/gl_lighting.vert").read();
-  // auto fs = File("asset://shader/gl_lighting.frag").read();
+  auto vs = File("asset://shader/gl_lighting.vert").read();
+  auto fs = File("asset://shader/gl_lighting.frag").read();
 
-  auto vs = convertShader({
-    .shaderSource = File("asset://shader/lighting.vert").read(),
-    .shaderType = ShaderConverterStage::VERTEX,
-    .shaderConverterType = ShaderConverterTarget::GLSL
-  });
-
-  auto fs = convertShader({
-    .shaderSource = File("asset://shader/lighting.frag").read(),
-    .shaderType = ShaderConverterStage::FRAGMENT,
-    .shaderConverterType = ShaderConverterTarget::GLSL
-  });
+  // auto vs = convertShader({
+  //   .shaderSource = File("asset://shader/lighting.vert").read(),
+  //   .shaderType = ShaderConverterStage::VERTEX,
+  //   .shaderConverterType = ShaderConverterTarget::GLSL
+  // });
+  //
+  // auto fs = convertShader({
+  //   .shaderSource = File("asset://shader/lighting.frag").read(),
+  //   .shaderType = ShaderConverterStage::FRAGMENT,
+  //   .shaderConverterType = ShaderConverterTarget::GLSL
+  // });
   auto program = std::make_shared<OpenGLProgram>();
   program->initialize(vs, fs);
 
