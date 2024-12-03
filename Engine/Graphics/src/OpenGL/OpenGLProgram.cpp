@@ -60,6 +60,8 @@ void OpenGLProgram::initialize(std::string_view vertexShaderStr, std::string_vie
   glDeleteShader(vs);
   glDeleteShader(fs);
 
+  _parseShaders();
+
   m_initialized = true;
 }
 
@@ -85,10 +87,12 @@ void OpenGLProgram::bind(Uniforms* uniformVariables) {
 
 void OpenGLProgram::_updateUniforms(const UniformVariables& uniforms) {
   for (const auto& [name, variable] : uniforms) {
-    auto modified = std::string("uniforms.") + name;
-    // auto modified = name;
+    auto found = m_uniformVariablesName.find(name);
+    assert(found != m_uniformVariablesName.end() && "Invalid uniform name.");
+    auto& modified = found->second;
     GLint loc = glGetUniformLocation(m_program, modified.c_str());
     assert(loc != -1 && "Invalid uniform location");
+    // std::cout << "name: " << modified << ", location: " << loc << std::endl;
 
     std::visit([loc](auto& value) {
       using T = std::decay_t<decltype(value)>;
@@ -115,5 +119,29 @@ void OpenGLProgram::_updateTextures(TextureVariables textures) {
     assert(loc != -1 && "Invalid texture location");
     glUniform1i(loc, index);
     ++index;
+  }
+}
+
+std::string removePrefixUntilDot(const char* name) {
+  if (name == nullptr)
+    assert(false && "removePrefixUntilDot input is null");
+  std::string str(name);
+  size_t dotPosition = str.find('.');
+  if (dotPosition != std::string::npos)
+    return str.substr(dotPosition + 1);
+  return str;
+}
+
+void OpenGLProgram::_parseShaders() {
+  GLint uniformCount;
+  glGetProgramiv(m_program, GL_ACTIVE_UNIFORMS, &uniformCount);
+  char fullName[256];
+  GLsizei length;
+  GLint size;
+  GLenum type;
+  for (GLuint i = 0; i < uniformCount; i++) {
+    glGetActiveUniform(m_program, i, sizeof(fullName), &length, &size, &type, fullName);
+    auto variableName = removePrefixUntilDot(fullName);
+    m_uniformVariablesName.insert({std::move(variableName), fullName});
   }
 }

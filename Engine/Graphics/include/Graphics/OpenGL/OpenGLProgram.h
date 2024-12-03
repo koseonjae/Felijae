@@ -5,8 +5,6 @@
 #include <Graphics/Model/Uniforms.h>
 #include <Graphics/OpenGL/OpenGLTexture.h>
 
-#include <functional>
-#include <glm/glm.hpp>
 #include <string_view>
 #include <unordered_map>
 
@@ -29,6 +27,7 @@ public:
 private:
   void _updateUniforms(const UniformVariables& uniforms);
   void _updateTextures(TextureVariables textures);
+  void _parseShaders();
 
 private:
   GLuint m_program = 0;
@@ -36,5 +35,6 @@ private:
 
   ThreadChecker m_threadChecker;
   TextureVariables m_textureVariables;
+  std::unordered_map<std::string, std::string> m_uniformVariablesName;
 };
 } // namespace goala
