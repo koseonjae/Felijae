@@ -104,7 +104,7 @@ std::string convertSpirv2glsl(const std::vector<uint32_t>& spirvData) {
   }
 }
 
-std::string convertSpirv2msl(const std::vector<uint32_t>& spirvData) {
+std::string convertSpirv2msl(const std::vector<uint32_t>& spirvData, goala::ShaderConverterStage shaderType) {
   try {
     spirv_cross::CompilerMSL compiler(spirvData);
 
@@ -112,6 +112,13 @@ std::string convertSpirv2msl(const std::vector<uint32_t>& spirvData) {
       .platform = spirv_cross::CompilerMSL::Options::Platform::macOS,
     };
     compiler.set_msl_options(options);
+    if (shaderType == goala::ShaderConverterStage::VERTEX) {
+      compiler.rename_entry_point("main", "vertexShader", spv::ExecutionModelVertex);
+    }
+    else if (shaderType == goala::ShaderConverterStage::FRAGMENT)
+      compiler.rename_entry_point("main", "fragmentShader", spv::ExecutionModelFragment);
+    else
+      assert(false && "not supported");
 
     auto compiled = compiler.compile();
     assert(!compiled.empty() && "Compiled source is empty");
@@ -136,7 +143,7 @@ std::string convertShader(const ShaderConverterDesc& shaderConverterDesc) {
   if (shaderConverterDesc.shaderConverterType == ShaderConverterTarget::GLSL)
     converted = convertSpirv2glsl(spirv);
   else if (shaderConverterDesc.shaderConverterType == ShaderConverterTarget::MSL)
-    converted = convertSpirv2msl(spirv);
+    converted = convertSpirv2msl(spirv, shaderConverterDesc.shaderType);
   else
     assert(false && "Unsupported shader converter");
   return converted;

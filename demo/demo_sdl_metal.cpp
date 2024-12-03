@@ -13,6 +13,7 @@
 #include <Engine/Model/Model.h>
 #include <Engine/Model/Scene.h>
 #include <Engine/Renderer/ForwardRenderer.h>
+#include <Shader/ShaderConverter.h>
 
 #include <Metal/Metal.hpp>
 #include <QuartzCore/QuartzCore.hpp>
@@ -41,9 +42,6 @@ int main(int argc, char** argv) {
   auto layer = static_cast<CA::MetalLayer*>(SDL_Metal_GetLayer(view)); // swapchain
   layer->setDevice(device->getMTLDevice());
   layer->setPixelFormat(MTL::PixelFormatBGRA8Unorm);
-
-  // Renderer
-  auto renderer = std::make_shared<ForwardRenderer>();
 
   // Rasterizer
   Rasterizer rasterizer = {
@@ -84,12 +82,22 @@ int main(int argc, char** argv) {
   auto vertexBuffer = device->createBuffer(bufferDesc);
 
   // Shader
+  auto vs = convertShader({
+    .shaderSource = File("asset://shader/lighting.vert").read(),
+    .shaderType = ShaderConverterStage::VERTEX,
+    .shaderConverterType = ShaderConverterTarget::MSL
+  });
+  auto fs = convertShader({
+    .shaderSource = File("asset://shader/lighting.frag").read(),
+    .shaderType = ShaderConverterStage::FRAGMENT,
+    .shaderConverterType = ShaderConverterTarget::MSL
+  });
   ShaderDescription vertShaderDesc = {
-    .source = readFile(File("asset://shader/texture_vert.msl").getPath()),
+    .source = std::move(vs),
     .type = ShaderType::VERTEX
   };
   ShaderDescription fragShaderDesc = {
-    .source = readFile(File("asset://shader/texture_frag.msl").getPath()),
+    .source = std::move(fs),
     .type = ShaderType::FRAGMENT
   };
   auto vertexFunc = device->createShader(vertShaderDesc);
@@ -148,11 +156,19 @@ int main(int argc, char** argv) {
   camera->setCamera(eye, at, up);
   camera->setProjection(fovy, aspectRatio, n, f);
 
+  // Light
+  auto light = std::make_shared<Light>();
+  light->setLightColor({1.0f, 1.0f, 1.0f});
+  light->setLightDirection({0.0f, 0.0f, 1.0f});
+
   // Scene
   auto scene = std::make_shared<Scene>();
   scene->addModel(std::move(model));
   scene->setNode(std::move(camera));
+  scene->setNode(std::move(light));
 
+  // Renderer
+  auto renderer = std::make_shared<ForwardRenderer>();
   renderer->setScene(std::move(scene));
 
   // Texture
