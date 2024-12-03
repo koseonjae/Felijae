@@ -23,7 +23,7 @@ void main() {
     vec3 normal = normalize(v_normal);
     vec3 view = normalize(v_viewDir);
     vec3 light = normalize(uniforms.uLightDir);
-    vec3 reflectDir = reflect(-light, normal);
+    vec3 reflectDir = normalize(reflect(-light, normal));
 
     // Sample the diffuse texture
     vec3 diffuseColor = texture(uTexture, v_texCoord).rgb;
@@ -36,8 +36,8 @@ void main() {
     vec3 diffuse = max(dot(light, normal), 0.0) * diffuseColor;
 
     // Specular lighting
-    float specularShiness = 10.0; // ToDo: Make uniform
-    vec3 specular = pow(max(dot(reflectDir, view), 0.0), specularShiness) * uniforms.uLightColor;
+    float specularShiness = 10.0;
+    vec3 specular = pow(max(dot(reflectDir, light), 0.0), specularShiness) * uniforms.uLightColor;
 
     // Emissive lighting
     vec3 emit = uniforms.uEmitLight;

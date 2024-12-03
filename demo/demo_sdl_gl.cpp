@@ -98,9 +98,6 @@ int main() {
 
   // Program
 
-  // auto vs = File("asset://shader/gl_lighting.vert").read();
-  // auto fs = File("asset://shader/gl_lighting.frag").read();
-
   auto vs = convertShader({
     .shaderSource = File("asset://shader/lighting.vert").read(),
     .shaderType = ShaderConverterStage::VERTEX,
