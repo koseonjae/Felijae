@@ -1,38 +1,39 @@
 #version 330
 
-struct Uniforms
-{
-    mat4 uWorldMat;
-    mat4 uViewMat;
-    mat4 uProjMat;
-    vec3 uCameraPosition;
-    vec3 uLightDir;
-    vec3 uLightColor;
-    vec3 uEmitLight;
-};
+in vec3 v_normal; // world normal
+in vec2 v_texCoord; // bypass
+in vec3 v_viewDir; // view Vector
 
-uniform Uniforms uniforms;
-
+uniform vec3 uLightDir;
+uniform vec3 uLightColor;
+uniform vec3 uEmitLight;
 uniform sampler2D uTexture;
 
-in vec3 v_normal;
-in vec3 v_viewDir;
-in vec2 v_texCoord;
 layout(location = 0) out vec4 fragColor;
 
-void main()
-{
+void main() {
     vec3 normal = normalize(v_normal);
     vec3 view = normalize(v_viewDir);
-    vec3 light = normalize(uniforms.uLightDir);
-    vec3 reflectDir = reflect(-light, normal);
-    vec3 diffuseColor = texture(uTexture, v_texCoord).xyz;
-    float ambientConstant = 0.100000001490116119384765625;
-    vec3 ambient = diffuseColor * ambientConstant;
-    vec3 diffuse = diffuseColor * max(dot(light, normal), 0.0);
-    float specularShiness = 10.0;
-    vec3 specular = uniforms.uLightColor * pow(max(dot(reflectDir, view), 0.0), specularShiness);
-    vec3 emit = uniforms.uEmitLight;
-    vec3 color = ((ambient + diffuse) + specular) + emit;
+    vec3 light = normalize(uLightDir);
+    vec3 reflectDir = normalize(reflect(light, normal));
+
+    vec3 diffuseColor = texture(uTexture, v_texCoord).rgb;
+
+    // ambient
+    float ambientConstant = 0.1; // todo: uniform
+    vec3 ambient = ambientConstant * diffuseColor;
+
+    // diffuse
+    vec3 diffuse = dot(uLightDir, v_normal) * diffuseColor;
+
+    // specular
+    float specularShiness = 10; // todo: uniform
+    vec3 specular = pow(max(dot(reflectDir, light), 0), specularShiness) * uLightColor;
+
+    // emissive
+    vec3 emit = uEmitLight;
+
+    vec3 color = ambient + diffuseColor + specular + emit;
+
     fragColor = vec4(color, 1.0);
 }
