@@ -8,6 +8,33 @@
 #include <Metal/Metal.hpp>
 #include <Metal/triangle_types.h>
 
+#include <glm/gtc/type_ptr.hpp>
+
+namespace {
+uint32_t getTypeSize(MTL::DataType dataType) {
+  switch (dataType) {
+    case MTL::DataType::DataTypeFloat: return sizeof(float);
+    case MTL::DataType::DataTypeInt: return sizeof(int);
+    case MTL::DataType::DataTypeUInt: return sizeof(unsigned int);
+    case MTL::DataType::DataTypeBool: return sizeof(bool);
+
+    case MTL::DataType::DataTypeFloat2: return sizeof(float) * 2;
+    case MTL::DataType::DataTypeFloat3: return sizeof(float) * 3;
+    case MTL::DataType::DataTypeFloat4: return sizeof(float) * 4;
+    case MTL::DataType::DataTypeInt2: return sizeof(int) * 2;
+    case MTL::DataType::DataTypeInt3: return sizeof(int) * 3;
+    case MTL::DataType::DataTypeInt4: return sizeof(int) * 4;
+
+    case MTL::DataType::DataTypeFloat2x2: return sizeof(float) * 2 * 2;
+    case MTL::DataType::DataTypeFloat3x3: return sizeof(float) * 3 * 3;
+    case MTL::DataType::DataTypeFloat4x4: return sizeof(float) * 4 * 4;
+
+    default: {}
+  }
+  assert(false && "Unsupported data type");
+}
+}
+
 namespace goala {
 MetalPipeline::MetalPipeline(MetalDevice* device, PipelineDescription desc)
   : Pipeline(std::move(desc))
@@ -47,8 +74,13 @@ MetalPipeline::MetalPipeline(MetalDevice* device, PipelineDescription desc)
   _initializeAlphaBlend(pipelineDesc);
 
   NS::Error* err = nil;
+  MTL::RenderPipelineReflection* reflection = nil;
+  auto option = MTL::PipelineOptionArgumentInfo | MTL::PipelineOptionBufferTypeInfo;
+  device->getMTLDevice()->newRenderPipelineState(pipelineDesc, option, &reflection, &err);
   m_pipeline = makeMetalRef(device->getMTLDevice()->newRenderPipelineState(pipelineDesc, &err));
   assert(m_pipeline && "Failed to create pipeline");
+
+  _initializeReflection(reflection);
 }
 
 void MetalPipeline::update() {}
@@ -66,6 +98,7 @@ const MTL::RenderPipelineState* MetalPipeline::getPipeline() const {
 void MetalPipeline::encode(MTL::RenderCommandEncoder* encoder) {
   auto metalBuffer = SAFE_DOWN_CAST(MetalBuffer*, getBuffer());
   _encodeUniformTextures(encoder);
+  _encodeUniformVariables(encoder);
   _encodeViewport(encoder);
   _encodeCulling(encoder);
   encoder->setDepthStencilState(m_depthStencilState.get());
@@ -132,9 +165,47 @@ void MetalPipeline::_encodeUniformVariables(MTL::RenderCommandEncoder* encoder) 
   if (variables.empty())
     return;
 
+  auto& uniformBlockBuffers = m_uniformBlockBuffers;
+  const auto& reflectionsMap = m_uniformReflectionMap;
+  assert(uniformBlockBuffers.size() == reflectionsMap.size());
+
+  // todo: use Device::createDevice
+
+  m_device->getMTLDevice()->newBuffer(uniformBlockBuffers.size(), MTL::ResourceStorageModeShared);
+
+  auto findReflection = [&reflectionsMap](const std::string& name) -> const UniformReflection& {
+    for (const auto& [blockName, reflections] : reflectionsMap) {
+      auto found = std::ranges::find_if(reflections, [&name](const auto& reflection) {
+        return reflection.name == name;
+      });
+      if (found != reflections.end())
+        return *found;
+    }
+    assert(false && "Reflection not found");
+  };
+
   for (const auto& [name, variable] : variables) {
-    // todo: distinguish pipeline
-    // encoder->setVertexBytes()
+    const auto& reflection = findReflection(name);
+    assert(uniformBlockBuffers.contains(reflection.blockName) && "Uniform block not found");
+    auto& uniformBlock = uniformBlockBuffers[reflection.blockName];
+
+    const void* valuePtr = nullptr;
+    std::visit([&valuePtr](auto& value) {
+      using T = std::decay_t<decltype(value)>;
+      if constexpr (std::is_same_v<T, glm::vec3>)
+        valuePtr = reinterpret_cast<const void*>(glm::value_ptr(value));
+      else if constexpr (std::is_same_v<T, glm::mat4>)
+        valuePtr = reinterpret_cast<const void*>(glm::value_ptr(value));
+    }, variable);
+
+    std::memcpy(uniformBlock.data() + reflection.offset, valuePtr, reflection.size);
+  }
+
+  for (auto& [name, uniformBlock] : uniformBlockBuffers) {
+    auto buffer = m_device->getMTLDevice()->newBuffer(uniformBlock.size(), MTL::ResourceStorageModeShared);
+    std::memcpy(buffer->contents(), uniformBlock.data(), uniformBlock.size());
+    encoder->setVertexBuffer(buffer, 0, m_uniformBlockIdx.at(name)); // offset은 0으로 설정
+    encoder->setFragmentBuffer(buffer, 0, m_uniformBlockIdx.at(name));
   }
 }
 
@@ -192,5 +263,36 @@ void MetalPipeline::_initializeAlphaBlend(MTL::RenderPipelineDescriptor* descrip
   }
   else
     assert(false && "Undefined blend equation");
+}
+
+void MetalPipeline::_initializeReflection(MTL::RenderPipelineReflection* reflection) {
+  int count = reflection->vertexArguments()->count();
+  for (int i = 0; i < count; ++i) {
+    MTL::Argument* arg = reinterpret_cast<MTL::Argument*>(reflection->vertexArguments()->object(i));
+    std::string uniformBlockName = arg->name()->utf8String();
+    auto size = arg->bufferDataSize();
+
+    auto members = arg->bufferStructType()->members();
+    if (!members)
+      continue;
+
+    m_uniformBlockBuffers[uniformBlockName].resize(size);
+    m_uniformBlockIdx[uniformBlockName] = arg->index();
+    m_uniformReflectionMap.insert({uniformBlockName, {}});
+
+    for (int j = 0; j < members->count(); ++j) {
+      MTL::StructMember* member = reinterpret_cast<MTL::StructMember*>(members->object(j));
+      m_uniformReflectionMap[uniformBlockName].push_back(
+        UniformReflection{
+          .blockName = uniformBlockName,
+          .name = member->name()->utf8String(),
+          .type = static_cast<uint32_t>(member->dataType()),
+          .size = getTypeSize(member->dataType()),
+          .offset = static_cast<uint32_t>(member->offset()),
+          .index = static_cast<uint32_t>(member->argumentIndex())
+        }
+      );
+    }
+  }
 }
 } // namespace goala
