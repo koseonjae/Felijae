@@ -5,6 +5,7 @@
 
 namespace MTL {
 class RenderCommandEncoder;
+class Buffer;
 }
 
 namespace goala {
@@ -30,7 +31,10 @@ public:
 
   const MTL::RenderCommandEncoder* getEncoder() const;
 
+  void setBufferTemp(MetalRef<MTL::Buffer> buffer, int offset, int index);
+
 private:
   MetalRef<MTL::RenderCommandEncoder> m_encoder;
+  std::unordered_map<int, MetalRef<MTL::Buffer>> m_mtlUniformBlocks;
 };
 } // namespace goala

@@ -18,6 +18,7 @@ class Buffer;
 
 namespace goala {
 class MetalDevice;
+class MetalCommandEncoder;
 
 struct UniformReflection {
   // UniformReflection(const UniformReflection&) = delete;
@@ -44,7 +45,7 @@ public:
 
   const MTL::RenderPipelineState* getPipeline() const;
 
-  void encode(MTL::RenderCommandEncoder* encoder);
+  void encode(MetalCommandEncoder* encoder);
 
 private:
   void _initializeDepthTest();
@@ -53,7 +54,7 @@ private:
   void _encodeViewport(MTL::RenderCommandEncoder* encoder);
   void _encodeCulling(MTL::RenderCommandEncoder* encoder);
   void _encodeUniformTextures(MTL::RenderCommandEncoder* encoder);
-  void _encodeUniformVariables(MTL::RenderCommandEncoder* encoder);
+  void _encodeUniformVariables(MetalCommandEncoder* encoder);
 
 private:
   MetalDevice* m_device = nullptr;
@@ -63,6 +64,5 @@ private:
   std::unordered_map<std::string, std::vector<uint8_t>> m_uniformBlockBuffers;
   std::unordered_map<std::string, int> m_uniformBlockIdx;
   std::unordered_map<std::string, std::vector<UniformReflection>> m_uniformReflectionMap;
-  std::unordered_map<std::string, MetalRef<MTL::Buffer>> m_mtlUniformBlocks;
 };
 } // namespace goala
