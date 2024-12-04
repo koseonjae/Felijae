@@ -206,7 +206,6 @@ void MetalPipeline::_encodeUniformVariables(MetalCommandEncoder* encoder) {
 
   for (auto& [uniformBlockName, uniformBlock] : uniformBlockBuffers) {
     auto buffer = makeMetalRef(m_device->getMTLDevice()->newBuffer(uniformBlock.size(), MTL::ResourceStorageModeShared));
-    m_bufferCache.push_back(buffer);
     std::memcpy(buffer->contents(), uniformBlock.data(), uniformBlock.size());
     encoder->setBufferTemp(buffer, 0, m_uniformBlockIdx.at(uniformBlockName));
   }

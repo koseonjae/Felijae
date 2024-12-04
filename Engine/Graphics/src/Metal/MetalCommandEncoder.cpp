@@ -33,5 +33,5 @@ const MTL::RenderCommandEncoder* MetalCommandEncoder::getEncoder() const {
 void MetalCommandEncoder::setBufferTemp(MetalRef<MTL::Buffer> buffer, int offset, int index) {
   m_encoder->setVertexBuffer(buffer.get(), offset, index); // offset은 0으로 설정
   m_encoder->setFragmentBuffer(buffer.get(), offset, index);
-  m_mtlUniformBlocks[index] = buffer;
+  m_mtlUniformBlocks[index] = std::move(buffer);
 }

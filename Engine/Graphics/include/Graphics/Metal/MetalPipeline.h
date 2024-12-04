@@ -64,6 +64,5 @@ private:
   std::unordered_map<std::string, std::vector<uint8_t>> m_uniformBlockBuffers;
   std::unordered_map<std::string, int> m_uniformBlockIdx;
   std::unordered_map<std::string, std::vector<UniformReflection>> m_uniformReflectionMap;
-  std::vector<MetalRef<MTL::Buffer>> m_bufferCache;
 };
 } // namespace goala
