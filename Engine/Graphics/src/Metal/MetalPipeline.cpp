@@ -171,8 +171,6 @@ void MetalPipeline::_encodeUniformVariables(MTL::RenderCommandEncoder* encoder) 
 
   // todo: use Device::createDevice
 
-  m_device->getMTLDevice()->newBuffer(uniformBlockBuffers.size(), MTL::ResourceStorageModeShared);
-
   auto findReflection = [&reflectionsMap](const std::string& name) -> const UniformReflection& {
     for (const auto& [blockName, reflections] : reflectionsMap) {
       auto found = std::ranges::find_if(reflections, [&name](const auto& reflection) {
@@ -201,31 +199,36 @@ void MetalPipeline::_encodeUniformVariables(MTL::RenderCommandEncoder* encoder) 
     std::memcpy(uniformBlock.data() + reflection.offset, valuePtr, reflection.size);
   }
 
+  // world좌표를 곱하면 망가짐
   struct alignas(16) UniformTest {
-    glm::mat4 uWorldMat;
+    glm::mat4 uWorldMat = glm::mat4(0.1f);
     glm::mat4 uViewMat;
     glm::mat4 uProjMat;
-    glm::vec3 uCameraPosition;
-    uint8_t padding1[4];  // 패딩 4바이트 추가
+    glm::vec3 uCameraPosition = {3.0, 3.0, 3.0};
+    uint8_t padding1[4]; // 패딩 4바이트 추가
 
-    glm::vec3 uLightDir;
-    uint8_t padding2[4];  // 패딩 4바이트 추가
+    glm::vec3 uLightDir = {0.0f, 0.0f, 1.0f};
+    uint8_t padding2[4]; // 패딩 4바이트 추가
 
-    glm::vec3 uLightColor;
-    uint8_t padding3[4];  // 패딩 4바이트 추가
+    glm::vec3 uLightColor = {1.0f, 1.0f, 1.0f};
+    uint8_t padding3[4]; // 패딩 4바이트 추가
 
-    glm::vec3 uEmitLight;
-    uint8_t padding4[4];  // 패딩 4바이트 추가
+    glm::vec3 uEmitLight = {0.0f, 0.0f, 0.0f};
+    uint8_t padding4[4]; // 패딩 4바이트 추가
   };
   UniformTest uniformTest{};
   static_assert(sizeof(UniformTest) == 256);
 
-  for (auto& [name, uniformBlock] : uniformBlockBuffers) {
-    auto buffer = m_device->getMTLDevice()->newBuffer(uniformBlock.size(), MTL::ResourceStorageModeShared);
+  for (auto& [uniformBlockName, uniformBlock] : uniformBlockBuffers) {
+    if (auto found = m_mtlUniformBlocks.find(uniformBlockName); found == m_mtlUniformBlocks.end()) // todo: encoding이 아니라 생성자에서 mtl uniform buffer 생성?
+      m_mtlUniformBlocks.insert({uniformBlockName, makeMetalRef(m_device->getMTLDevice()->newBuffer(uniformBlock.size(), MTL::ResourceStorageModeShared))});
+    auto& buffer = m_mtlUniformBlocks.at(uniformBlockName);
     std::memcpy(buffer->contents(), uniformBlock.data(), uniformBlock.size());
+
     std::memcpy(&uniformTest, uniformBlock.data(), uniformBlock.size());
-    encoder->setVertexBuffer(buffer, 0, m_uniformBlockIdx.at(name)); // offset은 0으로 설정
-    encoder->setFragmentBuffer(buffer, 0, m_uniformBlockIdx.at(name));
+
+    encoder->setVertexBuffer(buffer.get(), 1, m_uniformBlockIdx.at(uniformBlockName)); // offset은 0으로 설정
+    encoder->setFragmentBuffer(buffer.get(), 1, m_uniformBlockIdx.at(uniformBlockName));
   }
 }
 

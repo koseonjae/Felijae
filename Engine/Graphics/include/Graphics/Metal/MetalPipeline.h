@@ -13,6 +13,7 @@ class RenderPipelineState;
 class RenderPipelineDescriptor;
 class RenderCommandEncoder;
 class RenderPipelineReflection;
+class Buffer;
 }
 
 namespace goala {
@@ -62,5 +63,6 @@ private:
   std::unordered_map<std::string, std::vector<uint8_t>> m_uniformBlockBuffers;
   std::unordered_map<std::string, int> m_uniformBlockIdx;
   std::unordered_map<std::string, std::vector<UniformReflection>> m_uniformReflectionMap;
+  std::unordered_map<std::string, MetalRef<MTL::Buffer>> m_mtlUniformBlocks;
 };
 } // namespace goala
