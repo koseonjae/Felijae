@@ -26,7 +26,7 @@ const std::vector<int> viewport = {640, 480};
 } // namespace
 
 int main(int argc, char** argv) {
-  File::registerPath("../../demo/asset", "asset://");
+  File::registerPath("../../../demo/asset", "asset://");
 
   SDL_SetHint(SDL_HINT_RENDER_DRIVER, "metal");
   SDL_InitSubSystem(SDL_INIT_VIDEO);
@@ -216,8 +216,6 @@ int main(int argc, char** argv) {
 
     CommandBufferDescription commandBufferDesc{};
     auto cmdBuf = queue->createCommandBuffer(commandBufferDesc);
-//    auto blitCmdBuf = queue->createCommandBuffer(commandBufferDesc);
-    // blitCmdBuf->addDependency(cmdBuf.get()); // todo: fence 임시로 없앴음
 
     renderer->update();
     renderer->render(cmdBuf);

@@ -108,7 +108,7 @@ void MetalPipeline::encode(MetalCommandEncoder* metalEncoder) {
   if (m_depthStencilState.get())
     encoder->setDepthStencilState(m_depthStencilState.get());
   encoder->setRenderPipelineState(m_pipeline.get());
-  encoder->setVertexBuffer(metalBuffer->getVertexHandle(), 0, AAPLVertexInputIndexVertices);
+  encoder->setVertexBuffer(metalBuffer->getVertexHandle(), 0, VERTEX_BUFFER_INDEX);
   encoder->drawIndexedPrimitives(MTL::PrimitiveType::PrimitiveTypeTriangle,
                                  metalBuffer->getIndicesSize(),
                                  MTL::IndexTypeUInt32,
@@ -206,6 +206,7 @@ void MetalPipeline::_encodeUniformVariables(MetalCommandEncoder* encoder) {
 
   for (auto& [uniformBlockName, uniformBlock] : uniformBlockBuffers) {
     auto buffer = makeMetalRef(m_device->getMTLDevice()->newBuffer(uniformBlock.size(), MTL::ResourceStorageModeShared));
+    m_bufferCache.push_back(buffer);
     std::memcpy(buffer->contents(), uniformBlock.data(), uniformBlock.size());
     encoder->setBufferTemp(buffer, 0, m_uniformBlockIdx.at(uniformBlockName));
   }
@@ -268,11 +269,12 @@ void MetalPipeline::_initializeAlphaBlend(MTL::RenderPipelineDescriptor* descrip
 }
 
 void MetalPipeline::_initializeReflection(MTL::RenderPipelineReflection* reflection) {
-  int count = reflection->vertexArguments()->count();
+  int count = reflection->vertexBindings()->count();
   for (int i = 0; i < count; ++i) {
-    MTL::Argument* arg = reinterpret_cast<MTL::Argument*>(reflection->vertexArguments()->object(i));
+    MTL::Argument* arg = reinterpret_cast<MTL::Argument*>(reflection->vertexBindings()->object(i));
     std::string uniformBlockName = arg->name()->utf8String();
     auto size = arg->bufferDataSize();
+    auto index = arg->index();
 
     auto members = arg->bufferStructType()->members();
     if (!members)

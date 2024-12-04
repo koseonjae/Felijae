@@ -1,43 +1,79 @@
+#pragma clang diagnostic ignored "-Wmissing-prototypes"
+
 #include <metal_stdlib>
+#include <simd/simd.h>
 
 using namespace metal;
 
-struct AAPLVertex {
+// Returns the determinant of a 2x2 matrix.
+static inline __attribute__((always_inline))
+float spvDet2x2(float a1, float a2, float b1, float b2)
+{
+    return a1 * b2 - b1 * a2;
+}
+
+// Returns the inverse of a matrix, by using the algorithm of calculating the classical
+// adjoint and dividing by the determinant. The contents of the matrix are changed.
+static inline __attribute__((always_inline))
+float3x3 spvInverse3x3(float3x3 m)
+{
+    float3x3 adj;	// The adjoint matrix (inverse after dividing by determinant)
+
+    // Create the transpose of the cofactors, as the classical adjoint of the matrix.
+    adj[0][0] =  spvDet2x2(m[1][1], m[1][2], m[2][1], m[2][2]);
+    adj[0][1] = -spvDet2x2(m[0][1], m[0][2], m[2][1], m[2][2]);
+    adj[0][2] =  spvDet2x2(m[0][1], m[0][2], m[1][1], m[1][2]);
+
+    adj[1][0] = -spvDet2x2(m[1][0], m[1][2], m[2][0], m[2][2]);
+    adj[1][1] =  spvDet2x2(m[0][0], m[0][2], m[2][0], m[2][2]);
+    adj[1][2] = -spvDet2x2(m[0][0], m[0][2], m[1][0], m[1][2]);
+
+    adj[2][0] =  spvDet2x2(m[1][0], m[1][1], m[2][0], m[2][1]);
+    adj[2][1] = -spvDet2x2(m[0][0], m[0][1], m[2][0], m[2][1]);
+    adj[2][2] =  spvDet2x2(m[0][0], m[0][1], m[1][0], m[1][1]);
+
+    // Calculate the determinant as a combination of the cofactors of the first row.
+    float det = (adj[0][0] * m[0][0]) + (adj[0][1] * m[1][0]) + (adj[0][2] * m[2][0]);
+
+    // Divide the classical adjoint matrix by the determinant.
+    // If determinant is zero, matrix is not invertable, so leave it unchanged.
+    return (det != 0.0f) ? (adj * (1.0f / det)) : m;
+}
+
+struct Uniforms
+{
+    float4x4 uWorldMat;
+    float4x4 uViewMat;
+    float4x4 uProjMat;
+    float3 uCameraPosition;
+    float3 uLightDir;
+    float3 uLightColor;
+    float3 uEmitLight;
+};
+
+struct vertexShader_out
+{
+    float3 v_normal [[user(locn0)]];
+    float2 v_texCoord [[user(locn1)]];
+    float3 v_viewDir [[user(locn2)]];
+    float4 gl_Position [[position]];
+};
+
+struct vertexShader_in
+{
     float3 position [[attribute(0)]];
     float3 normal [[attribute(1)]];
     float2 texCoord [[attribute(2)]];
 };
 
-struct RasterizerData {
-    float4 position [[position]];
-    float3 normal;
-    float2 texCoord;
-    float3 viewDir;
-};
-
-struct Uniforms {
-    float4x4 worldMat;
-    float4x4 viewMat;
-    float4x4 projMat;
-    float3 cameraPosition;
-    float3 uLightDir;     // Directional light direction
-    float3 uLightColor;   // Light color
-    float3 uEmitLight;    // Emissive light color
-};
-
-vertex RasterizerData vertexShader(AAPLVertex v [[stage_in]],
-                                   constant Uniforms& uniforms [[buffer(0)]]) {
-    RasterizerData out;
-
-    out.position = uniforms.projMat * uniforms.viewMat * uniforms.worldMat * float4(v.position, 1.0);
-
-    out.texCoord = v.texCoord;
-
-    float3x3 normalMatrix = float3x3(transpose(inverse(float3x3(uniforms.worldMat))));
-    out.normal = normalize(normalMatrix * v.normal);
-
-    float3 worldPos = (uniforms.worldMat * float4(v.position, 1.0)).xyz;
-    out.viewDir = normalize(uniforms.cameraPosition - worldPos);
-
+vertex vertexShader_out vertexShader(vertexShader_in in [[stage_in]], constant Uniforms& uniforms [[buffer(1)]])
+{
+    vertexShader_out out = {};
+    out.gl_Position = ((uniforms.uProjMat * uniforms.uViewMat) * uniforms.uWorldMat) * float4(in.position, 1.0);
+    out.v_texCoord = in.texCoord;
+    float3x3 normalMatrix = transpose(spvInverse3x3(float3x3(uniforms.uWorldMat[0].xyz, uniforms.uWorldMat[1].xyz, uniforms.uWorldMat[2].xyz)));
+    out.v_normal = fast::normalize(normalMatrix * in.normal);
+    float3 worldPos = (uniforms.uWorldMat * float4(in.position, 1.0)).xyz;
+    out.v_viewDir = fast::normalize(uniforms.uCameraPosition - worldPos);
     return out;
 }

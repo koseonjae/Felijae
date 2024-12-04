@@ -1,50 +1,46 @@
 #include <metal_stdlib>
+#include <simd/simd.h>
 
 using namespace metal;
 
-struct RasterizerData {
-    float4 position [[position]];
-    float3 normal;
-    float2 texCoord;
-    float3 viewDir;
+struct Uniforms
+{
+    float4x4 uWorldMat;
+    float4x4 uViewMat;
+    float4x4 uProjMat;
+    float3 uCameraPosition;
+    float3 uLightDir;
+    float3 uLightColor;
+    float3 uEmitLight;
 };
 
-struct Uniforms {
-    float4x4 worldMat;
-    float4x4 viewMat;
-    float4x4 projMat;
-    float3 cameraPosition;
-    float3 uLightDir;     // Directional light direction
-    float3 uLightColor;   // Light color
-    float3 uEmitLight;    // Emissive light color
+struct fragmentShader_out
+{
+    float4 fragColor [[color(0)]];
 };
 
-fragment float4 fragmentShader(RasterizerData in [[stage_in]],
-                               constant Uniforms& uniforms [[buffer(0)]],
-                               texture2d<float> texture [[texture(0)]],
-                               sampler textureSampler [[sampler(0)]]) {
-    float3 normal = normalize(in.normal);
-    float3 view = normalize(in.viewDir);
-    float3 light = normalize(uniforms.uLightDir);
-    float3 reflectDir = normalize(reflect(-light, normal));
+struct fragmentShader_in
+{
+    float3 v_normal [[user(locn0)]];
+    float2 v_texCoord [[user(locn1)]];
+    float3 v_viewDir [[user(locn2)]];
+};
 
-    float3 diffuseColor = texture.sample(textureSampler, in.texCoord).rgb;
-
-    // ambient
-    float ambientConstant = 0.1;
-    float3 ambient = ambientConstant * diffuseColor;
-
-    // diffuse
-    float3 diffuse = max(dot(light, normal), 0.0) * diffuseColor;
-
-    // specular
-    float specularShiness = 10; // todo: uniform
-    float3 specular = pow(max(dot(reflectDir, view), 0.0), specularShiness) * uniforms.uLightColor;
-
-    // emissive
+fragment fragmentShader_out fragmentShader(fragmentShader_in in [[stage_in]], constant Uniforms& uniforms [[buffer(1)]], texture2d<float> uTexture [[texture(0)]], sampler uTextureSmplr [[sampler(0)]])
+{
+    fragmentShader_out out = {};
+    float3 normal = fast::normalize(in.v_normal);
+    float3 view = fast::normalize(in.v_viewDir);
+    float3 light = fast::normalize(uniforms.uLightDir);
+    float3 reflectDir = fast::normalize(reflect(-light, normal));
+    float3 diffuseColor = uTexture.sample(uTextureSmplr, in.v_texCoord).xyz;
+    float ambientConstant = 0.100000001490116119384765625;
+    float3 ambient = diffuseColor * ambientConstant;
+    float3 diffuse = diffuseColor * fast::max(dot(light, normal), 0.0);
+    float specularShiness = 10.0;
+    float3 specular = uniforms.uLightColor * powr(fast::max(dot(reflectDir, light), 0.0), specularShiness);
     float3 emit = uniforms.uEmitLight;
-
-    float3 color = ambient + diffuse + specular + emit;
-
-    return float4(color, 1.0);
+    float3 color = ((ambient + diffuse) + specular) + emit;
+    out.fragColor = float4(color, 1.0);
+    return out;
 }

@@ -7,6 +7,8 @@
 #include <Metal/MTLVertexDescriptor.hpp>
 
 namespace goala {
+constexpr int VERTEX_BUFFER_INDEX = 10;
+
 class MetalDevice;
 
 class MetalBuffer : public Buffer {

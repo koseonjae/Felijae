@@ -19,20 +19,19 @@ MetalBuffer::MetalBuffer(MetalDevice* device, BufferDescription desc) {
 
   m_vertexDesc = makeMetalRef(MTL::VertexDescriptor::alloc()->init());
 
-  m_vertexDesc->attributes()->object(0)->setFormat(
-    MTL::VertexFormat::VertexFormatFloat3);
-  m_vertexDesc->attributes()->object(0)->setBufferIndex(0);
+  m_vertexDesc->attributes()->object(0)->setFormat(MTL::VertexFormat::VertexFormatFloat3);
+  m_vertexDesc->attributes()->object(0)->setBufferIndex(VERTEX_BUFFER_INDEX);
   m_vertexDesc->attributes()->object(0)->setOffset(offsetof(Vertex, pos));
 
   m_vertexDesc->attributes()->object(1)->setFormat(MTL::VertexFormat::VertexFormatFloat3);
-  m_vertexDesc->attributes()->object(1)->setBufferIndex(0);
+  m_vertexDesc->attributes()->object(1)->setBufferIndex(VERTEX_BUFFER_INDEX);
   m_vertexDesc->attributes()->object(1)->setOffset(offsetof(Vertex, nor));
 
   m_vertexDesc->attributes()->object(2)->setFormat(MTL::VertexFormat::VertexFormatFloat2);
-  m_vertexDesc->attributes()->object(2)->setBufferIndex(0);
+  m_vertexDesc->attributes()->object(2)->setBufferIndex(VERTEX_BUFFER_INDEX);
   m_vertexDesc->attributes()->object(2)->setOffset(offsetof(Vertex, texCoord));
 
-  m_vertexDesc->layouts()->object(0)->setStride(sizeof(Vertex));
+  m_vertexDesc->layouts()->object(VERTEX_BUFFER_INDEX)->setStride(sizeof(Vertex));
 
   m_indicesSize = obj.indices.size();
 }
