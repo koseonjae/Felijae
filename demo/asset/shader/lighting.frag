@@ -37,7 +37,7 @@ void main() {
 
     // Specular lighting
     float specularShiness = 10.0;
-    vec3 specular = pow(max(dot(reflectDir, light), 0.0), specularShiness) * uniforms.uLightColor;
+    vec3 specular = pow(max(dot(reflectDir, view), 0.0), specularShiness) * uniforms.uLightColor;
 
     // Emissive lighting
     vec3 emit = uniforms.uEmitLight;
