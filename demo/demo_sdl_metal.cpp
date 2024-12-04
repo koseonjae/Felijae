@@ -216,7 +216,7 @@ int main(int argc, char** argv) {
 
     CommandBufferDescription commandBufferDesc{};
     auto cmdBuf = queue->createCommandBuffer(commandBufferDesc);
-    auto blitCmdBuf = queue->createCommandBuffer(commandBufferDesc);
+//    auto blitCmdBuf = queue->createCommandBuffer(commandBufferDesc);
     // blitCmdBuf->addDependency(cmdBuf.get()); // todo: fence 임시로 없앴음
 
     renderer->update();
