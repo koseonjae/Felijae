@@ -7,7 +7,7 @@
 using namespace goala;
 
 int main() {
-  File::registerPath("../../demo/asset", "asset://");
+    File::registerPath(DEMO_DIR + std::string("/asset"), "asset://");
 
   auto glsl_vert = convertShader({
     .shaderSource = File("asset://shader/lighting.vert").read(),

@@ -26,7 +26,7 @@ const std::vector<int> viewport = {800, 600};
 } // namespace
 
 int main(int argc, char** argv) {
-  File::registerPath("../../demo/asset", "asset://");
+  File::registerPath(DEMO_DIR + std::string("/asset"), "asset://");
 
   SDL_SetHint(SDL_HINT_RENDER_DRIVER, "metal");
   SDL_InitSubSystem(SDL_INIT_VIDEO);

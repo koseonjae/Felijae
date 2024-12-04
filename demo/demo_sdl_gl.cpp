@@ -21,7 +21,7 @@
 using namespace goala;
 
 int main() {
-  File::registerPath("../../demo/asset", "asset://");
+  File::registerPath(DEMO_DIR + std::string("/asset"), "asset://");
 
   SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
   SDL_Init(SDL_INIT_VIDEO);
