@@ -40,6 +40,7 @@ int main(int argc, char** argv) {
 
   SDL_MetalView view = SDL_Metal_CreateView(window);
   auto layer = static_cast<CA::MetalLayer*>(SDL_Metal_GetLayer(view)); // swapchain
+  layer->setFramebufferOnly(false);
   layer->setDevice(device->getMTLDevice());
   layer->setPixelFormat(MTL::PixelFormatBGRA8Unorm);
 
@@ -63,7 +64,7 @@ int main(int argc, char** argv) {
   // OutputMerger
   OutputMerger outputMerger = {
     .depthTest = {
-      .enable = true,
+      .enable = false,
       .depthFunc = DepthTest::DepthTestFunc::Less,
       .updateDepthMask = true,
     },

@@ -104,7 +104,9 @@ void MetalPipeline::encode(MetalCommandEncoder* metalEncoder) {
   _encodeUniformVariables(metalEncoder);
   _encodeViewport(encoder);
   _encodeCulling(encoder);
-  encoder->setDepthStencilState(m_depthStencilState.get());
+
+  if (m_depthStencilState.get())
+    encoder->setDepthStencilState(m_depthStencilState.get());
   encoder->setRenderPipelineState(m_pipeline.get());
   encoder->setVertexBuffer(metalBuffer->getVertexHandle(), 0, AAPLVertexInputIndexVertices);
   encoder->drawIndexedPrimitives(MTL::PrimitiveType::PrimitiveTypeTriangle,
