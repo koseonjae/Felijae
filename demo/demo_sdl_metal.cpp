@@ -2,14 +2,13 @@
 #include <Base/Utility/FileReader.h>
 #include <Base/Utility/ImageLoader.h>
 #include <Base/Utility/ImageUtil.h>
-#include <Graphics/Metal/MetalCommandBuffer.h>
-#include <Graphics/Metal/MetalCommandQueue.h>
-#include <Graphics/Metal/MetalPipeline.h>
-#include <Graphics/Metal/MetalRenderPass.h>
-#include <Graphics/Metal/MetalShader.h>
-#include <Graphics/Metal/MetalTexture.h>
 #include <Graphics/Utility/ImageFormatUtil.h>
 #include <Graphics/Utility/MetalBlitCopy.h>
+#include <Graphics/Model/CommandBuffer.h>
+#include <Graphics/Model/Pipeline.h>
+#include <Graphics/Metal/MetalCommandQueue.h>
+#include <Graphics/Metal/MetalDevice.h>
+#include <Graphics/Metal/MetalTexture.h>
 #include <Engine/Model/Model.h>
 #include <Engine/Model/Scene.h>
 #include <Engine/Renderer/ForwardRenderer.h>
@@ -75,12 +74,6 @@ int main(int argc, char** argv) {
     }
   };
 
-  // Buffer
-  BufferDescription bufferDesc = {
-    .object = loadObj(File("asset://model/suzanne/suzanne.obj"))
-  };
-  auto vertexBuffer = device->createBuffer(bufferDesc);
-
   TextureDescription uniformTextureDesc = {
     .imageData = convertRGB2BGRA(ImageLoader::load(File("asset://model/suzanne/uvmap.jpeg"))),
     .sampler = {
@@ -103,26 +96,27 @@ int main(int argc, char** argv) {
   glm::vec3 emitLight{0.0f, 0.0f, 0.0f};
   uniforms->setUniform("uEmitLight", emitLight);
 
-  std::vector<ShaderDescription> shaders;
-  shaders.push_back({
-    .source = File("asset://shader/lighting.vert").read(),
-    .type = ShaderType::VERTEX
-  });
-  shaders.push_back({
-    .source = File("asset://shader/lighting.frag").read(),
-    .type = ShaderType::FRAGMENT
-  });
-
   // Pipeline
-  PipelineDescription metalPipelineDesc = {
-    .shaders = std::move(shaders),
-    .buffer = std::move(vertexBuffer),
+  PipelineDescription pipelineDesc = {
+    .shaders = {
+      {
+        .source = File("asset://shader/lighting.vert").read(),
+        .type = ShaderType::VERTEX
+      },
+      {
+        .source = File("asset://shader/lighting.frag").read(),
+        .type = ShaderType::FRAGMENT
+      }
+    },
+    .vertexBuffer = {
+      .object = loadObj(File("asset://model/suzanne/suzanne.obj"))
+    },
     .rasterizer = rasterizer,
     .outputMerger = outputMerger,
     .format = getImageFormat(layer->pixelFormat()),
     .uniforms = uniforms,
   };
-  auto metalPipeline = device->createPipeline(metalPipelineDesc);
+  auto pipeline = device->createPipeline(pipelineDesc);
 
   // Queue
   CommandQueueDescription queueDesc{};
@@ -130,7 +124,7 @@ int main(int argc, char** argv) {
 
   // Model
   auto model = std::make_shared<Model>();
-  model->setPipeline(metalPipeline);
+  model->setPipeline(pipeline);
 
   // Camera
   glm::vec3 eye = glm::vec3(3.0, 3.0, 3.0);

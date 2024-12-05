@@ -13,7 +13,7 @@ class MetalDevice;
 
 class MetalBuffer : public Buffer {
 public:
-  MetalBuffer(MetalDevice* device, BufferDescription obj);
+  MetalBuffer(MetalDevice* device, VertexBufferDescription obj);
 
   void bind() override;
 

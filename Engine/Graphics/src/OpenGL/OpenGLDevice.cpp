@@ -14,7 +14,7 @@ std::shared_ptr<Pipeline> OpenGLDevice::createPipeline(PipelineDescription desc)
   return pipeline;
 }
 
-std::shared_ptr<Buffer> OpenGLDevice::createBuffer(BufferDescription desc) {
+std::shared_ptr<Buffer> OpenGLDevice::createBuffer(VertexBufferDescription desc) {
   auto buffer = std::make_shared<OpenGLBuffer>(this, std::move(desc));
   return buffer;
 }

@@ -11,7 +11,7 @@ class CommandQueue;
 class Shader;
 class RenderPass;
 
-struct BufferDescription;
+struct VertexBufferDescription;
 struct FenceDescription;
 struct PipelineDescription;
 struct TextureDescription;
@@ -25,7 +25,7 @@ public:
 
   virtual std::shared_ptr<Pipeline> createPipeline(PipelineDescription desc) = 0;
 
-  virtual std::shared_ptr<Buffer> createBuffer(BufferDescription desc) = 0;
+  virtual std::shared_ptr<Buffer> createBuffer(VertexBufferDescription desc) = 0;
 
   virtual std::shared_ptr<Texture> createTexture(TextureDescription desc) = 0;
 

@@ -42,8 +42,9 @@ MetalPipeline::MetalPipeline(MetalDevice* device, PipelineDescription desc)
   , m_device(device) {
   auto pipelineDesc = MTL::RenderPipelineDescriptor::alloc()->init();
 
-  auto metalBuffer = std::static_pointer_cast<MetalBuffer>(m_desc.buffer);
-  pipelineDesc->setVertexDescriptor(metalBuffer->getVertexDescriptor());
+  m_vertexBuffer = device->createBuffer(m_desc.vertexBuffer);
+  auto metalVertexBuffer = SAFE_DOWN_CAST(MetalBuffer*, m_vertexBuffer.get());
+  pipelineDesc->setVertexDescriptor(metalVertexBuffer->getVertexDescriptor());
 
   auto colorAttachmentDesc = pipelineDesc->colorAttachments()->object(0);
   colorAttachmentDesc->setPixelFormat(getMetalImageFormat(m_desc.format));
@@ -75,7 +76,7 @@ const MTL::RenderPipelineState* MetalPipeline::getPipeline() const {
 }
 
 void MetalPipeline::encode(MetalCommandEncoder* metalEncoder) {
-  auto metalBuffer = SAFE_DOWN_CAST(MetalBuffer*, getBuffer());
+  auto metalBuffer = SAFE_DOWN_CAST(MetalBuffer*, getVertexBuffer());
   auto encoder = metalEncoder->getEncoder();
   _encodeUniformTextures(encoder);
   _encodeUniformVariables(metalEncoder);

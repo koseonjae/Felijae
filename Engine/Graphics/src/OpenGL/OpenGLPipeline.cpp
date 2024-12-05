@@ -1,5 +1,6 @@
 #include <Graphics/OpenGL/OpenGLPipeline.h>
 #include <Graphics/OpenGL/OpenGLProgram.h>
+#include <Graphics/OpenGL/OpenGLDevice.h>
 #include <ShaderConverter/ShaderConverter.h>
 
 #include <OpenGL/gl3.h>
@@ -7,21 +8,23 @@
 using namespace goala;
 
 OpenGLPipeline::OpenGLPipeline(OpenGLDevice* device, PipelineDescription desc)
-  : Pipeline(std::move(desc)) {
+  : Pipeline(std::move(desc))
+  , m_device(device){
   _initializeProgram();
+  _initializeVertexBuffer();
 }
 
 void OpenGLPipeline::update() {}
 
 void OpenGLPipeline::render() {
-  assert(m_program && m_desc.buffer && "There is empty pipeline");
+  assert(m_program && m_vertexBuffer && "There is empty pipeline");
   _bindViewport();
   _bindCulling();
   _bindDepthTest();
   _bindAlphaBlending();
   m_program->bind(m_desc.uniforms.get());
-  m_desc.buffer->bind();
-  m_desc.buffer->draw();
+  m_vertexBuffer->bind();
+  m_vertexBuffer->draw();
 }
 
 void OpenGLPipeline::_bindCulling() {
@@ -143,4 +146,8 @@ void OpenGLPipeline::_initializeProgram() {
       assert(false && "Invalid shader type");
   }
   m_program = std::make_shared<OpenGLProgram>(vertexShaderSrc, fragShaderSrc);
+}
+
+void OpenGLPipeline::_initializeVertexBuffer() {
+  m_vertexBuffer = m_device->createBuffer(m_desc.vertexBuffer);
 }

@@ -1,17 +1,16 @@
-#include <Base/File/File.h>
-#include <Base/Object/Polygons.h>
 #include <Base/Utility/ImageLoader.h>
 #include <Base/Utility/TypeCast.h>
+#include <Base/File/File.h>
+#include <Base/Object/Polygons.h>
+#include <Graphics/Model/CommandBuffer.h>
+#include <Graphics/Model/CommandQueue.h>
+#include <Graphics/Model/Pipeline.h>
+#include <Graphics/OpenGL/OpenGLDevice.h>
+#include <Graphics/OpenGL/OpenGLRenderPass.h>
 #include <Engine/Model/Light.h>
 #include <Engine/Model/Model.h>
 #include <Engine/Model/Scene.h>
 #include <Engine/Renderer/ForwardRenderer.h>
-#include <Graphics/OpenGL/OpenGLCommandBuffer.h>
-#include <Graphics/OpenGL/OpenGLCommandQueue.h>
-#include <Graphics/OpenGL/OpenGLDevice.h>
-#include <Graphics/OpenGL/OpenGLPipeline.h>
-#include <Graphics/OpenGL/OpenGLRenderPass.h>
-#include <Graphics/OpenGL/OpenGLTexture.h>
 
 #include <SDL2/SDL.h>
 #include <glm/glm.hpp>
@@ -94,17 +93,6 @@ int main() {
     }
   };
 
-  // Shaders
-  std::vector<ShaderDescription> shaders;
-  shaders.push_back({
-    .source = File("asset://shader/lighting.vert").read(),
-    .type = ShaderType::VERTEX
-  });
-  shaders.push_back({
-    .source = File("asset://shader/lighting.frag").read(),
-    .type = ShaderType::FRAGMENT
-  });
-
   // Uniform
   auto uniforms = std::make_shared<Uniforms>();
   glm::vec3 emitLight{0.0f, 0.0f, 0.0f};
@@ -117,15 +105,20 @@ int main() {
   auto texture = device->createTexture(textureDesc);
   uniforms->setTexture("uTexture", texture);
 
-  // Buffer
-  BufferDescription bufferDesc = {
-    .object = loadObj(File("asset://model/suzanne/suzanne.obj"))
-  };
-  auto buffer = device->createBuffer(bufferDesc);
-
   PipelineDescription pipelineDesc = {
-    .buffer = buffer,
-    .shaders = std::move(shaders),
+    .shaders = {
+      {
+        .source = File("asset://shader/lighting.vert").read(),
+        .type = ShaderType::VERTEX
+      },
+      {
+        .source = File("asset://shader/lighting.frag").read(),
+        .type = ShaderType::FRAGMENT
+      }
+    },
+    .vertexBuffer = {
+      .object = loadObj(File("asset://model/suzanne/suzanne.obj"))
+    },
     .rasterizer = rasterizer,
     .outputMerger = outputMerger,
     .uniforms = uniforms,

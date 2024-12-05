@@ -12,7 +12,7 @@
 namespace goala {
 
 struct PipelineDescription {
- std::shared_ptr<Buffer> buffer;
+ VertexBufferDescription vertexBuffer;
  std::vector<ShaderDescription> shaders;
  Rasterizer rasterizer{};
  OutputMerger outputMerger{};
@@ -36,13 +36,14 @@ public:
  //  void setOutputMerger(std::shared_ptr<OutputMerger> outputMerger) { m_outputMerger = std::move(outputMerger); }
  //  void setUniforms(std::shared_ptr<Uniforms> uniforms) { m_uniforms = std::move(uniforms); }
 
- const Buffer* getBuffer() const { return m_desc.buffer.get(); }
- Buffer* getBuffer() { return m_desc.buffer.get(); }
+ const Buffer* getVertexBuffer() const { return m_vertexBuffer.get(); }
+ Buffer* getVertexBuffer() { return m_vertexBuffer.get(); }
 
  const Uniforms* getUniforms() const { return m_desc.uniforms.get(); }
  Uniforms* getUniforms() { return m_desc.uniforms.get(); }
 
 protected:
  PipelineDescription m_desc{};
+ std::shared_ptr<Buffer> m_vertexBuffer;
 };
 } // namespace goala

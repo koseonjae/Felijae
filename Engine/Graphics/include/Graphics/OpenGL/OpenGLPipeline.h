@@ -19,8 +19,10 @@ private:
   void _bindDepthTest();
   void _bindAlphaBlending();
   void _initializeProgram();
+  void _initializeVertexBuffer();
 
 private:
+  OpenGLDevice* m_device = nullptr;
   std::shared_ptr<OpenGLProgram> m_program;
 };
 } // namespace goala

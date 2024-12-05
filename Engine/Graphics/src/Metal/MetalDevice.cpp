@@ -16,7 +16,7 @@ std::shared_ptr<Pipeline> MetalDevice::createPipeline(PipelineDescription desc) 
   return pipeline;
 }
 
-std::shared_ptr<Buffer> MetalDevice::createBuffer(BufferDescription desc) {
+std::shared_ptr<Buffer> MetalDevice::createBuffer(VertexBufferDescription desc) {
   auto buffer = std::make_shared<MetalBuffer>(this, std::move(desc));
   return buffer;
 }

@@ -6,7 +6,7 @@
 
 namespace goala {
 
-struct BufferDescription {
+struct VertexBufferDescription {
   Object object;
 };
 
