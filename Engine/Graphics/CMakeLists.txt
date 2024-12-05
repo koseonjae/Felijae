@@ -1,6 +1,7 @@
 add_library(Graphics STATIC
     src/Utility/ImageFormatUtil.cpp
     src/Utility/MetalBlitCopy.cpp
+    src/Utility/OpenGLBlitCopy.cpp
     src/Model/Uniforms.cpp
     src/OpenGL/OpenGLCommandEncoder.cpp
     src/OpenGL/OpenGLCommandQueue.cpp
@@ -26,6 +27,7 @@ add_library(Graphics STATIC
 
     include/Graphics/Utility/ImageFormatUtil.h
     include/Graphics/Utility/MetalBlitCopy.h
+    include/Graphics/Utility/OpenGLBlitCopy.h
     include/Graphics/Utility/MetalRef.h
     include/Graphics/Model/CommandEncoder.h
     include/Graphics/Model/CommandQueue.h

@@ -5,9 +5,9 @@
 #include <Graphics/Utility/MetalBlitCopy.h>
 #include <Graphics/Model/CommandBuffer.h>
 #include <Graphics/Model/Pipeline.h>
-#include <Graphics/Metal/MetalCommandQueue.h>
+#include <Graphics/Model/CommandQueue.h>
+#include <Graphics/Model/Texture.h>
 #include <Graphics/Metal/MetalDevice.h>
-#include <Graphics/Metal/MetalTexture.h>
 #include <Engine/Model/Model.h>
 #include <Engine/Model/Scene.h>
 #include <Engine/Renderer/ForwardRenderer.h>
@@ -31,8 +31,8 @@ int main(int argc, char** argv) {
   File::registerPath(DEMO_DIR + std::string("/asset"), "asset://");
 
   auto device = std::make_unique<MetalDevice>();
-  MetalSDLWrapper sdl(Graphics::Metal, 800, 600, device->getMTLDevice());
-  auto [width, height] = sdl.getDrawableSize();
+  auto sdl = std::make_unique<MetalSDLWrapper>(Graphics::Metal, 800, 600, device->getMTLDevice());
+  auto [width, height] = sdl->getDrawableSize();
 
   // Rasterizer
   Rasterizer rasterizer = {
@@ -105,7 +105,7 @@ int main(int argc, char** argv) {
     },
     .rasterizer = rasterizer,
     .outputMerger = outputMerger,
-    .format = getImageFormatSDLFormat(sdl.getPixelFormat()),
+    .format = getImageFormatSDLFormat(sdl->getPixelFormat()),
     .uniforms = uniforms,
   };
   auto pipeline = device->createPipeline(pipelineDesc);
@@ -172,22 +172,21 @@ int main(int argc, char** argv) {
   auto renderPass = device->createRenderPass(std::move(renderPassDesc));
   renderer->setRenderPass(renderPass);
 
-  sdl.setUpdateCallback([&]() {
+  sdl->setUpdateCallback([&]() {
     renderer->update();
   });
 
-  sdl.setRenderCallback([&]() {
+  sdl->setRenderCallback([&]() {
     CommandBufferDescription commandBufferDesc{};
     auto cmdBuf = queue->createCommandBuffer(commandBufferDesc);
     renderer->render(cmdBuf);
   });
 
-  sdl.setBlitCopyCallback([&](void* drawable) {
-    auto metalTexture = std::static_pointer_cast<MetalTexture>(texture);
+  sdl->setBlitCopyCallback([&](void* drawable) {
     blitTextureToDrawable(texture.get(), queue.get(), drawable);
   });
 
-  sdl.loop();
+  sdl->loop();
 
   return 0;
 }

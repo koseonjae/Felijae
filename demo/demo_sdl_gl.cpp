@@ -1,6 +1,6 @@
 #include <Base/Utility/ImageLoader.h>
-#include <Base/Utility/TypeCast.h>
 #include <Base/File/File.h>
+#include <Graphics/Utility/OpenGLBlitCopy.h>
 #include <Graphics/Model/CommandBuffer.h>
 #include <Graphics/Model/CommandQueue.h>
 #include <Graphics/Model/Pipeline.h>
@@ -10,8 +10,7 @@
 #include <Engine/Model/Model.h>
 #include <Engine/Model/Scene.h>
 #include <Engine/Renderer/ForwardRenderer.h>
-
-#include "SDLWrapper/OpenGLSDLWrapper.h"
+#include <SDLWrapper/OpenGLSDLWrapper.h>
 
 #include <glm/glm.hpp>
 
@@ -20,9 +19,9 @@ using namespace goala;
 int main() {
   File::registerPath(DEMO_DIR + std::string("/asset"), "asset://");
 
-  OpenGLSDLWrapper sdl(Graphics::OpenGL3, 800, 600);
+  auto sdl = std::make_unique<OpenGLSDLWrapper>(Graphics::OpenGL3, 800, 600);
 
-  auto [width, height] = sdl.getDrawableSize();
+  auto [width, height] = sdl->getDrawableSize();
 
   auto device = std::make_unique<OpenGLDevice>();
 
@@ -161,28 +160,21 @@ int main() {
   CommandQueueDescription queueDesc{};
   auto cmdQueue = device->createCommandQueue(queueDesc);
 
-  sdl.setUpdateCallback([&]() {
+  sdl->setUpdateCallback([&]() {
     renderer->update();
   });
 
-  sdl.setRenderCallback([&]() {
+  sdl->setRenderCallback([&]() {
     CommandBufferDescription cmdBufDesc{};
     auto cmdBuf = cmdQueue->createCommandBuffer(cmdBufDesc);
     renderer->render(cmdBuf);
   });
 
-  sdl.setBlitCopyCallback([&](void*) {
-    auto openGLRenderPass = SAFE_DOWN_CAST(OpenGLRenderPass*, renderer->getRenderPass());
-    glBindFramebuffer(GL_READ_FRAMEBUFFER, openGLRenderPass->getFrameBuffer(0).getHandle());
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-
-    glBlitFramebuffer(
-      0, 0, width, height, // 소스 영역 (FBO)
-      0, 0, width, height, // 대상 영역 (화면)
-      GL_COLOR_BUFFER_BIT, GL_NEAREST);
+  sdl->setBlitCopyCallback([&](void*) {
+    blitCopyFrameBufferToScreen(renderer->getRenderPass(), width, height);
   });
 
-  sdl.loop();
+  sdl->loop();
 
   return 0;
 }
