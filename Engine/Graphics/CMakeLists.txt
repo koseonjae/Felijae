@@ -34,7 +34,6 @@ add_library(Graphics STATIC
     include/Graphics/Model/Fence.h
     include/Graphics/Model/Shader.h
     include/Graphics/Model/Uniforms.h
-    include/Graphics/Model/Program.h
     include/Graphics/Model/Rasterizer.h
     include/Graphics/Model/OutputMerger.h
     include/Graphics/Model/RenderPass.h
@@ -70,4 +69,5 @@ target_link_libraries(Graphics
     PUBLIC
     OpenGL::GL
     MetalCpp
+    Shader
     Base)

@@ -10,7 +10,6 @@
 #include <Graphics/OpenGL/OpenGLCommandQueue.h>
 #include <Graphics/OpenGL/OpenGLDevice.h>
 #include <Graphics/OpenGL/OpenGLPipeline.h>
-#include <Graphics/OpenGL/OpenGLProgram.h>
 #include <Graphics/OpenGL/OpenGLRenderPass.h>
 #include <Graphics/OpenGL/OpenGLTexture.h>
 #include <Shader/ShaderConverter.h>
@@ -96,21 +95,16 @@ int main() {
     }
   };
 
-  // Program
-
-  auto vs = convertShader({
-    .shaderSource = File("asset://shader/lighting.vert").read(),
-    .shaderType = ShaderConverterStage::VERTEX,
-    .shaderConverterType = ShaderConverterTarget::GLSL
+  // Shaders
+  std::vector<ShaderDescription> shaders;
+  shaders.push_back({
+    .source = File("asset://shader/lighting.vert").read(),
+    .type = ShaderType::VERTEX
   });
-
-  auto fs = convertShader({
-    .shaderSource = File("asset://shader/lighting.frag").read(),
-    .shaderType = ShaderConverterStage::FRAGMENT,
-    .shaderConverterType = ShaderConverterTarget::GLSL
+  shaders.push_back({
+    .source = File("asset://shader/lighting.frag").read(),
+    .type = ShaderType::FRAGMENT
   });
-  auto program = std::make_shared<OpenGLProgram>();
-  program->initialize(vs, fs);
 
   // Uniform
   auto uniforms = std::make_shared<Uniforms>();
@@ -132,8 +126,7 @@ int main() {
 
   PipelineDescription pipelineDesc = {
     .buffer = buffer,
-    .shaders = {},
-    .program = program,
+    .shaders = std::move(shaders),
     .rasterizer = rasterizer,
     .outputMerger = outputMerger,
     .uniforms = uniforms,

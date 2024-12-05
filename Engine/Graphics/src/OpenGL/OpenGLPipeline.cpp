@@ -1,21 +1,25 @@
 #include <Graphics/OpenGL/OpenGLPipeline.h>
+#include <Graphics/OpenGL/OpenGLProgram.h>
+#include <Shader/ShaderConverter.h>
 
 #include <OpenGL/gl3.h>
 
 using namespace goala;
 
 OpenGLPipeline::OpenGLPipeline(OpenGLDevice* device, PipelineDescription desc)
-  : Pipeline(std::move(desc)) {}
+  : Pipeline(std::move(desc)) {
+  _initializeProgram();
+}
 
 void OpenGLPipeline::update() {}
 
 void OpenGLPipeline::render() {
-  assert(m_desc.program && m_desc.buffer && "There is empty pipeline");
+  assert(m_program && m_desc.buffer && "There is empty pipeline");
   _bindViewport();
   _bindCulling();
   _bindDepthTest();
   _bindAlphaBlending();
-  m_desc.program->bind(m_desc.uniforms.get());
+  m_program->bind(m_desc.uniforms.get());
   m_desc.buffer->bind();
   m_desc.buffer->draw();
 }
@@ -116,4 +120,27 @@ void OpenGLPipeline::_bindAlphaBlending() {
   }
   assert(blendEquation != GL_NONE && "[OpenGLPipeline] Invalid blend equation.");
   glBlendEquation(blendEquation);
+}
+
+void OpenGLPipeline::_initializeProgram() {
+  std::string vertexShaderSrc;
+  std::string fragShaderSrc;
+  for (const auto& shader : m_desc.shaders) {
+    if (shader.type == ShaderType::VERTEX) {
+      vertexShaderSrc = convertShader({
+        .shaderSource = shader.source,
+        .shaderType = getShaderConverterType(shader.type),
+        .shaderConverterType = ShaderConverterTarget::GLSL
+      });
+    }
+    else if (shader.type == ShaderType::FRAGMENT)
+      fragShaderSrc = convertShader({
+        .shaderSource = shader.source,
+        .shaderType = getShaderConverterType(shader.type),
+        .shaderConverterType = ShaderConverterTarget::GLSL
+      });
+    else
+      assert(false && "Invalid shader type");
+  }
+  m_program = std::make_shared<OpenGLProgram>(vertexShaderSrc, fragShaderSrc);
 }

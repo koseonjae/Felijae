@@ -1,5 +1,7 @@
 #pragma once
 
+#include <Shader/ShaderConverter.h>
+
 #include <string>
 
 namespace goala {
@@ -14,6 +16,16 @@ struct ShaderDescription {
   std::string source;
   ShaderType type;
 };
+
+inline ShaderConverterStage getShaderConverterType(ShaderType shaderType) {
+  switch (shaderType) {
+    case ShaderType::VERTEX: return ShaderConverterStage::VERTEX;
+    case ShaderType::FRAGMENT: return ShaderConverterStage::FRAGMENT;
+    case ShaderType::COMPUTE: return ShaderConverterStage::COMPUTE;
+    default: {}
+  }
+  assert(false && "Unsupported shader type");
+}
 
 class Shader {
 public:

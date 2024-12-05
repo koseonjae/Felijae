@@ -13,7 +13,6 @@
 #include <Engine/Model/Model.h>
 #include <Engine/Model/Scene.h>
 #include <Engine/Renderer/ForwardRenderer.h>
-#include <Shader/ShaderConverter.h>
 
 #include <Metal/Metal.hpp>
 #include <QuartzCore/QuartzCore.hpp>
@@ -82,28 +81,6 @@ int main(int argc, char** argv) {
   };
   auto vertexBuffer = device->createBuffer(bufferDesc);
 
-  // Shader
-  auto vs = convertShader({
-    .shaderSource = File("asset://shader/lighting.vert").read(),
-    .shaderType = ShaderConverterStage::VERTEX,
-    .shaderConverterType = ShaderConverterTarget::MSL
-  });
-  auto fs = convertShader({
-    .shaderSource = File("asset://shader/lighting.frag").read(),
-    .shaderType = ShaderConverterStage::FRAGMENT,
-    .shaderConverterType = ShaderConverterTarget::MSL
-  });
-  ShaderDescription vertShaderDesc = {
-    .source = std::move(vs),
-    .type = ShaderType::VERTEX
-  };
-  ShaderDescription fragShaderDesc = {
-    .source = std::move(fs),
-    .type = ShaderType::FRAGMENT
-  };
-  auto vertexFunc = device->createShader(vertShaderDesc);
-  auto fragmentFunc = device->createShader(fragShaderDesc);
-
   TextureDescription uniformTextureDesc = {
     .imageData = convertRGB2BGRA(ImageLoader::load(File("asset://model/suzanne/uvmap.jpeg"))),
     .sampler = {
@@ -126,9 +103,19 @@ int main(int argc, char** argv) {
   glm::vec3 emitLight{0.0f, 0.0f, 0.0f};
   uniforms->setUniform("uEmitLight", emitLight);
 
+  std::vector<ShaderDescription> shaders;
+  shaders.push_back({
+    .source = File("asset://shader/lighting.vert").read(),
+    .type = ShaderType::VERTEX
+  });
+  shaders.push_back({
+    .source = File("asset://shader/lighting.frag").read(),
+    .type = ShaderType::FRAGMENT
+  });
+
   // Pipeline
   PipelineDescription metalPipelineDesc = {
-    .shaders = {std::move(vertexFunc), std::move(fragmentFunc)},
+    .shaders = std::move(shaders),
     .buffer = std::move(vertexBuffer),
     .rasterizer = rasterizer,
     .outputMerger = outputMerger,

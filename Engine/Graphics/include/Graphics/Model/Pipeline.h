@@ -1,22 +1,19 @@
 #pragma once
 
 #include <Graphics/Model/Buffer.h>
-#include <Graphics/Model/Device.h>
 #include <Graphics/Model/OutputMerger.h>
-#include <Graphics/Model/Program.h>
 #include <Graphics/Model/Rasterizer.h>
 #include <Graphics/Model/Uniforms.h>
 #include <Graphics/Model/RenderPass.h>
 #include <Graphics/Model/Shader.h>
 
-#include <memory>
 #include <vector>
 
 namespace goala {
+
 struct PipelineDescription {
  std::shared_ptr<Buffer> buffer;
- std::vector<std::shared_ptr<Shader>> shaders;
- std::shared_ptr<Program> program;
+ std::vector<ShaderDescription> shaders;
  Rasterizer rasterizer{};
  OutputMerger outputMerger{};
  std::shared_ptr<Uniforms> uniforms;
@@ -41,9 +38,6 @@ public:
 
  const Buffer* getBuffer() const { return m_desc.buffer.get(); }
  Buffer* getBuffer() { return m_desc.buffer.get(); }
-
- const Program* getProgram() const { return m_desc.program.get(); };
- Program* getProgram() { return m_desc.program.get(); };
 
  const Uniforms* getUniforms() const { return m_desc.uniforms.get(); }
  Uniforms* getUniforms() { return m_desc.uniforms.get(); }

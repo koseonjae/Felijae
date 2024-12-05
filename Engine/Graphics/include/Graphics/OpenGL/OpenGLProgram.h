@@ -1,7 +1,6 @@
 #pragma once
 
 #include <Base/Utility/ThreadChecker.h>
-#include <Graphics/Model/Program.h>
 #include <Graphics/Model/Uniforms.h>
 #include <Graphics/OpenGL/OpenGLTexture.h>
 
@@ -9,10 +8,10 @@
 #include <unordered_map>
 
 namespace goala {
-class OpenGLProgram final : public Program {
+class OpenGLProgram final {
 public:
-  OpenGLProgram() = default;
-  ~OpenGLProgram() override;
+  OpenGLProgram(std::string_view vsPath, std::string_view fsPath);
+  ~OpenGLProgram();
 
   OpenGLProgram(OpenGLProgram&&) = delete;
   OpenGLProgram& operator=(OpenGLProgram&&) = delete;
@@ -20,9 +19,7 @@ public:
   OpenGLProgram(const OpenGLProgram&) = delete;
   OpenGLProgram& operator=(const OpenGLProgram&) = delete;
 
-  void initialize(std::string_view vsPath, std::string_view fsPath) override;
-
-  void bind(Uniforms* uniforms) override;
+  void bind(Uniforms* uniforms);
 
 private:
   void _updateUniforms(const UniformVariables& uniforms);

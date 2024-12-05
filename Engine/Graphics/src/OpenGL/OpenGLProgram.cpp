@@ -30,7 +30,7 @@ void checkCompileErrors(GLuint shader, std::string_view type) {
   }
 }
 
-void OpenGLProgram::initialize(std::string_view vertexShaderStr, std::string_view fragShaderStr) {
+OpenGLProgram::OpenGLProgram(std::string_view vertexShaderStr, std::string_view fragShaderStr) {
   m_threadChecker.checkThread();
   assert(!m_initialized && "OpenGLProgram is already initialized");
 

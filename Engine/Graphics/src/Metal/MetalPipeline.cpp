@@ -4,13 +4,12 @@
 #include <Graphics/Utility/ImageFormatUtil.h>
 #include <Graphics/Metal/MetalTexture.h>
 #include <Base/Utility/TypeCast.h>
+#include <Shader/ShaderConverter.h>
+#include <Graphics/Metal/MetalCommandEncoder.h>
 
 #include <Metal/Metal.hpp>
-#include <Metal/triangle_types.h>
 
 #include <glm/gtc/type_ptr.hpp>
-
-#include "Graphics/Metal/MetalCommandEncoder.h"
 
 namespace {
 uint32_t getTypeSize(MTL::DataType dataType) {
@@ -43,37 +42,15 @@ MetalPipeline::MetalPipeline(MetalDevice* device, PipelineDescription desc)
   , m_device(device) {
   auto pipelineDesc = MTL::RenderPipelineDescriptor::alloc()->init();
 
-  for (const auto& shader : m_desc.shaders) {
-    auto metalShader = std::static_pointer_cast<MetalShader>(shader);
-    assert(metalShader && "Failed to cast to MetalShader");
-    switch (metalShader->getShaderType()) {
-      case ShaderType::VERTEX: {
-        pipelineDesc->setVertexFunction(metalShader->getFunction());
-        break;
-      }
-      case ShaderType::FRAGMENT: {
-        pipelineDesc->setFragmentFunction(metalShader->getFunction());
-        break;
-      }
-      case ShaderType::COMPUTE: {
-        assert(false && "Compute shader is not supported");
-        break;
-      }
-      case ShaderType::UNDEFINED: {
-        assert(false && "Shader type is not defined");
-        break;
-      }
-    }
-  }
-
   auto metalBuffer = std::static_pointer_cast<MetalBuffer>(m_desc.buffer);
   pipelineDesc->setVertexDescriptor(metalBuffer->getVertexDescriptor());
 
   auto colorAttachmentDesc = pipelineDesc->colorAttachments()->object(0);
   colorAttachmentDesc->setPixelFormat(getMetalImageFormat(m_desc.format));
 
-  _initializeDepthTest();
+  _initializeDepthStencilState();
   _initializeAlphaBlend(pipelineDesc);
+  _initializeShaders(pipelineDesc);
 
   NS::Error* err = nil;
   MTL::RenderPipelineReflection* reflection = nil;
@@ -114,6 +91,46 @@ void MetalPipeline::encode(MetalCommandEncoder* metalEncoder) {
                                  MTL::IndexTypeUInt32,
                                  metalBuffer->getIndexHandle(),
                                  0);
+}
+
+void MetalPipeline::_initializeShaders(MTL::RenderPipelineDescriptor* pipelineDesc) {
+  for (const auto& shader : m_desc.shaders) {
+    // vulkan glsl to msl
+    auto convertedShader = convertShader({
+      .shaderSource = shader.source,
+      .shaderType = getShaderConverterType(shader.type),
+      .shaderConverterType = ShaderConverterTarget::MSL
+    });
+    ShaderDescription shaderDesc = {
+      .source = convertedShader,
+      .type = shader.type
+    };
+    auto shaderFunc = m_device->createShader(std::move(shaderDesc));
+    m_shaders.push_back(std::move(shaderFunc));
+  }
+
+  for (const auto& shader : m_shaders) {
+    auto metalShader = std::static_pointer_cast<MetalShader>(shader);
+    assert(metalShader && "Failed to cast to MetalShader");
+    switch (metalShader->getShaderType()) {
+      case ShaderType::VERTEX: {
+        pipelineDesc->setVertexFunction(metalShader->getFunction());
+        break;
+      }
+      case ShaderType::FRAGMENT: {
+        pipelineDesc->setFragmentFunction(metalShader->getFunction());
+        break;
+      }
+      case ShaderType::COMPUTE: {
+        assert(false && "Compute shader is not supported");
+        break;
+      }
+      case ShaderType::UNDEFINED: {
+        assert(false && "Shader type is not defined");
+        break;
+      }
+    }
+  }
 }
 
 void MetalPipeline::_encodeViewport(MTL::RenderCommandEncoder* encoder) {
@@ -211,7 +228,7 @@ void MetalPipeline::_encodeUniformVariables(MetalCommandEncoder* encoder) {
   }
 }
 
-void MetalPipeline::_initializeDepthTest() {
+void MetalPipeline::_initializeDepthStencilState() {
   const auto& depthTest = m_desc.outputMerger.depthTest;
   if (!depthTest.enable)
     return;

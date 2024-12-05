@@ -4,6 +4,7 @@
 
 namespace goala {
 class OpenGLDevice;
+class OpenGLProgram;
 
 class OpenGLPipeline : public Pipeline {
 public:
@@ -17,5 +18,9 @@ private:
   void _bindViewport();
   void _bindDepthTest();
   void _bindAlphaBlending();
+  void _initializeProgram();
+
+private:
+  std::shared_ptr<OpenGLProgram> m_program;
 };
 } // namespace goala

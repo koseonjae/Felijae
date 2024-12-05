@@ -48,7 +48,8 @@ public:
   void encode(MetalCommandEncoder* encoder);
 
 private:
-  void _initializeDepthTest();
+  void _initializeShaders(MTL::RenderPipelineDescriptor* pipelineDesc);
+  void _initializeDepthStencilState();
   void _initializeAlphaBlend(MTL::RenderPipelineDescriptor* descriptor);
   void _initializeReflection(MTL::RenderPipelineReflection* reflection);
   void _encodeViewport(MTL::RenderCommandEncoder* encoder);
@@ -58,6 +59,7 @@ private:
 
 private:
   MetalDevice* m_device = nullptr;
+  std::vector<std::shared_ptr<Shader>> m_shaders;
   MetalRef<MTL::RenderPipelineState> m_pipeline;
   MetalRef<MTL::DepthStencilState> m_depthStencilState;
 

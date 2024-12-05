@@ -1,13 +1,10 @@
 #pragma once
 
-#include <Graphics/Model/Program.h>
-
 #include <glm/glm.hpp>
 #include <memory>
 
 namespace goala {
 class Object;
-class Program;
 class Pipeline;
 class Buffer;
 
