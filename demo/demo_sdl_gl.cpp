@@ -1,7 +1,6 @@
 #include <Base/Utility/ImageLoader.h>
 #include <Base/Utility/TypeCast.h>
 #include <Base/File/File.h>
-#include <Base/Object/Polygons.h>
 #include <Graphics/Model/CommandBuffer.h>
 #include <Graphics/Model/CommandQueue.h>
 #include <Graphics/Model/Pipeline.h>
@@ -12,7 +11,8 @@
 #include <Engine/Model/Scene.h>
 #include <Engine/Renderer/ForwardRenderer.h>
 
-#include <SDL2/SDL.h>
+#include "SDLWrapper/OpenGLSDLWrapper.h"
+
 #include <glm/glm.hpp>
 
 using namespace goala;
@@ -20,44 +20,9 @@ using namespace goala;
 int main() {
   File::registerPath(DEMO_DIR + std::string("/asset"), "asset://");
 
-  SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
-  SDL_Init(SDL_INIT_VIDEO);
-  SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-  SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
-  SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
-  SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
-  SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
-  SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
+  OpenGLSDLWrapper sdl(Graphics::OpenGL3, 800, 600);
 
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-
-  SDL_Window* window = SDL_CreateWindow("SDL OpenGL",
-                                        SDL_WINDOWPOS_CENTERED,
-                                        SDL_WINDOWPOS_CENTERED,
-                                        800,
-                                        600,
-                                        SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
-  SDL_GLContext context = SDL_GL_CreateContext(window);
-
-  SDL_AddEventWatch([](void* data, SDL_Event* event) {
-    switch (event->window.event) {
-      case SDL_WINDOWEVENT_RESIZED:
-      case SDL_WINDOWEVENT_SIZE_CHANGED: {
-        auto width = event->window.data1;
-        auto height = event->window.data2;
-        // todo: impl
-      }
-      default: {
-        break;
-      }
-    }
-    return 0;
-  }, window);
-
-  int width, height;
-  SDL_GL_GetDrawableSize(window, &width, &height);
+  auto [width, height] = sdl.getDrawableSize();
 
   auto device = std::make_unique<OpenGLDevice>();
 
@@ -193,27 +158,20 @@ int main() {
     scene->addModel(std::move(model));
   }
 
-  bool running = true;
-  while (running) {
-    SDL_Event event;
-    while (SDL_PollEvent(&event)) {
-      switch (event.type) {
-        case SDL_KEYUP: {
-          if (event.key.keysym.sym == SDLK_ESCAPE)
-            running = false;
-          break;
-        }
-      }
-    }
+  CommandQueueDescription queueDesc{};
+  auto cmdQueue = device->createCommandQueue(queueDesc);
 
-    CommandQueueDescription queueDesc{};
-    auto cmdQueue = device->createCommandQueue(queueDesc);
+  sdl.setUpdateCallback([&]() {
+    renderer->update();
+  });
 
+  sdl.setRenderCallback([&]() {
     CommandBufferDescription cmdBufDesc{};
     auto cmdBuf = cmdQueue->createCommandBuffer(cmdBufDesc);
-    renderer->update();
     renderer->render(cmdBuf);
+  });
 
+  sdl.setBlitCopyCallback([&](void*) {
     auto openGLRenderPass = SAFE_DOWN_CAST(OpenGLRenderPass*, renderer->getRenderPass());
     glBindFramebuffer(GL_READ_FRAMEBUFFER, openGLRenderPass->getFrameBuffer(0).getHandle());
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
@@ -222,13 +180,9 @@ int main() {
       0, 0, width, height, // 소스 영역 (FBO)
       0, 0, width, height, // 대상 영역 (화면)
       GL_COLOR_BUFFER_BIT, GL_NEAREST);
+  });
 
-    SDL_GL_SwapWindow(window);
-  }
-
-  SDL_GL_DeleteContext(context);
-  SDL_DestroyWindow(window);
-  SDL_Quit();
+  sdl.loop();
 
   return 0;
 }

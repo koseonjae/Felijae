@@ -12,32 +12,27 @@
 #include <Engine/Model/Scene.h>
 #include <Engine/Renderer/ForwardRenderer.h>
 
-#include <SDL.h>
+#include <SDLWrapper/MetalSDLWrapper.h>
 
 using namespace goala;
 
 namespace {
-const std::vector<int> viewport = {800, 600};
+ImageFormat getImageFormatSDLFormat(SDL_PixelFormatEnum pixelFormat) {
+  switch (pixelFormat) {
+    case SDL_PIXELFORMAT_RGBA8888: return ImageFormat::RGBA;
+    case SDL_PIXELFORMAT_BGRA8888: return ImageFormat::BGRA;
+    default:
+      assert(false && "Format not supported");
+  }
+}
 } // namespace
 
 int main(int argc, char** argv) {
   File::registerPath(DEMO_DIR + std::string("/asset"), "asset://");
 
-  SDL_SetHint(SDL_HINT_RENDER_DRIVER, "metal");
-  SDL_InitSubSystem(SDL_INIT_VIDEO);
-  SDL_Window* window = SDL_CreateWindow("SDL Metal", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, viewport[0], viewport[1], SDL_WINDOW_METAL);
-
-  int width, height;
-  SDL_Metal_GetDrawableSize(window, &width, &height);
-  assert(viewport[0] == width && viewport[1] == height && "Created window drawable size is not same with viewport");
-
   auto device = std::make_unique<MetalDevice>();
-
-  SDL_MetalView view = SDL_Metal_CreateView(window);
-  auto layer = static_cast<CA::MetalLayer*>(SDL_Metal_GetLayer(view)); // swapchain
-  layer->setFramebufferOnly(false);
-  layer->setDevice(device->getMTLDevice());
-  layer->setPixelFormat(MTL::PixelFormatBGRA8Unorm);
+  MetalSDLWrapper sdl(Graphics::Metal, 800, 600, device->getMTLDevice());
+  auto [width, height] = sdl.getDrawableSize();
 
   // Rasterizer
   Rasterizer rasterizer = {
@@ -49,8 +44,8 @@ int main(int argc, char** argv) {
     .viewport = {
       .minX = 0,
       .minY = 0,
-      .width = viewport[0],
-      .height = viewport[1],
+      .width = width,
+      .height = height,
       .minZ = 0.0f,
       .maxZ = 1.0f,
     }
@@ -110,7 +105,7 @@ int main(int argc, char** argv) {
     },
     .rasterizer = rasterizer,
     .outputMerger = outputMerger,
-    .format = getImageFormat(layer->pixelFormat()),
+    .format = getImageFormatSDLFormat(sdl.getPixelFormat()),
     .uniforms = uniforms,
   };
   auto pipeline = device->createPipeline(pipelineDesc);
@@ -177,34 +172,23 @@ int main(int argc, char** argv) {
   auto renderPass = device->createRenderPass(std::move(renderPassDesc));
   renderer->setRenderPass(renderPass);
 
-  bool quit = false;
-  SDL_Event e;
-
-  while (!quit) {
-    while (SDL_PollEvent(&e) != 0) {
-      switch (e.type) {
-        case SDL_QUIT: {
-          quit = true;
-          break;
-        }
-      }
-    }
-
+  sdl.setUpdateCallback([&]() {
     renderer->update();
+  });
 
+  sdl.setRenderCallback([&]() {
     CommandBufferDescription commandBufferDesc{};
     auto cmdBuf = queue->createCommandBuffer(commandBufferDesc);
     renderer->render(cmdBuf);
+  });
 
-    // Draw offscreen texture to window swap chain
-    auto drawable = layer->nextDrawable();
+  sdl.setBlitCopyCallback([&](void* drawable) {
+    auto mtlDrawable = static_cast<CA::MetalDrawable*>(drawable);
     auto metalTexture = std::static_pointer_cast<MetalTexture>(texture);
-    blitTextureToDrawable(metalTexture->getTextureHandle(), drawable, std::static_pointer_cast<MetalCommandQueue>(queue)->getMTLCommandQueue());
-  }
+    blitTextureToDrawable(metalTexture->getTextureHandle(), mtlDrawable, std::static_pointer_cast<MetalCommandQueue>(queue)->getMTLCommandQueue());
+  });
 
-  SDL_Metal_DestroyView(view);
-  SDL_DestroyWindow(window);
-  SDL_Quit();
+  sdl.loop();
 
   return 0;
 }
