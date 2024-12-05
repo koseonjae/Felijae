@@ -18,9 +18,8 @@ SDL_PixelFormatEnum getSDLPixelFormat(MTL::PixelFormat metalFormat) {
 }
 }
 
-MetalSDLWrapper::MetalSDLWrapper(Graphics graphics, int width, int height, MTL::Device* device)
-  : SDLWrapper(graphics)
-  , m_width(width)
+MetalSDLWrapper::MetalSDLWrapper(int width, int height, MTL::Device* device)
+  : m_width(width)
   , m_height(height) {
   SDL_SetHint(SDL_HINT_RENDER_DRIVER, "metal");
   SDL_InitSubSystem(SDL_INIT_VIDEO);
@@ -52,5 +51,6 @@ SDL_PixelFormatEnum MetalSDLWrapper::getPixelFormat() const {
 }
 
 void MetalSDLWrapper::onBlitCopyAndSwapBuffer() {
-  m_blitCopyCallback(m_layer->nextDrawable());
+  auto drawable = m_layer->nextDrawable();
+  m_blitCopyCallback(drawable);
 }

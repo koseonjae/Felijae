@@ -19,7 +19,7 @@ using namespace goala;
 int main() {
   File::registerPath(DEMO_DIR + std::string("/asset"), "asset://");
 
-  auto sdl = std::make_unique<OpenGLSDLWrapper>(Graphics::OpenGL3, 800, 600);
+  auto sdl = std::make_unique<OpenGLSDLWrapper>(800, 600);
 
   auto [width, height] = sdl->getDrawableSize();
 

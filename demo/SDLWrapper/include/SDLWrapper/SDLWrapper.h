@@ -9,9 +9,6 @@ enum class Graphics {
 
 class SDLWrapper {
 public:
-  explicit SDLWrapper(Graphics graphics)
-    : m_graphics(graphics) {}
-
   virtual ~SDLWrapper() = default;
 
   void loop();
@@ -37,7 +34,6 @@ private:
   virtual void onBlitCopyAndSwapBuffer() = 0;
 
 private:
-  Graphics m_graphics = Graphics::Undefined;
   std::function<void()> m_updateCallback;
   std::function<void()> m_renderCallback;
 

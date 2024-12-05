@@ -6,7 +6,7 @@
 
 class OpenGLSDLWrapper : public SDLWrapper {
 public:
-  OpenGLSDLWrapper(Graphics graphics, int width, int height);
+  OpenGLSDLWrapper(int width, int height);
 
   ~OpenGLSDLWrapper() override;
 

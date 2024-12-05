@@ -14,7 +14,7 @@ class MetalLayer;
 
 class MetalSDLWrapper : public SDLWrapper {
 public:
-  MetalSDLWrapper(Graphics graphics, int width, int height, MTL::Device* device);
+  MetalSDLWrapper(int width, int height, MTL::Device* device);
 
   ~MetalSDLWrapper() override;
 

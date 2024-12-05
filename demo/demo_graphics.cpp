@@ -1,18 +1,22 @@
 #include <Base/Utility/FileReader.h>
 #include <Base/Utility/ImageLoader.h>
 #include <Base/Utility/ImageUtil.h>
+#include <Base/Utility/TypeCast.h>
 #include <Graphics/Utility/ImageFormatUtil.h>
 #include <Graphics/Utility/MetalBlitCopy.h>
 #include <Graphics/Model/CommandBuffer.h>
 #include <Graphics/Model/Pipeline.h>
 #include <Graphics/Model/CommandQueue.h>
 #include <Graphics/Model/Texture.h>
+#include <Graphics/OpenGL/OpenGLDevice.h>
 #include <Graphics/Metal/MetalDevice.h>
 #include <Engine/Model/Model.h>
 #include <Engine/Model/Scene.h>
 #include <Engine/Renderer/ForwardRenderer.h>
-
 #include <SDLWrapper/MetalSDLWrapper.h>
+#include <SDLWrapper/OpenGLSDLWrapper.h>
+
+#include "Graphics/Utility/OpenGLBlitCopy.h"
 
 using namespace goala;
 
@@ -30,9 +34,23 @@ ImageFormat getImageFormatSDLFormat(SDL_PixelFormatEnum pixelFormat) {
 int main(int argc, char** argv) {
   File::registerPath(DEMO_DIR + std::string("/asset"), "asset://");
 
-  auto device = std::make_unique<MetalDevice>();
-  auto sdl = std::make_unique<MetalSDLWrapper>(800, 600, device->getMTLDevice());
-  auto [width, height] = sdl->getDrawableSize();
+  constexpr Graphics graphics = Graphics::Metal; // Select OpenGL3, Metal ...
+
+  int width = 800;
+  int height = 600;
+  std::unique_ptr<Device> device;
+  std::unique_ptr<SDLWrapper> sdl;
+  if (graphics == Graphics::OpenGL3) {
+    device = std::make_unique<OpenGLDevice>();
+    sdl = std::make_unique<OpenGLSDLWrapper>(width, height);
+  }
+  else {
+    device = std::make_unique<MetalDevice>();
+    sdl = std::make_unique<MetalSDLWrapper>(width, height, SAFE_DOWN_CAST(MetalDevice*, device.get())->getMTLDevice());
+  }
+
+  auto drawableSize = sdl->getDrawableSize();
+  assert(width == std::get<0>(drawableSize) && height == std::get<1>(drawableSize) && "Wrong drawable size");
 
   // Rasterizer
   Rasterizer rasterizer = {
@@ -66,8 +84,11 @@ int main(int argc, char** argv) {
     }
   };
 
+  auto image = ImageLoader::load(File("asset://model/suzanne/uvmap.jpeg"));
+  if constexpr (graphics == Graphics::Metal)
+    image = convertRGB2BGRA(image);
   TextureDescription uniformTextureDesc = {
-    .imageData = convertRGB2BGRA(ImageLoader::load(File("asset://model/suzanne/uvmap.jpeg"))),
+    .imageData = image,
     .sampler = {
       .minFilter = TextureFilter::LINEAR,
       .magFilter = TextureFilter::LINEAR,
@@ -151,7 +172,7 @@ int main(int argc, char** argv) {
       .width = width,
       .height = height,
       .pixel = {},
-      .format = getImageFormat(MTL::PixelFormatBGRA8Unorm),
+      .format = getImageFormatSDLFormat(sdl->getPixelFormat()),
     },
     .loadType = TextureLoadType::EAGER,
   };
@@ -183,7 +204,10 @@ int main(int argc, char** argv) {
   });
 
   sdl->setBlitCopyCallback([&](void* drawable) {
-    blitTextureToDrawable(texture.get(), queue.get(), drawable);
+    if constexpr (graphics == Graphics::OpenGL3)
+      blitCopyFrameBufferToScreen(renderer->getRenderPass(), width, height);
+    else
+      blitTextureToDrawable(texture.get(), queue.get(), drawable);
   });
 
   sdl->loop();

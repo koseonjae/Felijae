@@ -1,9 +1,8 @@
 #include <SDLWrapper/OpenGLSDLWrapper.h>
 
 
-OpenGLSDLWrapper::OpenGLSDLWrapper(Graphics graphics, int width, int height)
-  : SDLWrapper(graphics)
-  , m_width(width)
+OpenGLSDLWrapper::OpenGLSDLWrapper(int width, int height)
+  : m_width(width)
   , m_height(height) {
   SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
   SDL_Init(SDL_INIT_VIDEO);
