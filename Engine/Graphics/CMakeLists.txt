@@ -69,5 +69,5 @@ target_link_libraries(Graphics
     PUBLIC
     OpenGL::GL
     MetalCpp
-    Shader
+    ShaderConverter # todo: Engine이 content를 받아서 (demo가 아닌) Engine 내부에서 pipeline을 만들도록 변경한 후에, ShaderConverting을 engine이 해주고, 그래픽스 레이어에선 ShaderConverter가 없도록 리팩토링
     Base)

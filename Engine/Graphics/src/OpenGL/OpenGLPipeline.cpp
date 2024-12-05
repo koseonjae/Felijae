@@ -1,6 +1,6 @@
 #include <Graphics/OpenGL/OpenGLPipeline.h>
 #include <Graphics/OpenGL/OpenGLProgram.h>
-#include <Shader/ShaderConverter.h>
+#include <ShaderConverter/ShaderConverter.h>
 
 #include <OpenGL/gl3.h>
 

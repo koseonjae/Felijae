@@ -12,7 +12,6 @@
 #include <Graphics/OpenGL/OpenGLPipeline.h>
 #include <Graphics/OpenGL/OpenGLRenderPass.h>
 #include <Graphics/OpenGL/OpenGLTexture.h>
-#include <Shader/ShaderConverter.h>
 
 #include <SDL2/SDL.h>
 #include <glm/glm.hpp>

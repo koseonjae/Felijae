@@ -20,10 +20,9 @@ target_include_directories(Engine PUBLIC
     include)
 
 add_subdirectory(Base)
-add_subdirectory(Shader)
+add_subdirectory(ShaderConverter)
 add_subdirectory(Graphics)
 
 target_link_libraries(Engine
     PUBLIC
-    Shader
     Graphics)
