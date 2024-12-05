@@ -20,7 +20,14 @@ public:
 
   void setRenderCallback(std::function<void()> renderCallback);
 
-  void setBlitCopyCallback(std::function<void(void*)> blitCopyCallback);
+  /**
+   *
+   * @param blitCopyCallback
+   * drawable param
+   * opengl : nullptr
+   * metal  : CA::MetalDrawable*
+   */
+  void setBlitCopyCallback(std::function<void(void* drawable)> blitCopyCallback);
 
   virtual std::tuple<int, int> getDrawableSize() const = 0;
 

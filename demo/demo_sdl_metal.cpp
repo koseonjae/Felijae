@@ -183,9 +183,8 @@ int main(int argc, char** argv) {
   });
 
   sdl.setBlitCopyCallback([&](void* drawable) {
-    auto mtlDrawable = static_cast<CA::MetalDrawable*>(drawable);
     auto metalTexture = std::static_pointer_cast<MetalTexture>(texture);
-    blitTextureToDrawable(metalTexture->getTextureHandle(), mtlDrawable, std::static_pointer_cast<MetalCommandQueue>(queue)->getMTLCommandQueue());
+    blitTextureToDrawable(texture.get(), queue.get(), drawable);
   });
 
   sdl.loop();
