@@ -1,4 +1,3 @@
-#include <Base/Object/Polygons.h>
 #include <Base/Utility/FileReader.h>
 #include <Base/Utility/ImageLoader.h>
 #include <Base/Utility/ImageUtil.h>
@@ -13,8 +12,6 @@
 #include <Engine/Model/Scene.h>
 #include <Engine/Renderer/ForwardRenderer.h>
 
-#include <Metal/Metal.hpp>
-#include <QuartzCore/QuartzCore.hpp>
 #include <SDL.h>
 
 using namespace goala;
@@ -193,15 +190,14 @@ int main(int argc, char** argv) {
       }
     }
 
-    auto drawable = layer->nextDrawable();
+    renderer->update();
 
     CommandBufferDescription commandBufferDesc{};
     auto cmdBuf = queue->createCommandBuffer(commandBufferDesc);
-
-    renderer->update();
     renderer->render(cmdBuf);
 
     // Draw offscreen texture to window swap chain
+    auto drawable = layer->nextDrawable();
     auto metalTexture = std::static_pointer_cast<MetalTexture>(texture);
     blitTextureToDrawable(metalTexture->getTextureHandle(), drawable, std::static_pointer_cast<MetalCommandQueue>(queue)->getMTLCommandQueue());
   }
