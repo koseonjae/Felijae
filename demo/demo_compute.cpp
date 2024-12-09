@@ -53,6 +53,8 @@ int main() {
     },
     .buffer = {
       .data = std::move(inputData),
+      .width = width,
+      .height = height,
     },
     .uniforms = {width, height},
     .textures = {outputTexture}

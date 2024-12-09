@@ -22,22 +22,26 @@ MetalComputePipeline::MetalComputePipeline(MetalDevice* device, ComputePipelineD
 // todo: output texture를 받는 방법 정리
 void MetalComputePipeline::encode(MTL::ComputeCommandEncoder* computeEncoder) {
   computeEncoder->setComputePipelineState(m_pipelineState.get());
-  computeEncoder->setBuffer(m_buffer.get(), 0, 0);
 
-  auto& uniforms = m_desc.uniforms;
-  for (int i = 0 ; i < uniforms.size(); ++i) {
-    const auto [valuePtr, valueSize] = getUniformAddress(uniforms[i]);
-    computeEncoder->setBytes(valuePtr, valueSize, i);
+  int bufIdx = 0;
+  computeEncoder->setBuffer(m_buffer.get(), 0, bufIdx++);
+
+  for (auto& uniform : m_desc.uniforms) {
+    const auto [valuePtr, valueSize] = getUniformAddress(uniform);
+    computeEncoder->setBytes(valuePtr, valueSize, bufIdx++);
   }
 
   auto& textures = m_desc.textures;
   for (int i = 0; i < textures.size(); i++)
     computeEncoder->setTexture(SAFE_DOWN_CAST(MetalTexture*, textures[i].get())->getTextureHandle(), i);
 
-  constexpr int threadGroupSize = 64;
-  MTL::Size threadGroupSize1D(threadGroupSize, 1, 1);
-  MTL::Size threadGroups1D((m_desc.buffer.data.size() + threadGroupSize - 1) / threadGroupSize, 1, 1);
-  computeEncoder->dispatchThreadgroups(threadGroups1D, threadGroupSize1D);
+  // todo: research better thread dispatch rule
+  // https://developer.apple.com/documentation/metal/compute_passes/calculating_threadgroup_and_grid_sizes
+  MTL::Size threadPerGrid(m_bufferWidth, m_bufferHeight, 1);
+  auto threadGroupWidth = m_pipelineState->threadExecutionWidth();
+  auto threadGroupHeight = m_pipelineState->maxTotalThreadsPerThreadgroup() / threadGroupWidth;
+  MTL::Size threadGroups(threadGroupWidth, threadGroupHeight, 1);
+  computeEncoder->dispatchThreadgroups(threadPerGrid, threadGroups);
 
   computeEncoder->endEncoding();
 }
@@ -45,6 +49,8 @@ void MetalComputePipeline::encode(MTL::ComputeCommandEncoder* computeEncoder) {
 void MetalComputePipeline::_initializeBuffer(MTL::ComputePipelineDescriptor* pipelineDesc) {
   // todo: use ComputeBuffer
   m_buffer = makeMetalRef(m_device->getMTLDevice()->newBuffer(m_desc.buffer.data.data(), m_desc.buffer.data.size() * sizeof(float), MTL::ResourceStorageModeShared));
+  m_bufferWidth = m_desc.buffer.width;
+  m_bufferHeight = m_desc.buffer.height;
 }
 
 void MetalComputePipeline::_initializeShader(MTL::ComputePipelineDescriptor* pipelineDesc) {
