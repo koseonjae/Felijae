@@ -20,6 +20,8 @@
 
 using namespace goala;
 
+constexpr Graphics graphics = Graphics::Metal; // Select OpenGL3, Metal ...
+
 namespace {
 ImageFormat getImageFormatSDLFormat(SDL_PixelFormatEnum pixelFormat) {
   switch (pixelFormat) {
@@ -33,8 +35,6 @@ ImageFormat getImageFormatSDLFormat(SDL_PixelFormatEnum pixelFormat) {
 
 int main(int argc, char** argv) {
   File::registerPath(DEMO_DIR + std::string("/asset"), "asset://");
-
-  constexpr Graphics graphics = Graphics::Metal; // Select OpenGL3, Metal ...
 
   int width = 800;
   int height = 600;
