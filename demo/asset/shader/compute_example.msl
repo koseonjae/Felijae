@@ -1,0 +1,16 @@
+#include <metal_stdlib>
+using namespace metal;
+
+kernel void compute_shader(
+    device const float* inputBuffer [[buffer(0)]],
+    texture2d<float, access::write> outputTexture [[texture(0)]],
+    uint2 gid [[thread_position_in_grid]],
+    constant uint& rows [[buffer(1)]],
+    constant uint& cols [[buffer(2)]]
+) {
+    if (gid.x < cols && gid.y < rows) {
+        uint index = gid.y * cols + gid.x;
+        float value = inputBuffer[index];
+        outputTexture.write(float4(value, value, value, 1.0), gid);
+    }
+}
