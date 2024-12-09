@@ -13,10 +13,6 @@ struct VertexBufferDescription {
 class Buffer {
  public:
   virtual ~Buffer() = default;
-
-  virtual void bind() = 0;
-
-  virtual void draw() = 0;
 };
 
 } // namespace goala

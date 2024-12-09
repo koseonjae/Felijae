@@ -17,10 +17,6 @@ class MetalBuffer : public Buffer {
 public:
   MetalBuffer(MetalDevice* device, VertexBufferDescription obj);
 
-  void bind() override;
-
-  void draw() override;
-
   MTL::Buffer* getVertexHandle();
   const MTL::Buffer* getVertexHandle() const;
 

@@ -12,9 +12,9 @@ public:
 
   ~OpenGLBuffer() override;
 
-  void bind() override;
+  void bind();
 
-  void draw() override;
+  void draw();
 
 private:
   bool m_initialized = false;

@@ -37,14 +37,6 @@ MetalBuffer::MetalBuffer(MetalDevice* device, VertexBufferDescription desc) {
   m_indicesSize = obj.indices.size();
 }
 
-void MetalBuffer::bind() {
-  assert(false && "todo: implement");
-}
-
-void MetalBuffer::draw() {
-  assert(false && "draw에서 encoding을 해야하나?");
-}
-
 MTL::Buffer* MetalBuffer::getVertexHandle() { return m_vertexHandle.get(); }
 const MTL::Buffer* MetalBuffer::getVertexHandle() const { return m_vertexHandle.get(); }
 

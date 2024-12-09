@@ -2,6 +2,8 @@
 #include <Graphics/OpenGL/OpenGLProgram.h>
 #include <Graphics/OpenGL/OpenGLDevice.h>
 #include <ShaderConverter/ShaderConverter.h>
+#include <Base/Utility/TypeCast.h>
+#include <Graphics/OpenGL/OpenGLBuffer.h>
 
 #include <OpenGL/gl3.h>
 
@@ -21,8 +23,9 @@ void OpenGLPipeline::render() {
   _bindDepthTest();
   _bindAlphaBlending();
   m_program->bind(m_desc.uniforms.get());
-  m_vertexBuffer->bind();
-  m_vertexBuffer->draw();
+  auto glVertexBuffer = SAFE_DOWN_CAST(OpenGLBuffer*, m_vertexBuffer.get());
+  glVertexBuffer->bind();
+  glVertexBuffer->draw();
 }
 
 void OpenGLPipeline::_bindCulling() {
