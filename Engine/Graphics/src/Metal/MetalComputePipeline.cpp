@@ -25,15 +25,14 @@ void MetalComputePipeline::encode(MTL::ComputeCommandEncoder* computeEncoder, Te
   computeEncoder->setBuffer(m_buffer.get(), 0, 0);
   computeEncoder->setTexture(SAFE_DOWN_CAST(MetalTexture*, texture)->getTextureHandle(), 0);
 
-  int rows = 4; // todo: clean code
-  int cols = 4;
-
-  computeEncoder->setBytes(&rows, sizeof(rows), 1);
-  computeEncoder->setBytes(&cols, sizeof(cols), 2);
+  computeEncoder->setBytes(&m_bufferWidth, sizeof(m_bufferWidth), 1);
+  computeEncoder->setBytes(&m_bufferHeight, sizeof(m_bufferHeight), 2);
 
   // 스레드 그룹 설정
-  MTL::Size threadGroupSize(8, 8, 1);
-  MTL::Size threadGroups((cols + 7) / 8, (rows + 7) / 8, 1);
+  constexpr int threadGroupWidth = 8;
+  constexpr int threadGroupHeight = 8;
+  MTL::Size threadGroupSize(threadGroupWidth, threadGroupHeight, 1);
+  MTL::Size threadGroups((m_bufferWidth + (threadGroupWidth - 1)) / threadGroupWidth, (m_bufferHeight + (threadGroupHeight - 1)) / threadGroupHeight, 1);
   computeEncoder->dispatchThreadgroups(threadGroups, threadGroupSize);
 
   computeEncoder->endEncoding();
@@ -42,6 +41,8 @@ void MetalComputePipeline::encode(MTL::ComputeCommandEncoder* computeEncoder, Te
 void MetalComputePipeline::_initializeBuffer(MTL::ComputePipelineDescriptor* pipelineDesc) {
   // todo: use ComputeBuffer
   m_buffer = makeMetalRef(m_device->getMTLDevice()->newBuffer(m_desc.buffer.data.data(), m_desc.buffer.data.size() * sizeof(float), MTL::ResourceStorageModeShared));
+  m_bufferWidth = m_desc.buffer.width;
+  m_bufferHeight = m_desc.buffer.height;
 }
 
 void MetalComputePipeline::_initializeShader(MTL::ComputePipelineDescriptor* pipelineDesc) {

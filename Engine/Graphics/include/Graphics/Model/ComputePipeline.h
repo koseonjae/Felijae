@@ -14,6 +14,8 @@ namespace goala {
 
 struct ComputeBufferDescription {
   std::vector<float> data;
+  int width;
+  int height;
 };
 
 struct ComputePipelineDescription {

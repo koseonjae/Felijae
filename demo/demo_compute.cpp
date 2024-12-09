@@ -22,9 +22,9 @@ int main() {
   auto commandQueue = device->createCommandQueue({});
 
   // 행렬 크기 정의
-  const uint rows = 4;
-  const uint cols = 4;
-  const size_t totalElements = rows * cols;
+  constexpr int width = 4;
+  constexpr int height = 10;
+  constexpr int totalElements = width * height;
 
   std::vector<float> inputData(totalElements);
   for (size_t i = 0; i < totalElements; ++i)
@@ -36,7 +36,9 @@ int main() {
       .type = ShaderType::COMPUTE
     },
     .buffer = {
-      .data = std::move(inputData)
+      .data = std::move(inputData),
+      .width = width,
+      .height = height,
     },
   };
 
@@ -45,14 +47,14 @@ int main() {
 
   // 출력 텍스처 생성
   auto textureDescriptor = MTL::TextureDescriptor::texture2DDescriptor(
-    MTL::PixelFormatRGBA32Float, cols, rows, false);
+    MTL::PixelFormatRGBA32Float, width, height, false);
   textureDescriptor->setUsage(MTL::TextureUsageShaderWrite);
 
   TextureDescription textureDesc = {
     .imageData = {
       .pixel = {},
-      .width = 4,
-      .height = 4,
+      .width = width,
+      .height = height,
       .channels = 1,
       .format = ImageFormat::Float32
     },
@@ -75,20 +77,18 @@ int main() {
   commandBuffer->waitUntilCompleted();
 
   // 결과 확인
-  auto outputBuffer = std::make_unique<float[]>(totalElements); // RGBA 포맷
-  MTL::Region region = MTL::Region::Make2D(0, 0, cols, rows);
-  SAFE_DOWN_CAST(MetalTexture*, outputTexture.get())->getTextureHandle()->getBytes(outputBuffer.get(), cols* sizeof(float), region, 0);
+  std::array<float, totalElements> outputBuffer{};
+  MTL::Region region = MTL::Region::Make2D(0, 0, width, height);
+  SAFE_DOWN_CAST(MetalTexture*, outputTexture.get())->getTextureHandle()->getBytes(outputBuffer.data(), width * sizeof(float), region, 0);
 
   std::cout << "결과 텍스처 값:" << std::endl;
-  for (uint y = 0; y < rows; ++y) {
-    for (uint x = 0; x < cols; ++x) {
-      size_t index = y * cols + x; // R32 float 채널
+  for (uint y = 0; y < height; ++y) {
+    for (uint x = 0; x < width; ++x) {
+      size_t index = y * width + x;
       std::cout << outputBuffer[index] << " ";
     }
     std::cout << std::endl;
   }
-
-  computeEncoder->release();
 
   return 0;
 }
