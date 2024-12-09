@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Graphics/Model/Buffer.h>
+#include <Graphics/Model/VertexBuffer.h>
 #include <Graphics/Utility/MetalRef.h>
 
 namespace MTL {
@@ -13,9 +13,9 @@ constexpr int VERTEX_BUFFER_INDEX = 10;
 
 class MetalDevice;
 
-class MetalBuffer : public Buffer {
+class MetalVertexBuffer : public VertexBuffer {
 public:
-  MetalBuffer(MetalDevice* device, VertexBufferDescription obj);
+  MetalVertexBuffer(MetalDevice* device, VertexBufferDescription obj);
 
   MTL::Buffer* getVertexHandle();
   const MTL::Buffer* getVertexHandle() const;

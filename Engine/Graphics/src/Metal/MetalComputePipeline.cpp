@@ -6,7 +6,7 @@
 
 #include <Metal/Metal.hpp>
 
-#include "Graphics/Metal/MetalBuffer.h"
+#include "Graphics/Metal/MetalVertexBuffer.h"
 
 using namespace goala;
 

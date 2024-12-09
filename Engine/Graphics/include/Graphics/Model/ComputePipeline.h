@@ -1,17 +1,10 @@
 #pragma once
-#include "Shader.h"
 
-// #include <Graphics/Model/Buffer.h>
-// #include <Graphics/Model/OutputMerger.h>
-// #include <Graphics/Model/Rasterizer.h>
-// #include <Graphics/Model/Uniforms.h>
-// #include <Graphics/Model/RenderPass.h>
-// #include <Graphics/Model/Shader.h>
+#include <Graphics/Model/Shader.h>
 
 #include <vector>
 
 namespace goala {
-
 struct ComputeBufferDescription {
   std::vector<float> data;
   int width;

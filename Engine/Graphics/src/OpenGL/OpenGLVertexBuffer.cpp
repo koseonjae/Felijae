@@ -1,9 +1,9 @@
-#include <Graphics/OpenGL/OpenGLBuffer.h>
+#include <Graphics/OpenGL/OpenGLVertexBuffer.h>
 #include <Base/Object/Object.h>
 
 using namespace goala;
 
-OpenGLBuffer::OpenGLBuffer(OpenGLDevice* device, VertexBufferDescription desc) {
+OpenGLVertexBuffer::OpenGLVertexBuffer(OpenGLDevice* device, VertexBufferDescription desc) {
   auto& obj = desc.object;
 
   glGenVertexArrays(1, &m_vao);
@@ -36,7 +36,7 @@ OpenGLBuffer::OpenGLBuffer(OpenGLDevice* device, VertexBufferDescription desc) {
   m_initialized = true;
 }
 
-OpenGLBuffer::~OpenGLBuffer() {
+OpenGLVertexBuffer::~OpenGLVertexBuffer() {
   if (!m_initialized)
     return;
   glDeleteBuffers(1, &m_abo);
@@ -45,12 +45,12 @@ OpenGLBuffer::~OpenGLBuffer() {
   m_initialized = false;
 }
 
-void OpenGLBuffer::bind() {
+void OpenGLVertexBuffer::bind() {
   assert(m_initialized && "OpenGLBuffer is not initialized");
   glBindVertexArray(m_abo);
 }
 
-void OpenGLBuffer::draw() {
+void OpenGLVertexBuffer::draw() {
   assert(m_initialized && "OpenGLBuffer is not initialized");
   glDrawElements(GL_TRIANGLES, m_indicesSize, GL_UNSIGNED_INT, nullptr);
 }

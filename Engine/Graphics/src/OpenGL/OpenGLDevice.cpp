@@ -1,7 +1,7 @@
 #include <Graphics/OpenGL/OpenGLDevice.h>
 #include <Graphics/OpenGL/OpenGLCommandQueue.h>
 #include <Graphics/OpenGL/OpenGLPipeline.h>
-#include <Graphics/OpenGL/OpenGLBuffer.h>
+#include <Graphics/OpenGL/OpenGLVertexBuffer.h>
 #include <Graphics/OpenGL/OpenGLTexture.h>
 #include <Graphics/OpenGL/OpenGLRenderPass.h>
 #include <Graphics/Model/Fence.h>
@@ -19,7 +19,7 @@ std::shared_ptr<ComputePipeline> OpenGLDevice::createComputePipeline(ComputePipe
 }
 
 std::shared_ptr<Buffer> OpenGLDevice::createBuffer(VertexBufferDescription desc) {
-  auto buffer = std::make_shared<OpenGLBuffer>(this, std::move(desc));
+  auto buffer = std::make_shared<OpenGLVertexBuffer>(this, std::move(desc));
   return buffer;
 }
 

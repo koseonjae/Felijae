@@ -1,7 +1,7 @@
 #include <Graphics/Metal/MetalDevice.h>
 #include <Graphics/Metal/MetalCommandQueue.h>
 #include <Graphics/Metal/MetalPipeline.h>
-#include <Graphics/Metal/MetalBuffer.h>
+#include <Graphics/Metal/MetalVertexBuffer.h>
 #include <Graphics/Metal/MetalFence.h>
 #include <Graphics/Metal/MetalRenderPass.h>
 #include <Graphics/Metal/MetalShader.h>
@@ -23,7 +23,7 @@ std::shared_ptr<ComputePipeline> MetalDevice::createComputePipeline(ComputePipel
 }
 
 std::shared_ptr<Buffer> MetalDevice::createBuffer(VertexBufferDescription desc) {
-  auto buffer = std::make_shared<MetalBuffer>(this, std::move(desc));
+  auto buffer = std::make_shared<MetalVertexBuffer>(this, std::move(desc));
   return buffer;
 }
 

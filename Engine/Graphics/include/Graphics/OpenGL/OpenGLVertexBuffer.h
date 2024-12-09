@@ -1,16 +1,16 @@
 #pragma once
 
-#include <Graphics/Model/Buffer.h>
+#include <Graphics/Model/VertexBuffer.h>
 #include <OpenGL/gl3.h>
 
 namespace goala {
 class OpenGLDevice;
 
-class OpenGLBuffer final : public Buffer {
+class OpenGLVertexBuffer final : public VertexBuffer {
 public:
-  OpenGLBuffer(OpenGLDevice* device, VertexBufferDescription desc);
+  OpenGLVertexBuffer(OpenGLDevice* device, VertexBufferDescription desc);
 
-  ~OpenGLBuffer() override;
+  ~OpenGLVertexBuffer() override;
 
   void bind();
 

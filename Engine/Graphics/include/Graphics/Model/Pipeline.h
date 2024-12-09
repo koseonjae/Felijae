@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Graphics/Model/Buffer.h>
+#include <Graphics/Model/VertexBuffer.h>
 #include <Graphics/Model/OutputMerger.h>
 #include <Graphics/Model/Rasterizer.h>
 #include <Graphics/Model/Uniforms.h>

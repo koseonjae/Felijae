@@ -1,4 +1,4 @@
-#include <Graphics/Metal/MetalBuffer.h>
+#include <Graphics/Metal/MetalVertexBuffer.h>
 #include <Graphics/Metal/MetalPipeline.h>
 #include <Graphics/Metal/MetalShader.h>
 #include <Graphics/Utility/ImageFormatUtil.h>
@@ -58,7 +58,7 @@ const MTL::RenderPipelineState* MetalPipeline::getPipeline() const {
 }
 
 void MetalPipeline::encode(MetalCommandEncoder* metalEncoder) {
-  auto metalBuffer = SAFE_DOWN_CAST(MetalBuffer*, getVertexBuffer());
+  auto metalBuffer = SAFE_DOWN_CAST(MetalVertexBuffer*, getVertexBuffer());
   auto encoder = metalEncoder->getEncoder();
   _encodeUniformTextures(encoder);
   _encodeUniformVariables(metalEncoder);
@@ -78,7 +78,7 @@ void MetalPipeline::encode(MetalCommandEncoder* metalEncoder) {
 
 void MetalPipeline::_initializeVertexBuffer(MTL::RenderPipelineDescriptor* pipelineDesc) {
   m_vertexBuffer = m_device->createBuffer(m_desc.vertexBuffer);
-  auto metalVertexBuffer = SAFE_DOWN_CAST(MetalBuffer*, m_vertexBuffer.get());
+  auto metalVertexBuffer = SAFE_DOWN_CAST(MetalVertexBuffer*, m_vertexBuffer.get());
   pipelineDesc->setVertexDescriptor(metalVertexBuffer->getVertexDescriptor());
 }
 

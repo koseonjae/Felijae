@@ -3,7 +3,7 @@
 #include <Graphics/OpenGL/OpenGLDevice.h>
 #include <ShaderConverter/ShaderConverter.h>
 #include <Base/Utility/TypeCast.h>
-#include <Graphics/OpenGL/OpenGLBuffer.h>
+#include <Graphics/OpenGL/OpenGLVertexBuffer.h>
 
 #include <OpenGL/gl3.h>
 
@@ -23,7 +23,7 @@ void OpenGLPipeline::render() {
   _bindDepthTest();
   _bindAlphaBlending();
   m_program->bind(m_desc.uniforms.get());
-  auto glVertexBuffer = SAFE_DOWN_CAST(OpenGLBuffer*, m_vertexBuffer.get());
+  auto glVertexBuffer = SAFE_DOWN_CAST(OpenGLVertexBuffer*, m_vertexBuffer.get());
   glVertexBuffer->bind();
   glVertexBuffer->draw();
 }

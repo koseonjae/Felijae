@@ -1,5 +1,5 @@
 #include <Base/Object/Object.h>
-#include <Graphics/Metal/MetalBuffer.h>
+#include <Graphics/Metal/MetalVertexBuffer.h>
 #include <Graphics/Metal/MetalDevice.h>
 
 #include <Metal/MTLBuffer.hpp>
@@ -7,7 +7,7 @@
 
 using namespace goala;
 
-MetalBuffer::MetalBuffer(MetalDevice* device, VertexBufferDescription desc) {
+MetalVertexBuffer::MetalVertexBuffer(MetalDevice* device, VertexBufferDescription desc) {
   auto resourceOption = MTL::ResourceCPUCacheModeDefaultCache;
 
   auto& obj = desc.object;
@@ -37,15 +37,15 @@ MetalBuffer::MetalBuffer(MetalDevice* device, VertexBufferDescription desc) {
   m_indicesSize = obj.indices.size();
 }
 
-MTL::Buffer* MetalBuffer::getVertexHandle() { return m_vertexHandle.get(); }
-const MTL::Buffer* MetalBuffer::getVertexHandle() const { return m_vertexHandle.get(); }
+MTL::Buffer* MetalVertexBuffer::getVertexHandle() { return m_vertexHandle.get(); }
+const MTL::Buffer* MetalVertexBuffer::getVertexHandle() const { return m_vertexHandle.get(); }
 
-MTL::Buffer* MetalBuffer::getIndexHandle() { return m_indexHandle.get(); }
-const MTL::Buffer* MetalBuffer::getIndexHandle() const { return m_indexHandle.get(); }
+MTL::Buffer* MetalVertexBuffer::getIndexHandle() { return m_indexHandle.get(); }
+const MTL::Buffer* MetalVertexBuffer::getIndexHandle() const { return m_indexHandle.get(); }
 
-MTL::VertexDescriptor* MetalBuffer::getVertexDescriptor() { return m_vertexDesc.get(); }
-const MTL::VertexDescriptor* MetalBuffer::getVertexDescriptor() const { return m_vertexDesc.get(); }
+MTL::VertexDescriptor* MetalVertexBuffer::getVertexDescriptor() { return m_vertexDesc.get(); }
+const MTL::VertexDescriptor* MetalVertexBuffer::getVertexDescriptor() const { return m_vertexDesc.get(); }
 
-int MetalBuffer::getIndicesSize() const {
+int MetalVertexBuffer::getIndicesSize() const {
   return m_indicesSize;
 }
