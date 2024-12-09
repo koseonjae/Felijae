@@ -49,9 +49,12 @@ public:
 
 private:
   void _initializeShaders(MTL::RenderPipelineDescriptor* pipelineDesc);
+  void _initializeVertexBuffer(MTL::RenderPipelineDescriptor* pipelineDesc);
+  void _initializeAttachments(MTL::RenderPipelineDescriptor* pipelineDesc);
   void _initializeDepthStencilState();
   void _initializeAlphaBlend(MTL::RenderPipelineDescriptor* descriptor);
   void _initializeReflection(MTL::RenderPipelineReflection* reflection);
+  void _initializePipeline(MTL::RenderPipelineDescriptor* descriptor);
   void _encodeViewport(MTL::RenderCommandEncoder* encoder);
   void _encodeCulling(MTL::RenderCommandEncoder* encoder);
   void _encodeUniformTextures(MTL::RenderCommandEncoder* encoder);

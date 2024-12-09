@@ -42,25 +42,13 @@ MetalPipeline::MetalPipeline(MetalDevice* device, PipelineDescription desc)
   , m_device(device) {
   auto pipelineDesc = MTL::RenderPipelineDescriptor::alloc()->init();
 
-  m_vertexBuffer = device->createBuffer(m_desc.vertexBuffer);
-  auto metalVertexBuffer = SAFE_DOWN_CAST(MetalBuffer*, m_vertexBuffer.get());
-  pipelineDesc->setVertexDescriptor(metalVertexBuffer->getVertexDescriptor());
 
-  auto colorAttachmentDesc = pipelineDesc->colorAttachments()->object(0);
-  colorAttachmentDesc->setPixelFormat(getMetalImageFormat(m_desc.format));
-
+  _initializeAttachments(pipelineDesc);
+  _initializeVertexBuffer(pipelineDesc);
   _initializeDepthStencilState();
   _initializeAlphaBlend(pipelineDesc);
   _initializeShaders(pipelineDesc);
-
-  NS::Error* err = nil;
-  MTL::RenderPipelineReflection* reflection = nil;
-  auto option = MTL::PipelineOptionArgumentInfo | MTL::PipelineOptionBufferTypeInfo;
-  device->getMTLDevice()->newRenderPipelineState(pipelineDesc, option, &reflection, &err);
-  m_pipeline = makeMetalRef(device->getMTLDevice()->newRenderPipelineState(pipelineDesc, &err));
-  assert(m_pipeline && "Failed to create pipeline");
-
-  _initializeReflection(reflection);
+  _initializePipeline(pipelineDesc);
 }
 
 void MetalPipeline::update() {}
@@ -92,6 +80,17 @@ void MetalPipeline::encode(MetalCommandEncoder* metalEncoder) {
                                  MTL::IndexTypeUInt32,
                                  metalBuffer->getIndexHandle(),
                                  0);
+}
+
+void MetalPipeline::_initializeVertexBuffer(MTL::RenderPipelineDescriptor* pipelineDesc) {
+  m_vertexBuffer = m_device->createBuffer(m_desc.vertexBuffer);
+  auto metalVertexBuffer = SAFE_DOWN_CAST(MetalBuffer*, m_vertexBuffer.get());
+  pipelineDesc->setVertexDescriptor(metalVertexBuffer->getVertexDescriptor());
+}
+
+void MetalPipeline::_initializeAttachments(class MTL::RenderPipelineDescriptor* pipelineDesc) {
+  auto colorAttachmentDesc = pipelineDesc->colorAttachments()->object(0);
+  colorAttachmentDesc->setPixelFormat(getMetalImageFormat(m_desc.format));
 }
 
 void MetalPipeline::_initializeShaders(MTL::RenderPipelineDescriptor* pipelineDesc) {
@@ -286,23 +285,23 @@ void MetalPipeline::_initializeAlphaBlend(MTL::RenderPipelineDescriptor* descrip
 }
 
 void MetalPipeline::_initializeReflection(MTL::RenderPipelineReflection* reflection) {
-  int count = reflection->vertexBindings()->count();
+  int count = static_cast<int>(reflection->vertexBindings()->count());
   for (int i = 0; i < count; ++i) {
-    MTL::Argument* arg = reinterpret_cast<MTL::Argument*>(reflection->vertexBindings()->object(i));
+    const auto* arg = reinterpret_cast<MTL::Argument*>(reflection->vertexBindings()->object(i));
     std::string uniformBlockName = arg->name()->utf8String();
-    auto size = arg->bufferDataSize();
-    auto index = arg->index();
+    const auto size = static_cast<int>(arg->bufferDataSize());
+    const auto index = static_cast<int>(arg->index());
 
-    auto members = arg->bufferStructType()->members();
+    const auto members = arg->bufferStructType()->members();
     if (!members)
       continue;
 
     m_uniformBlockBuffers[uniformBlockName].resize(size);
-    m_uniformBlockIdx[uniformBlockName] = arg->index();
+    m_uniformBlockIdx[uniformBlockName] = index;
     m_uniformReflectionMap.insert({uniformBlockName, {}});
 
     for (int j = 0; j < members->count(); ++j) {
-      MTL::StructMember* member = reinterpret_cast<MTL::StructMember*>(members->object(j));
+      const auto* member = reinterpret_cast<MTL::StructMember*>(members->object(j));
       m_uniformReflectionMap[uniformBlockName].push_back(
         UniformReflection{
           .blockName = uniformBlockName,
@@ -315,5 +314,16 @@ void MetalPipeline::_initializeReflection(MTL::RenderPipelineReflection* reflect
       );
     }
   }
+}
+
+void MetalPipeline::_initializePipeline(MTL::RenderPipelineDescriptor* pipelineDesc) {
+  NS::Error* err = nil;
+  MTL::RenderPipelineReflection* reflection = nil;
+  auto option = MTL::PipelineOptionArgumentInfo | MTL::PipelineOptionBufferTypeInfo;
+  m_device->getMTLDevice()->newRenderPipelineState(pipelineDesc, option, &reflection, &err);
+  m_pipeline = makeMetalRef(m_device->getMTLDevice()->newRenderPipelineState(pipelineDesc, &err));
+  assert(m_pipeline && "Failed to create pipeline");
+
+  _initializeReflection(reflection);
 }
 } // namespace goala
