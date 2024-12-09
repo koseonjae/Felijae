@@ -3,8 +3,10 @@
 #include <Graphics/Model/Buffer.h>
 #include <Graphics/Utility/MetalRef.h>
 
-#include <Metal/MTLBuffer.hpp>
-#include <Metal/MTLVertexDescriptor.hpp>
+namespace MTL {
+class Buffer;
+class VertexDescriptor;
+}
 
 namespace goala {
 constexpr int VERTEX_BUFFER_INDEX = 10;

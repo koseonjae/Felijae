@@ -2,6 +2,7 @@
 #include <Graphics/Metal/MetalBuffer.h>
 #include <Graphics/Metal/MetalDevice.h>
 
+#include <Metal/MTLBuffer.hpp>
 #include <Metal/MTLVertexDescriptor.hpp>
 
 using namespace goala;
