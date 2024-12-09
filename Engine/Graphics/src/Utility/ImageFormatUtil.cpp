@@ -3,6 +3,8 @@
 namespace goala {
 MTL::PixelFormat getMetalImageFormat(ImageFormat format) {
   switch (format) {
+    case ImageFormat::Float: // todo: 이걸로 변환하면 되는게 맞나? 속성 확인
+      return MTL::PixelFormatRGBA32Float;
     case ImageFormat::RGB:
       assert(false && "RGB is not supported in Metal");
     case ImageFormat::RGBA:

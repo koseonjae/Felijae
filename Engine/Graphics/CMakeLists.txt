@@ -24,6 +24,7 @@ add_library(Graphics STATIC
     src/Metal/MetalShader.cpp
     src/Metal/MetalTexture.cpp
     src/Metal/MetalPipeline.cpp
+    src/Metal/MetalComputePipeline.cpp
 
     include/Graphics/Utility/ImageFormatUtil.h
     include/Graphics/Utility/MetalBlitCopy.h
@@ -40,6 +41,8 @@ add_library(Graphics STATIC
     include/Graphics/Model/OutputMerger.h
     include/Graphics/Model/RenderPass.h
     include/Graphics/Model/Texture.h
+    include/Graphics/Model/Pipeline.h
+    include/Graphics/Model/ComputePipeline.h
     include/Graphics/OpenGL/OpenGLCommandEncoder.h
     include/Graphics/OpenGL/OpenGLCommandQueue.h
     include/Graphics/OpenGL/OpenGLCommandBuffer.h
@@ -60,7 +63,8 @@ add_library(Graphics STATIC
     include/Graphics/Metal/MetalRenderPass.h
     include/Graphics/Metal/MetalShader.h
     include/Graphics/Metal/MetalTexture.h
-    include/Graphics/Metal/MetalPipeline.h)
+    include/Graphics/Metal/MetalPipeline.h
+    include/Graphics/Metal/MetalComputePipeline.h)
 
 target_include_directories(Graphics PUBLIC
     include)

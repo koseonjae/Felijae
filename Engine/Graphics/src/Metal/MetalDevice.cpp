@@ -6,6 +6,7 @@
 #include <Graphics/Metal/MetalRenderPass.h>
 #include <Graphics/Metal/MetalShader.h>
 #include <Graphics/Metal/MetalTexture.h>
+#include <Graphics/Metal/MetalComputePipeline.h>
 
 using namespace goala;
 
@@ -14,6 +15,11 @@ MetalDevice::MetalDevice(): m_device(makeMetalRef(MTL::CreateSystemDefaultDevice
 std::shared_ptr<Pipeline> MetalDevice::createPipeline(PipelineDescription desc) {
   auto pipeline = std::make_shared<MetalPipeline>(this, std::move(desc));
   return pipeline;
+}
+
+std::shared_ptr<ComputePipeline> MetalDevice::createComputePipeline(ComputePipelineDescription desc) {
+  auto computePipeline = std::make_shared<MetalComputePipeline>(this, std::move(desc));
+  return computePipeline;
 }
 
 std::shared_ptr<Buffer> MetalDevice::createBuffer(VertexBufferDescription desc) {

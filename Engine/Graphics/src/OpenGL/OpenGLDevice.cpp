@@ -3,15 +3,19 @@
 #include <Graphics/OpenGL/OpenGLPipeline.h>
 #include <Graphics/OpenGL/OpenGLBuffer.h>
 #include <Graphics/OpenGL/OpenGLTexture.h>
+#include <Graphics/OpenGL/OpenGLRenderPass.h>
 #include <Graphics/Model/Fence.h>
-
-#include "Graphics/OpenGL/OpenGLRenderPass.h"
+#include <Graphics/Model/ComputePipeline.h>
 
 using namespace goala;
 
 std::shared_ptr<Pipeline> OpenGLDevice::createPipeline(PipelineDescription desc) {
   auto pipeline = std::make_shared<OpenGLPipeline>(this, std::move(desc));
   return pipeline;
+}
+
+std::shared_ptr<ComputePipeline> OpenGLDevice::createComputePipeline(ComputePipelineDescription desc) {
+  assert(false && "OpenGL ComputePipeline is not supported");
 }
 
 std::shared_ptr<Buffer> OpenGLDevice::createBuffer(VertexBufferDescription desc) {

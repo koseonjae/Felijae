@@ -3,6 +3,7 @@
 #include <ShaderConverter/ShaderConverter.h>
 
 #include <string>
+#include <cassert>
 
 namespace goala {
 enum class ShaderType {

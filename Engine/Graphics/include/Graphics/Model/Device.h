@@ -6,6 +6,7 @@ namespace goala {
 class Buffer;
 class Fence;
 class Pipeline;
+class ComputePipeline;
 class Texture;
 class CommandQueue;
 class Shader;
@@ -14,6 +15,7 @@ class RenderPass;
 struct VertexBufferDescription;
 struct FenceDescription;
 struct PipelineDescription;
+struct ComputePipelineDescription;
 struct TextureDescription;
 struct CommandQueueDescription;
 struct ShaderDescription;
@@ -24,6 +26,8 @@ public:
   virtual ~Device() = default;
 
   virtual std::shared_ptr<Pipeline> createPipeline(PipelineDescription desc) = 0;
+
+  virtual std::shared_ptr<ComputePipeline> createComputePipeline(ComputePipelineDescription desc) = 0;
 
   virtual std::shared_ptr<Buffer> createBuffer(VertexBufferDescription desc) = 0;
 
