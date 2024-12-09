@@ -16,13 +16,6 @@ class MetalCommandEncoder : public CommandEncoder {
 public:
   MetalCommandEncoder(MetalCommandBuffer* commandBuffer, MetalRenderPass* renderPass, CommandEncoderDescription desc);
 
-  // void encode(Pipeline* pipeline) override;
-  //
-  // void draw() override;
-  //
-  // void updateDependency(const std::vector<std::shared_ptr<Fence>>& waitFences,
-  //                       const std::vector<std::shared_ptr<Fence>>& signalFences) override;
-
   void endEncoding() override;
 
   void encodeDraw(Pipeline* pipeline) override;

@@ -14,8 +14,6 @@ OpenGLPipeline::OpenGLPipeline(OpenGLDevice* device, PipelineDescription desc)
   _initializeVertexBuffer();
 }
 
-void OpenGLPipeline::update() {}
-
 void OpenGLPipeline::render() {
   assert(m_program && m_vertexBuffer && "There is empty pipeline");
   _bindViewport();

@@ -37,10 +37,6 @@ class MetalPipeline : public Pipeline {
 public:
   MetalPipeline(MetalDevice* device, PipelineDescription desc);
 
-  void update() override;
-
-  void render() override;
-
   MTL::RenderPipelineState* getPipeline();
 
   const MTL::RenderPipelineState* getPipeline() const;

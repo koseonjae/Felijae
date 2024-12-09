@@ -41,8 +41,6 @@ MetalPipeline::MetalPipeline(MetalDevice* device, PipelineDescription desc)
   : Pipeline(std::move(desc))
   , m_device(device) {
   auto pipelineDesc = MTL::RenderPipelineDescriptor::alloc()->init();
-
-
   _initializeAttachments(pipelineDesc);
   _initializeVertexBuffer(pipelineDesc);
   _initializeDepthStencilState();
@@ -50,10 +48,6 @@ MetalPipeline::MetalPipeline(MetalDevice* device, PipelineDescription desc)
   _initializeShaders(pipelineDesc);
   _initializePipeline(pipelineDesc);
 }
-
-void MetalPipeline::update() {}
-
-void MetalPipeline::render() {}
 
 MTL::RenderPipelineState* MetalPipeline::getPipeline() {
   return m_pipeline.get();

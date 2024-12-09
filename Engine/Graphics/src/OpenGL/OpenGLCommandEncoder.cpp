@@ -4,6 +4,9 @@
 
 #include <cassert>
 
+#include "Base/Utility/TypeCast.h"
+#include "Graphics/OpenGL/OpenGLPipeline.h"
+
 using namespace goala;
 
 OpenGLCommandEncoder::OpenGLCommandEncoder(OpenGLCommandBuffer* commandBuffer, OpenGLRenderPass* renderPass, CommandEncoderDescription desc)
@@ -23,6 +26,6 @@ void OpenGLCommandEncoder::endEncoding() {
 void OpenGLCommandEncoder::encodeDraw(Pipeline* pipeline) {
   m_encoded = [renderPass = m_renderPass, pipeline]() {
     renderPass->bind();
-    pipeline->render();
+    SAFE_DOWN_CAST(OpenGLPipeline*, pipeline)->render();
   };
 }
