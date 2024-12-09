@@ -150,5 +150,5 @@ void OpenGLPipeline::_initializeProgram() {
 }
 
 void OpenGLPipeline::_initializeVertexBuffer() {
-  m_vertexBuffer = m_device->createBuffer(m_desc.vertexBuffer);
+  m_vertexBuffer = m_device->createVertexBuffer(m_desc.vertexBuffer);
 }

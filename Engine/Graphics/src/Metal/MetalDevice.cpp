@@ -22,7 +22,7 @@ std::shared_ptr<ComputePipeline> MetalDevice::createComputePipeline(ComputePipel
   return computePipeline;
 }
 
-std::shared_ptr<Buffer> MetalDevice::createBuffer(VertexBufferDescription desc) {
+std::shared_ptr<VertexBuffer> MetalDevice::createVertexBuffer(VertexBufferDescription desc) {
   auto buffer = std::make_shared<MetalVertexBuffer>(this, std::move(desc));
   return buffer;
 }

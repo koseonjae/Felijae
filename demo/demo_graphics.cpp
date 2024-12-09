@@ -20,7 +20,7 @@
 
 using namespace goala;
 
-constexpr Graphics graphics = Graphics::OpenGL3; // Select OpenGL3, Metal ...
+constexpr Graphics graphics = Graphics::Metal; // Select OpenGL3, Metal ...
 
 namespace {
 ImageFormat getImageFormatSDLFormat(SDL_PixelFormatEnum pixelFormat) {

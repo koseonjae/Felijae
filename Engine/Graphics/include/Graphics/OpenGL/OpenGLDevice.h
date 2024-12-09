@@ -11,7 +11,7 @@ public:
 
   std::shared_ptr<ComputePipeline> createComputePipeline(ComputePipelineDescription desc) override;
 
-  std::shared_ptr<Buffer> createBuffer(VertexBufferDescription desc) override;
+  std::shared_ptr<VertexBuffer> createVertexBuffer(VertexBufferDescription desc) override;
 
   std::shared_ptr<Texture> createTexture(TextureDescription desc) override;
 

@@ -7,8 +7,8 @@
 namespace goala {
 struct ComputeBufferDescription {
   std::vector<float> data;
-  int width;
-  int height;
+  int width; // cols
+  int height; // rows
 };
 
 struct ComputePipelineDescription {

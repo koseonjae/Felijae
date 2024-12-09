@@ -3,7 +3,7 @@
 #include <memory>
 
 namespace goala {
-class Buffer;
+class VertexBuffer;
 class Fence;
 class Pipeline;
 class ComputePipeline;
@@ -29,7 +29,7 @@ public:
 
   virtual std::shared_ptr<ComputePipeline> createComputePipeline(ComputePipelineDescription desc) = 0;
 
-  virtual std::shared_ptr<Buffer> createBuffer(VertexBufferDescription desc) = 0;
+  virtual std::shared_ptr<VertexBuffer> createVertexBuffer(VertexBufferDescription desc) = 0;
 
   virtual std::shared_ptr<Texture> createTexture(TextureDescription desc) = 0;
 

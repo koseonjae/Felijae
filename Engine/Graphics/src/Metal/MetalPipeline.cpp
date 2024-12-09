@@ -77,7 +77,7 @@ void MetalPipeline::encode(MetalCommandEncoder* metalEncoder) {
 }
 
 void MetalPipeline::_initializeVertexBuffer(MTL::RenderPipelineDescriptor* pipelineDesc) {
-  m_vertexBuffer = m_device->createBuffer(m_desc.vertexBuffer);
+  m_vertexBuffer = m_device->createVertexBuffer(m_desc.vertexBuffer);
   auto metalVertexBuffer = SAFE_DOWN_CAST(MetalVertexBuffer*, m_vertexBuffer.get());
   pipelineDesc->setVertexDescriptor(metalVertexBuffer->getVertexDescriptor());
 }

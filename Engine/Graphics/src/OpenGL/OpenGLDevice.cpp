@@ -18,7 +18,7 @@ std::shared_ptr<ComputePipeline> OpenGLDevice::createComputePipeline(ComputePipe
   assert(false && "OpenGL ComputePipeline is not supported");
 }
 
-std::shared_ptr<Buffer> OpenGLDevice::createBuffer(VertexBufferDescription desc) {
+std::shared_ptr<VertexBuffer> OpenGLDevice::createVertexBuffer(VertexBufferDescription desc) {
   auto buffer = std::make_shared<OpenGLVertexBuffer>(this, std::move(desc));
   return buffer;
 }
