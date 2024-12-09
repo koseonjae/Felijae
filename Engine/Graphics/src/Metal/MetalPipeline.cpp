@@ -314,8 +314,7 @@ void MetalPipeline::_initializePipeline(MTL::RenderPipelineDescriptor* pipelineD
   NS::Error* err = nil;
   MTL::RenderPipelineReflection* reflection = nil;
   auto option = MTL::PipelineOptionArgumentInfo | MTL::PipelineOptionBufferTypeInfo;
-  m_device->getMTLDevice()->newRenderPipelineState(pipelineDesc, option, &reflection, &err);
-  m_pipeline = makeMetalRef(m_device->getMTLDevice()->newRenderPipelineState(pipelineDesc, &err));
+  m_pipeline = makeMetalRef(m_device->getMTLDevice()->newRenderPipelineState(pipelineDesc, option, &reflection, &err));
   assert(m_pipeline && "Failed to create pipeline");
 
   _initializeReflection(reflection);
