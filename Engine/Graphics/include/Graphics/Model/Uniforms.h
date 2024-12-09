@@ -8,11 +8,14 @@
 #include <unordered_map>
 #include <string_view>
 #include <functional>
+#include <tuple>
 
 namespace goala {
-using UniformType = std::variant<glm::vec3, glm::mat4>;
+using UniformType = std::variant<int, float, glm::vec3, glm::mat4>;
 using UniformVariables = std::unordered_map<std::string, UniformType>;
 using TextureVariables = std::unordered_map<std::string, std::shared_ptr<Texture>>;
+
+std::tuple<const void*, int> getUniformAddress(const UniformType& variable);
 
 class Uniforms {
 public:

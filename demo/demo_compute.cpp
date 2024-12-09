@@ -30,26 +30,6 @@ int main() {
   for (size_t i = 0; i < totalElements; ++i)
     inputData[i] = static_cast<float>(i);
 
-  ComputePipelineDescription pipelineDesc = {
-    .shader = {
-      .source = File("asset://shader/compute_example.msl").read(),
-      .type = ShaderType::COMPUTE
-    },
-    .buffer = {
-      .data = std::move(inputData),
-      .width = width,
-      .height = height,
-    },
-  };
-
-  auto pipeline = device->createComputePipeline(std::move(pipelineDesc));
-  auto mtlPipeline = SAFE_DOWN_CAST(MetalComputePipeline*, pipeline.get());
-
-  // 출력 텍스처 생성
-  auto textureDescriptor = MTL::TextureDescriptor::texture2DDescriptor(
-    MTL::PixelFormatRGBA32Float, width, height, false);
-  textureDescriptor->setUsage(MTL::TextureUsageShaderWrite);
-
   TextureDescription textureDesc = {
     .imageData = {
       .pixel = {},
@@ -66,12 +46,27 @@ int main() {
   };
   auto outputTexture = device->createTexture(textureDesc);
 
+  ComputePipelineDescription pipelineDesc = {
+    .shader = {
+      .source = File("asset://shader/compute_example.msl").read(),
+      .type = ShaderType::COMPUTE
+    },
+    .buffer = {
+      .data = std::move(inputData),
+    },
+    .uniforms = {width, height},
+    .textures = {outputTexture}
+  };
+
+  auto pipeline = device->createComputePipeline(std::move(pipelineDesc));
+  auto mtlPipeline = SAFE_DOWN_CAST(MetalComputePipeline*, pipeline.get());
+
   // 커맨드 버퍼와 인코더 생성
   auto commandBuffer = commandQueue->createCommandBuffer({});
   auto mtlCmdBuffer = SAFE_DOWN_CAST(MetalCommandBuffer*, commandBuffer.get());
   auto computeEncoder = mtlCmdBuffer->getCommandBuffer()->computeCommandEncoder();
 
-  mtlPipeline->encode(computeEncoder, outputTexture.get());
+  mtlPipeline->encode(computeEncoder);
 
   commandBuffer->commit();
   commandBuffer->waitUntilCompleted();

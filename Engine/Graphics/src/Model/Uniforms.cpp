@@ -1,6 +1,37 @@
 #include <Graphics/Model/Uniforms.h>
 
+#include <glm/gtc/type_ptr.hpp>
+
 using namespace goala;
+
+namespace goala {
+std::tuple<const void*, int> getUniformAddress(const UniformType& variable) {
+  const void* valuePtr = nullptr;
+  int size = 0;
+  std::visit([&valuePtr, &size](auto& value) {
+    using T = std::decay_t<decltype(value)>;
+    if constexpr (std::is_same_v<T, glm::vec3>) {
+      valuePtr = reinterpret_cast<const void*>(glm::value_ptr(value));
+      size = sizeof(glm::vec3);
+    }
+    else if constexpr (std::is_same_v<T, glm::mat4>) {
+      valuePtr = reinterpret_cast<const void*>(glm::value_ptr(value));
+      size = sizeof(glm::mat4);
+    }
+    else if constexpr (std::is_same_v<T, float>) {
+      valuePtr = reinterpret_cast<const void*>(&value);
+      size = sizeof(float);
+    }
+    else if constexpr (std::is_same_v<T, int>) {
+      valuePtr = reinterpret_cast<const void*>(&value);
+      size = sizeof(int);
+    }
+    else
+      assert(false && "Unsupported type");
+  }, variable);
+  return {valuePtr, size};
+}
+}
 
 void Uniforms::setUniform(std::string_view name, UniformType variable) {
   std::lock_guard<std::mutex> l(m_uniformsLock);

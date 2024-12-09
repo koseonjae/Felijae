@@ -9,8 +9,6 @@
 
 #include <Metal/Metal.hpp>
 
-#include <glm/gtc/type_ptr.hpp>
-
 namespace {
 uint32_t getTypeSize(MTL::DataType dataType) {
   switch (dataType) {
@@ -203,15 +201,8 @@ void MetalPipeline::_encodeUniformVariables(MetalCommandEncoder* encoder) {
     assert(uniformBlockBuffers.contains(reflection.blockName) && "Uniform block not found");
     auto& uniformBlock = uniformBlockBuffers[reflection.blockName];
 
-    const void* valuePtr = nullptr;
-    std::visit([&valuePtr](auto& value) {
-      using T = std::decay_t<decltype(value)>;
-      if constexpr (std::is_same_v<T, glm::vec3>)
-        valuePtr = reinterpret_cast<const void*>(glm::value_ptr(value));
-      else if constexpr (std::is_same_v<T, glm::mat4>)
-        valuePtr = reinterpret_cast<const void*>(glm::value_ptr(value));
-    }, variable);
-
+    const auto [valuePtr, valueSize] = getUniformAddress(variable);
+    assert(valueSize == reflection.size);
     std::memcpy(uniformBlock.data() + reflection.offset, valuePtr, reflection.size);
   }
 

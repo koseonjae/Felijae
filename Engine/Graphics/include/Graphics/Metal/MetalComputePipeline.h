@@ -20,7 +20,7 @@ class MetalComputePipeline : public ComputePipeline {
 public:
   MetalComputePipeline(MetalDevice* device, ComputePipelineDescription pipeline);
 
-  void encode(MTL::ComputeCommandEncoder* encoder, Texture* texture);
+  void encode(MTL::ComputeCommandEncoder* encoder);
 
 private:
   void _initializeBuffer(MTL::ComputePipelineDescriptor* pipelineDesc);
@@ -32,8 +32,6 @@ private:
   std::shared_ptr<Shader> m_shader;
   MetalRef<MTL::ComputePipelineState> m_pipelineState;
   MetalRef<MTL::Buffer> m_buffer; // todo: MetalBuffer로 wrap
-  int m_bufferWidth = 0;
-  int m_bufferHeight = 0;
 };
 
 }

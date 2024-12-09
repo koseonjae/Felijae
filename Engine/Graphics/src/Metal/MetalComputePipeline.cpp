@@ -20,20 +20,24 @@ MetalComputePipeline::MetalComputePipeline(MetalDevice* device, ComputePipelineD
 }
 
 // todo: output texture를 받는 방법 정리
-void MetalComputePipeline::encode(MTL::ComputeCommandEncoder* computeEncoder, Texture* texture) {
+void MetalComputePipeline::encode(MTL::ComputeCommandEncoder* computeEncoder) {
   computeEncoder->setComputePipelineState(m_pipelineState.get());
   computeEncoder->setBuffer(m_buffer.get(), 0, 0);
-  computeEncoder->setTexture(SAFE_DOWN_CAST(MetalTexture*, texture)->getTextureHandle(), 0);
 
-  computeEncoder->setBytes(&m_bufferWidth, sizeof(m_bufferWidth), 1);
-  computeEncoder->setBytes(&m_bufferHeight, sizeof(m_bufferHeight), 2);
+  auto& uniforms = m_desc.uniforms;
+  for (int i = 0 ; i < uniforms.size(); ++i) {
+    const auto [valuePtr, valueSize] = getUniformAddress(uniforms[i]);
+    computeEncoder->setBytes(valuePtr, valueSize, i);
+  }
 
-  // 스레드 그룹 설정
-  constexpr int threadGroupWidth = 8;
-  constexpr int threadGroupHeight = 8;
-  MTL::Size threadGroupSize(threadGroupWidth, threadGroupHeight, 1);
-  MTL::Size threadGroups((m_bufferWidth + (threadGroupWidth - 1)) / threadGroupWidth, (m_bufferHeight + (threadGroupHeight - 1)) / threadGroupHeight, 1);
-  computeEncoder->dispatchThreadgroups(threadGroups, threadGroupSize);
+  auto& textures = m_desc.textures;
+  for (int i = 0; i < textures.size(); i++)
+    computeEncoder->setTexture(SAFE_DOWN_CAST(MetalTexture*, textures[i].get())->getTextureHandle(), i);
+
+  constexpr int threadGroupSize = 64;
+  MTL::Size threadGroupSize1D(threadGroupSize, 1, 1);
+  MTL::Size threadGroups1D((m_desc.buffer.data.size() + threadGroupSize - 1) / threadGroupSize, 1, 1);
+  computeEncoder->dispatchThreadgroups(threadGroups1D, threadGroupSize1D);
 
   computeEncoder->endEncoding();
 }
@@ -41,8 +45,6 @@ void MetalComputePipeline::encode(MTL::ComputeCommandEncoder* computeEncoder, Te
 void MetalComputePipeline::_initializeBuffer(MTL::ComputePipelineDescriptor* pipelineDesc) {
   // todo: use ComputeBuffer
   m_buffer = makeMetalRef(m_device->getMTLDevice()->newBuffer(m_desc.buffer.data.data(), m_desc.buffer.data.size() * sizeof(float), MTL::ResourceStorageModeShared));
-  m_bufferWidth = m_desc.buffer.width;
-  m_bufferHeight = m_desc.buffer.height;
 }
 
 void MetalComputePipeline::_initializeShader(MTL::ComputePipelineDescriptor* pipelineDesc) {
