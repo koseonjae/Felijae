@@ -11,6 +11,6 @@ kernel void computeShader(
     if (gid.x < cols && gid.y < rows) {
         uint index = gid.y * cols + gid.x;
         float value = inputBuffer[index];
-        outputTexture.write(float4(value, value, value, 1.0), gid);
+        outputTexture.write(float(value), gid);
     }
 }

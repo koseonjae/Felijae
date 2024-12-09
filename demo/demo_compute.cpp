@@ -54,7 +54,7 @@ int main() {
       .width = 4,
       .height = 4,
       .channels = 1,
-      .format = ImageFormat::Float
+      .format = ImageFormat::Float32
     },
     .sampler = {},
     .usage = TextureUsage::WRITE,
@@ -75,14 +75,14 @@ int main() {
   commandBuffer->waitUntilCompleted();
 
   // 결과 확인
-  auto outputBuffer = std::make_unique<float[]>(totalElements * 4); // RGBA 포맷
+  auto outputBuffer = std::make_unique<float[]>(totalElements); // RGBA 포맷
   MTL::Region region = MTL::Region::Make2D(0, 0, cols, rows);
-  SAFE_DOWN_CAST(MetalTexture*, outputTexture.get())->getTextureHandle()->getBytes(outputBuffer.get(), cols * 4 * sizeof(float), region, 0);
+  SAFE_DOWN_CAST(MetalTexture*, outputTexture.get())->getTextureHandle()->getBytes(outputBuffer.get(), cols* sizeof(float), region, 0);
 
   std::cout << "결과 텍스처 값:" << std::endl;
   for (uint y = 0; y < rows; ++y) {
     for (uint x = 0; x < cols; ++x) {
-      size_t index = (y * cols + x) * 4; // RGBA 채널
+      size_t index = y * cols + x; // R32 float 채널
       std::cout << outputBuffer[index] << " ";
     }
     std::cout << std::endl;

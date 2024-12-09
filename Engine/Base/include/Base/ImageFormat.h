@@ -2,7 +2,7 @@
 
 namespace goala {
 enum class ImageFormat {
-  Float,
+  Float32,
   RGB,
   RGBA,
   BGRA,
