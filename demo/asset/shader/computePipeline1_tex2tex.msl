@@ -3,10 +3,14 @@ using namespace metal;
 
 kernel void computeShader(
     uint2 gid [[thread_position_in_grid]],
+    constant int& width [[buffer(0)]],
+    constant int& height [[buffer(1)]],
     texture2d<float, access::read> inTexture [[texture(0)]],
     texture2d<float, access::write> outTexture [[texture(1)]]
 ) {
+    if (gid.x >= width || gid.y >= height)
+        return;
     float value = inTexture.read(gid).r;
-    value = -value;
+    value = value + 1;
     outTexture.write(value, gid);
 }

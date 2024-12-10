@@ -23,7 +23,6 @@ public:
   void encode(MTL::ComputeCommandEncoder* encoder);
 
 private:
-  void _initializeBuffer(MTL::ComputePipelineDescriptor* pipelineDesc);
   void _initializeShader(MTL::ComputePipelineDescriptor* pipelineDesc);
   void _initializePipeline(MTL::ComputePipelineDescriptor* pipelineDesc);
 
@@ -31,7 +30,6 @@ private:
   MetalDevice* m_device = nullptr;
   std::shared_ptr<Shader> m_shader;
   MetalRef<MTL::ComputePipelineState> m_pipelineState;
-  MetalRef<MTL::Buffer> m_buffer; // todo: MetalBuffer로 wrap
   std::vector<int> m_threadSize;
 };
 

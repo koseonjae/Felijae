@@ -2,8 +2,13 @@
 
 #include <Graphics/Model/Shader.h>
 #include <Graphics/Model/Uniforms.h>
+#include <Graphics/Utility/MetalRef.h>
 
 #include <vector>
+
+namespace MTL {
+class Buffer;
+}
 
 namespace goala {
 struct ComputeBufferDescription {
@@ -12,7 +17,7 @@ struct ComputeBufferDescription {
 
 struct ComputePipelineDescription {
   ShaderDescription shader;
-  ComputeBufferDescription buffer;
+  std::vector<MetalRef<MTL::Buffer>> buffers;
   std::vector<UniformType> uniforms;
   std::vector<std::shared_ptr<Texture>> textures;
   std::vector<int> threadSize;

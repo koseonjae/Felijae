@@ -8,9 +8,9 @@ kernel void computeShader(
     uint2 gid [[thread_position_in_grid]],
     texture2d<float, access::write> outputTexture [[texture(0)]]
 ) {
-    if (gid.x < width && gid.y < height) {
-        int index = gid.y * width + gid.x;
-        float value = inputBuffer[index];
-        outputTexture.write(float(value), gid);
-    }
+    if (gid.x >= width || gid.y >= height)
+        return;
+    int index = gid.y * width + gid.x;
+    float value = inputBuffer[index];
+    outputTexture.write(float(value), gid);
 }

@@ -1,12 +1,11 @@
 #include <Graphics/Metal/MetalComputePipeline.h>
 #include <Graphics/Metal/MetalDevice.h>
 #include <Graphics/Metal/MetalShader.h>
-#include <Base/Utility/TypeCast.h>
 #include <Graphics/Metal/MetalTexture.h>
+#include <Graphics/Metal/MetalVertexBuffer.h>
+#include <Base/Utility/TypeCast.h>
 
 #include <Metal/Metal.hpp>
-
-#include "Graphics/Metal/MetalVertexBuffer.h"
 
 using namespace goala;
 
@@ -14,7 +13,6 @@ MetalComputePipeline::MetalComputePipeline(MetalDevice* device, ComputePipelineD
   : ComputePipeline(std::move(desc))
   , m_device(device) {
   auto pipelineDesc = MTL::ComputePipelineDescriptor::alloc()->init(); // 기존 demo에선 이걸 안쓰고 metal shader function만을 넘겼음
-  _initializeBuffer(pipelineDesc);
   _initializeShader(pipelineDesc);
   _initializePipeline(pipelineDesc);
 }
@@ -25,8 +23,8 @@ void MetalComputePipeline::encode(MTL::ComputeCommandEncoder* computeEncoder) {
 
   int bufIdx = 0;
 
-  if (m_buffer.get())
-    computeEncoder->setBuffer(m_buffer.get(), 0, bufIdx++);
+  for (auto& buffer : m_desc.buffers)
+    computeEncoder->setBuffer(buffer.get(), 0, bufIdx++);
 
   for (auto& uniform : m_desc.uniforms) {
     const auto [valuePtr, valueSize] = getUniformAddress(uniform);
@@ -61,13 +59,6 @@ void MetalComputePipeline::encode(MTL::ComputeCommandEncoder* computeEncoder) {
   computeEncoder->dispatchThreadgroups(threadPerGrid, threadGroups);
 
   computeEncoder->endEncoding();
-}
-
-void MetalComputePipeline::_initializeBuffer(MTL::ComputePipelineDescriptor* pipelineDesc) {
-  // todo: use ComputeBuffer
-  if (m_desc.buffer.data.empty())
-    return;
-  m_buffer = makeMetalRef(m_device->getMTLDevice()->newBuffer(m_desc.buffer.data.data(), m_desc.buffer.data.size() * sizeof(float), MTL::ResourceStorageModeShared));
 }
 
 void MetalComputePipeline::_initializeShader(MTL::ComputePipelineDescriptor* pipelineDesc) {

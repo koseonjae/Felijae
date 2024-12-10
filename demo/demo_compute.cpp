@@ -19,15 +19,13 @@ constexpr int height = 10;
 constexpr int totalElements = width * height;
 }
 
-std::shared_ptr<ComputePipeline> createBuf2TexturePipeline(MetalDevice* device, std::vector<float> inputData, std::shared_ptr<Texture> outputTexture) {
+std::shared_ptr<ComputePipeline> createBuf2TexturePipeline(MetalDevice* device, MetalRef<MTL::Buffer> inputBuffer, std::shared_ptr<Texture> outputTexture) {
   ComputePipelineDescription pipelineDesc = {
     .shader = {
-      .source = File("asset://shader/buf2texture.msl").read(),
+      .source = File("asset://shader/computePipeline0_buf2tex.msl").read(),
       .type = ShaderType::COMPUTE
     },
-    .buffer = {
-      .data = std::move(inputData),
-    },
+    .buffers = {inputBuffer},
     .threadSize = {width, height},
     .uniforms = {width, height},
     .textures = {outputTexture}
@@ -39,13 +37,28 @@ std::shared_ptr<ComputePipeline> createBuf2TexturePipeline(MetalDevice* device, 
 std::shared_ptr<ComputePipeline> createTexture2TexturePipeline(MetalDevice* device, std::shared_ptr<Texture> inputTexture, std::shared_ptr<Texture> outputTexture) {
   ComputePipelineDescription pipelineDesc = {
     .shader = {
-      .source = File("asset://shader/texture2texture.msl").read(),
+      .source = File("asset://shader/computePipeline1_tex2tex.msl").read(),
       .type = ShaderType::COMPUTE
     },
-    .buffer = {},
+    .buffers = {},
     .threadSize = {width, height},
-    .uniforms = {},
+    .uniforms = {width, height},
     .textures = {inputTexture, outputTexture}
+  };
+  auto pipeline = device->createComputePipeline(std::move(pipelineDesc));
+  return pipeline;
+}
+
+std::shared_ptr<ComputePipeline> createTexture2BufferPipeline(MetalDevice* device, std::shared_ptr<Texture> inputTexture, MetalRef<MTL::Buffer> outputBuffer) {
+  ComputePipelineDescription pipelineDesc = {
+    .shader = {
+      .source = File("asset://shader/computePipeline2_tex2buf.msl").read(),
+      .type = ShaderType::COMPUTE
+    },
+    .buffers = {outputBuffer},
+    .threadSize = {width, height},
+    .uniforms = {width, height},
+    .textures = {inputTexture}
   };
   auto pipeline = device->createComputePipeline(std::move(pipelineDesc));
   return pipeline;
@@ -64,6 +77,7 @@ int main() {
   std::vector<float> inputData(totalElements);
   for (size_t i = 0; i < totalElements; ++i)
     inputData[i] = static_cast<float>(i);
+  auto pipeline0_inputBuffer = makeMetalRef(device->getMTLDevice()->newBuffer(inputData.data(), inputData.size() * sizeof(float), MTL::ResourceStorageModeShared));
 
   // Pipeline 0
 
@@ -81,7 +95,7 @@ int main() {
     .loadType = TextureLoadType::EAGER,
     .pipeline = TexturePipeline::COMPUTE,
   });
-  auto pipeline0_buf2tex = createBuf2TexturePipeline(device.get(), std::move(inputData), pipeline0outputTexture);
+  auto pipeline0_buf2tex = createBuf2TexturePipeline(device.get(), pipeline0_inputBuffer, pipeline0outputTexture);
 
   // Pipeline 1 output texture
 
@@ -104,9 +118,15 @@ int main() {
 
   auto pipeline1_tex2tex = createTexture2TexturePipeline(device.get(), pipeline0outputTexture, pipeline1outputTexture);
 
+  // Pipeline 2 output buffer
+
+  std::vector<float> outputData(totalElements);
+  auto pipeline2_outputBuffer = makeMetalRef(device->getMTLDevice()->newBuffer(outputData.data(), outputData.size() * sizeof(float), MTL::ResourceStorageModeShared));
+  auto pipeline2_tex2buf = createTexture2BufferPipeline(device.get(), pipeline1outputTexture, pipeline2_outputBuffer);
+
   // Pipeline vector
 
-  std::vector<std::shared_ptr<ComputePipeline>> pipelines = {pipeline0_buf2tex, pipeline1_tex2tex};
+  std::vector<std::shared_ptr<ComputePipeline>> pipelines = {pipeline0_buf2tex, pipeline1_tex2tex, pipeline2_tex2buf};
 
   // Encoding
 
@@ -122,8 +142,13 @@ int main() {
   // Print output
 
   std::array<float, totalElements> outputBuffer{};
-  MTL::Region region = MTL::Region::Make2D(0, 0, width, height);
-  SAFE_DOWN_CAST(MetalTexture*, pipeline1outputTexture.get())->getTextureHandle()->getBytes(outputBuffer.data(), width * sizeof(float), region, 0);
+
+  // texture to array
+  // MTL::Region region = MTL::Region::Make2D(0, 0, width, height);
+  // SAFE_DOWN_CAST(MetalTexture*, pipeline1outputTexture.get())->getTextureHandle()->getBytes(outputBuffer.data(), width * sizeof(float), region, 0);
+
+  // buffer to array
+  std::memcpy(outputBuffer.data(), pipeline2_outputBuffer->contents(), sizeof(float) * totalElements);
 
   for (uint y = 0; y < height; ++y) {
     for (uint x = 0; x < width; ++x) {
