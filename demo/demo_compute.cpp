@@ -70,16 +70,12 @@ int main() {
   auto device = std::make_unique<MetalDevice>();
   assert(device && "Failed to create device");
 
-  auto commandQueue = device->createCommandQueue({});
-
-  // Pipeline 0 input buffer
+  // Pipeline 0
 
   std::vector<float> inputData(totalElements);
   for (size_t i = 0; i < totalElements; ++i)
     inputData[i] = static_cast<float>(i);
   auto pipeline0_inputBuffer = makeMetalRef(device->getMTLDevice()->newBuffer(inputData.data(), inputData.size() * sizeof(float), MTL::ResourceStorageModeShared));
-
-  // Pipeline 0
 
   auto pipeline0outputTexture = device->createTexture({
     .imageData = {
@@ -97,7 +93,7 @@ int main() {
   });
   auto pipeline0_buf2tex = createBuf2TexturePipeline(device.get(), pipeline0_inputBuffer, pipeline0outputTexture);
 
-  // Pipeline 1 output texture
+  // Pipeline 1
 
   auto pipeline1outputTexture = device->createTexture({
     .imageData = {
@@ -114,11 +110,9 @@ int main() {
     .pipeline = TexturePipeline::COMPUTE,
   });
 
-  // Pipeline 1
-
   auto pipeline1_tex2tex = createTexture2TexturePipeline(device.get(), pipeline0outputTexture, pipeline1outputTexture);
 
-  // Pipeline 2 output buffer
+  // Pipeline 2
 
   std::vector<float> outputData(totalElements);
   auto pipeline2_outputBuffer = makeMetalRef(device->getMTLDevice()->newBuffer(outputData.data(), outputData.size() * sizeof(float), MTL::ResourceStorageModeShared));
@@ -130,6 +124,7 @@ int main() {
 
   // Encoding
 
+  auto commandQueue = device->createCommandQueue({});
   auto commandBuffer = commandQueue->createCommandBuffer({});
   auto mtlCmdBuffer = SAFE_DOWN_CAST(MetalCommandBuffer*, commandBuffer.get());
   for (auto& pipeline : pipelines) {
