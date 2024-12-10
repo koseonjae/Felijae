@@ -24,7 +24,9 @@ void MetalComputePipeline::encode(MTL::ComputeCommandEncoder* computeEncoder) {
   computeEncoder->setComputePipelineState(m_pipelineState.get());
 
   int bufIdx = 0;
-  computeEncoder->setBuffer(m_buffer.get(), 0, bufIdx++);
+
+  if (m_buffer.get())
+    computeEncoder->setBuffer(m_buffer.get(), 0, bufIdx++);
 
   for (auto& uniform : m_desc.uniforms) {
     const auto [valuePtr, valueSize] = getUniformAddress(uniform);
@@ -37,10 +39,25 @@ void MetalComputePipeline::encode(MTL::ComputeCommandEncoder* computeEncoder) {
 
   // todo: research better thread dispatch rule
   // https://developer.apple.com/documentation/metal/compute_passes/calculating_threadgroup_and_grid_sizes
-  MTL::Size threadPerGrid(m_bufferWidth, m_bufferHeight, 1);
-  auto threadGroupWidth = m_pipelineState->threadExecutionWidth();
-  auto threadGroupHeight = m_pipelineState->maxTotalThreadsPerThreadgroup() / threadGroupWidth;
-  MTL::Size threadGroups(threadGroupWidth, threadGroupHeight, 1);
+
+  MTL::Size threadPerGrid{};
+  MTL::Size threadGroups{};
+  assert(!m_desc.threadSize.empty() && "Invalid thread size");
+  if (m_desc.threadSize.size() == 1) {
+    assert(false && "Need to support");
+  }
+  else if (m_desc.threadSize.size() == 2) {
+    int threadWidth = m_desc.threadSize[0];
+    int threadHeight = m_desc.threadSize[1];
+    threadPerGrid = MTL::Size(threadWidth, threadHeight, 1);
+
+    auto threadGroupWidth = m_pipelineState->threadExecutionWidth();
+    auto threadGroupHeight = m_pipelineState->maxTotalThreadsPerThreadgroup() / threadGroupWidth;
+    threadGroups = MTL::Size(threadGroupWidth, threadGroupHeight, 1);
+  }
+  else
+    assert(false && "3D thread size is not supported");
+
   computeEncoder->dispatchThreadgroups(threadPerGrid, threadGroups);
 
   computeEncoder->endEncoding();
@@ -48,9 +65,9 @@ void MetalComputePipeline::encode(MTL::ComputeCommandEncoder* computeEncoder) {
 
 void MetalComputePipeline::_initializeBuffer(MTL::ComputePipelineDescriptor* pipelineDesc) {
   // todo: use ComputeBuffer
+  if (m_desc.buffer.data.empty())
+    return;
   m_buffer = makeMetalRef(m_device->getMTLDevice()->newBuffer(m_desc.buffer.data.data(), m_desc.buffer.data.size() * sizeof(float), MTL::ResourceStorageModeShared));
-  m_bufferWidth = m_desc.buffer.width;
-  m_bufferHeight = m_desc.buffer.height;
 }
 
 void MetalComputePipeline::_initializeShader(MTL::ComputePipelineDescriptor* pipelineDesc) {

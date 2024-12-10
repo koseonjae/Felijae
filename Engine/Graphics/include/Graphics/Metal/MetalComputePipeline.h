@@ -32,8 +32,7 @@ private:
   std::shared_ptr<Shader> m_shader;
   MetalRef<MTL::ComputePipelineState> m_pipelineState;
   MetalRef<MTL::Buffer> m_buffer; // todo: MetalBuffer로 wrap
-  int m_bufferWidth = 0;
-  int m_bufferHeight = 0;
+  std::vector<int> m_threadSize;
 };
 
 }

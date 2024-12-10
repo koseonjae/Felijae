@@ -27,11 +27,25 @@ std::shared_ptr<ComputePipeline> createBuf2TexturePipeline(MetalDevice* device, 
     },
     .buffer = {
       .data = std::move(inputData),
-      .width = width,
-      .height = height,
     },
+    .threadSize = {width, height},
     .uniforms = {width, height},
     .textures = {outputTexture}
+  };
+  auto pipeline = device->createComputePipeline(std::move(pipelineDesc));
+  return pipeline;
+}
+
+std::shared_ptr<ComputePipeline> createTexture2TexturePipeline(MetalDevice* device, std::shared_ptr<Texture> inputTexture, std::shared_ptr<Texture> outputTexture) {
+  ComputePipelineDescription pipelineDesc = {
+    .shader = {
+      .source = File("asset://shader/texture2texture.msl").read(),
+      .type = ShaderType::COMPUTE
+    },
+    .buffer = {},
+    .threadSize = {width, height},
+    .uniforms = {},
+    .textures = {inputTexture, outputTexture}
   };
   auto pipeline = device->createComputePipeline(std::move(pipelineDesc));
   return pipeline;

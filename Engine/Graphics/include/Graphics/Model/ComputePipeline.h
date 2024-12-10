@@ -8,8 +8,6 @@
 namespace goala {
 struct ComputeBufferDescription {
   std::vector<float> data;
-  int width; // cols
-  int height; // rows
 };
 
 struct ComputePipelineDescription {
@@ -17,6 +15,7 @@ struct ComputePipelineDescription {
   ComputeBufferDescription buffer;
   std::vector<UniformType> uniforms;
   std::vector<std::shared_ptr<Texture>> textures;
+  std::vector<int> threadSize;
 };
 
 class ComputePipeline {
