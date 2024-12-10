@@ -4,6 +4,7 @@
 #include <Base/Utility/TypeCast.h>
 #include <Graphics/Utility/ImageFormatUtil.h>
 #include <Graphics/Utility/MetalBlitCopy.h>
+#include <Graphics/Utility/OpenGLBlitCopy.h>
 #include <Graphics/Model/CommandBuffer.h>
 #include <Graphics/Model/Pipeline.h>
 #include <Graphics/Model/CommandQueue.h>
@@ -16,11 +17,7 @@
 #include <SDLWrapper/MetalSDLWrapper.h>
 #include <SDLWrapper/OpenGLSDLWrapper.h>
 
-#include "Graphics/Utility/OpenGLBlitCopy.h"
-
 using namespace goala;
-
-constexpr Graphics graphics = Graphics::Metal; // Select OpenGL3, Metal ...
 
 namespace {
 ImageFormat getImageFormatSDLFormat(SDL_PixelFormatEnum pixelFormat) {
@@ -31,10 +28,20 @@ ImageFormat getImageFormatSDLFormat(SDL_PixelFormatEnum pixelFormat) {
       assert(false && "Format not supported");
   }
 }
+
+Graphics parseGraphicsOption(const std::string& arg) {
+  if (arg == "OpenGL")
+    return Graphics::OpenGL3;
+  if (arg == "Metal")
+    return Graphics::Metal;
+  assert(false && "Invalid graphics option");
+}
 } // namespace
 
 int main(int argc, char** argv) {
   File::registerPath(DEMO_DIR + std::string("/asset"), "asset://");
+
+  Graphics graphics = argc > 1 ? parseGraphicsOption(argv[1]) : Graphics::Metal;
 
   int width = 800;
   int height = 600;
@@ -85,7 +92,7 @@ int main(int argc, char** argv) {
   };
 
   auto image = ImageLoader::load(File("asset://model/suzanne/uvmap.jpeg"));
-  if constexpr (graphics == Graphics::Metal)
+  if (graphics == Graphics::Metal)
     image = convertRGB2BGRA(image);
   TextureDescription uniformTextureDesc = {
     .imageData = image,
@@ -204,7 +211,7 @@ int main(int argc, char** argv) {
   });
 
   sdl->setBlitCopyCallback([&](void* drawable) {
-    if constexpr (graphics == Graphics::OpenGL3)
+    if (graphics == Graphics::OpenGL3)
       blitCopyFrameBufferToScreen(renderer->getRenderPass(), width, height);
     else
       blitTextureToDrawable(texture.get(), queue.get(), drawable);
