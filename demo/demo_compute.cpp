@@ -64,6 +64,21 @@ std::shared_ptr<ComputePipeline> createTexture2BufferPipeline(MetalDevice* devic
   return pipeline;
 }
 
+std::shared_ptr<ComputePipeline> createBuffer2BufferPipeline(MetalDevice* device, MetalRef<MTL::Buffer> inputBuffer, MetalRef<MTL::Buffer> outputBuffer) {
+  ComputePipelineDescription pipelineDesc = {
+    .shader = {
+      .source = File("asset://shader/computePipeline3_buf2buf.msl").read(),
+      .type = ShaderType::COMPUTE
+    },
+    .buffers = {inputBuffer, outputBuffer},
+    .threadSize = {width, height},
+    .uniforms = {width, height},
+    .textures = {}
+  };
+  auto pipeline = device->createComputePipeline(std::move(pipelineDesc));
+  return pipeline;
+}
+
 int main() {
   File::registerPath(DEMO_DIR + std::string("/asset"), "asset://");
 
@@ -114,13 +129,17 @@ int main() {
 
   // Pipeline 2
 
-  std::vector<float> outputData(totalElements);
-  auto pipeline2_outputBuffer = makeMetalRef(device->getMTLDevice()->newBuffer(outputData.data(), outputData.size() * sizeof(float), MTL::ResourceStorageModeShared));
-  auto pipeline2_tex2buf = createTexture2BufferPipeline(device.get(), pipeline1outputTexture, pipeline2_outputBuffer);
+  auto pipeline2_mtlBuffer = makeMetalRef(device->getMTLDevice()->newBuffer(totalElements * sizeof(float), MTL::ResourceStorageModeShared));
+  auto pipeline2_tex2buf = createTexture2BufferPipeline(device.get(), pipeline1outputTexture, pipeline2_mtlBuffer);
+
+  // Pipeline 3
+
+  auto pipeline3_mtlBuffer = makeMetalRef(device->getMTLDevice()->newBuffer(totalElements * sizeof(float), MTL::ResourceStorageModeShared));
+  auto pipeline3_buf2buf = createBuffer2BufferPipeline(device.get(), pipeline2_mtlBuffer, pipeline3_mtlBuffer);
 
   // Pipeline vector
 
-  std::vector<std::shared_ptr<ComputePipeline>> pipelines = {pipeline0_buf2tex, pipeline1_tex2tex, pipeline2_tex2buf};
+  std::vector pipelines = {pipeline0_buf2tex, pipeline1_tex2tex, pipeline2_tex2buf, pipeline3_buf2buf};
 
   // Encoding
 
@@ -143,7 +162,7 @@ int main() {
   // SAFE_DOWN_CAST(MetalTexture*, pipeline1outputTexture.get())->getTextureHandle()->getBytes(outputBuffer.data(), width * sizeof(float), region, 0);
 
   // buffer to array
-  std::memcpy(outputBuffer.data(), pipeline2_outputBuffer->contents(), sizeof(float) * totalElements);
+  std::memcpy(outputBuffer.data(), pipeline3_mtlBuffer->contents(), sizeof(float) * totalElements);
 
   for (uint y = 0; y < height; ++y) {
     for (uint x = 0; x < width; ++x) {
