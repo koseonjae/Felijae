@@ -59,9 +59,13 @@ int main() {
 
   auto commandQueue = device->createCommandQueue({});
 
+  // Pipeline 0 input buffer
+
   std::vector<float> inputData(totalElements);
   for (size_t i = 0; i < totalElements; ++i)
     inputData[i] = static_cast<float>(i);
+
+  // Pipeline 0
 
   auto pipeline0outputTexture = device->createTexture({
     .imageData = {
@@ -77,9 +81,9 @@ int main() {
     .loadType = TextureLoadType::EAGER,
     .pipeline = TexturePipeline::COMPUTE,
   });
-
   auto pipeline0_buf2tex = createBuf2TexturePipeline(device.get(), std::move(inputData), pipeline0outputTexture);
-  auto mtlPipeline0_buf2tex = SAFE_DOWN_CAST(MetalComputePipeline*, pipeline0_buf2tex.get());
+
+  // Pipeline 1 output texture
 
   auto pipeline1outputTexture = device->createTexture({
     .imageData = {
@@ -96,30 +100,35 @@ int main() {
     .pipeline = TexturePipeline::COMPUTE,
   });
 
+  // Pipeline 1
+
   auto pipeline1_tex2tex = createTexture2TexturePipeline(device.get(), pipeline0outputTexture, pipeline1outputTexture);
-  auto mtlPipeline1_tex2tex = SAFE_DOWN_CAST(MetalComputePipeline*, pipeline1_tex2tex.get());
+
+  // Pipeline vector
+
+  std::vector<std::shared_ptr<ComputePipeline>> pipelines = {pipeline0_buf2tex, pipeline1_tex2tex};
+
+  // Encoding
 
   auto commandBuffer = commandQueue->createCommandBuffer({});
   auto mtlCmdBuffer = SAFE_DOWN_CAST(MetalCommandBuffer*, commandBuffer.get());
-
-  auto computeEncoder0 = mtlCmdBuffer->getCommandBuffer()->computeCommandEncoder();
-  mtlPipeline0_buf2tex->encode(computeEncoder0);
-
-  auto computeEncoder1 = mtlCmdBuffer->getCommandBuffer()->computeCommandEncoder();
-  mtlPipeline1_tex2tex->encode(computeEncoder1);
-
+  for (auto& pipeline : pipelines) {
+    auto computeEncoder = mtlCmdBuffer->getCommandBuffer()->computeCommandEncoder();
+    SAFE_DOWN_CAST(MetalComputePipeline*, pipeline.get())->encode(computeEncoder);
+  }
   commandBuffer->commit();
   commandBuffer->waitUntilCompleted();
+
+  // Print output
 
   std::array<float, totalElements> outputBuffer{};
   MTL::Region region = MTL::Region::Make2D(0, 0, width, height);
   SAFE_DOWN_CAST(MetalTexture*, pipeline1outputTexture.get())->getTextureHandle()->getBytes(outputBuffer.data(), width * sizeof(float), region, 0);
 
-  std::cout << "결과 텍스처 값:" << std::endl;
   for (uint y = 0; y < height; ++y) {
     for (uint x = 0; x < width; ++x) {
       size_t index = y * width + x;
-      std::cout << outputBuffer[index] << " ";
+      std::cout << outputBuffer[index] << "\t";
     }
     std::cout << std::endl;
   }
