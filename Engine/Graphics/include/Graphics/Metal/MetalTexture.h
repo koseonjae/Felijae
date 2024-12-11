@@ -34,6 +34,5 @@ private:
   MetalRef<MTL::Texture> m_texture;
   MetalRef<MTL::SamplerState> m_sampler;
   bool m_initialized = false;
-  ImageData m_imageData{};
 };
 } // namespace goala

@@ -27,6 +27,5 @@ private:
 private:
   GLuint m_handle = 0;
   bool m_initialized = false;
-  ImageData m_imageData{};
 };
 } // namespace goala

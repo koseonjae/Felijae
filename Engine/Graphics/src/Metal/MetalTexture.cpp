@@ -8,8 +8,22 @@
 
 using namespace goala;
 
+namespace {
+MTL::TextureUsage getMTLTextureUsage(TextureUsage usage) {
+  MTL::TextureUsage result = MTL::TextureUsageUnknown;
+  if ((usage | TextureUsage::READ) == TextureUsage::READ)
+    result |= MTL::TextureUsageShaderRead;
+  if ((usage | TextureUsage::WRITE) == TextureUsage::WRITE)
+    result |= MTL::TextureUsageShaderWrite;
+  if ((usage | TextureUsage::RENDER_TARGET) == TextureUsage::RENDER_TARGET)
+    result |= MTL::TextureUsageRenderTarget;
+  return result;
+}
+}
+
 MetalTexture::MetalTexture(MetalDevice* device, TextureDescription desc)
-  : m_device(device), m_imageData(std::move(desc.imageData)) {
+  : Texture(std::move(desc))
+  , m_device(device) {
   if (desc.loadType == TextureLoadType::LAZY)
     return;
   _initIfNeeded();
@@ -21,26 +35,26 @@ void MetalTexture::_initIfNeeded() {
 
   auto metalDesc = makeMetalRef(MTL::TextureDescriptor::alloc()->init());
 
-  metalDesc->setWidth(m_imageData.width);
-  metalDesc->setHeight(m_imageData.height);
+  metalDesc->setWidth(m_desc.imageData.width);
+  metalDesc->setHeight(m_desc.imageData.height);
 
-  auto metalImageFormat = getMetalImageFormat(m_imageData.format);
+  auto metalImageFormat = getMetalImageFormat(m_desc.imageData.format);
   metalDesc->setPixelFormat(metalImageFormat);
 
   // todo: usage, storage parameterize
-  metalDesc->setUsage(MTL::TextureUsageShaderRead | MTL::TextureUsageShaderWrite | MTL::TextureUsageRenderTarget);
+  metalDesc->setUsage(getMTLTextureUsage(m_desc.usage));
   metalDesc->setStorageMode(MTL::StorageModeShared);
 
   auto texture = makeMetalRef(m_device->getMTLDevice()->newTexture(metalDesc.get()));
   assert(texture.get() && "Failed to create Metal texture");
 
-  if (!m_imageData.pixel.empty()) {
-    MTL::Region region = MTL::Region::Make2D(0, 0, m_imageData.width, m_imageData.height);
+  if (!m_desc.imageData.pixel.empty()) {
+    MTL::Region region = MTL::Region::Make2D(0, 0, m_desc.imageData.width, m_desc.imageData.height);
     texture->replaceRegion(region,
                            0, // mipmap level
-                           m_imageData.pixel.data(),
-                           m_imageData.width * m_imageData.channels);
-    m_imageData.pixel.clear(); // todo: cpu image buffer 유지할지에 대한 옵션 추가
+                           m_desc.imageData.pixel.data(),
+                           m_desc.imageData.width * m_desc.imageData.channels);
+    m_desc.imageData.pixel.clear(); // todo: cpu image buffer 유지할지에 대한 옵션 추가
   }
   m_texture = std::move(texture);
 

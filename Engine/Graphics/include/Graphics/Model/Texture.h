@@ -58,8 +58,11 @@ struct TextureDescription {
 
 class Texture {
 public:
+  Texture(TextureDescription desc) : m_desc(std::move(desc)) {}
   virtual ~Texture() = default;
 
   virtual void bind() = 0;
+protected:
+  TextureDescription m_desc{};
 };
 } // namespace goala

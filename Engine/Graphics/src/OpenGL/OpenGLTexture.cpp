@@ -7,7 +7,7 @@
 using namespace goala;
 
 OpenGLTexture::OpenGLTexture(OpenGLDevice* device, TextureDescription desc)
-  : m_imageData(std::move(desc.imageData)) {
+  : Texture(std::move(desc)) {
   if (desc.loadType == TextureLoadType::LAZY)
     return;
   _initialize();
@@ -27,13 +27,13 @@ void OpenGLTexture::_initIfNeeded() {
 }
 
 void OpenGLTexture::_initialize() {
-  GLuint format = getGLFormat(m_imageData.format);
-  auto data = m_imageData.pixel.empty() ? nullptr : m_imageData.pixel.data();
+  GLuint format = getGLFormat(m_desc.imageData.format);
+  auto data = m_desc.imageData.pixel.empty() ? nullptr : m_desc.imageData.pixel.data();
 
   GLuint textureId = 0;
   glGenTextures(1, &textureId);
   glBindTexture(GL_TEXTURE_2D, textureId);
-  glTexImage2D(GL_TEXTURE_2D, 0, format, m_imageData.width, m_imageData.height, 0, format, GL_UNSIGNED_BYTE, data);
+  glTexImage2D(GL_TEXTURE_2D, 0, format, m_desc.imageData.width, m_desc.imageData.height, 0, format, GL_UNSIGNED_BYTE, data);
 
   // todo: init parameters from sampler description
 
@@ -45,7 +45,7 @@ void OpenGLTexture::_initialize() {
 
   m_handle = textureId;
 
-  m_imageData.pixel.clear(); // todo: Add option to keep cpu memory
+  m_desc.imageData.pixel.clear(); // todo: Add option to keep cpu memory
 
   m_initialized = true;
 }
