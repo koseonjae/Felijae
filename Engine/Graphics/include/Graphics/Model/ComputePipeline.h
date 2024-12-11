@@ -17,11 +17,11 @@ struct ComputeBufferDescription {
 };
 
 using TextureType = std::variant<MTL::Texture*, std::shared_ptr<Texture>>;
+using BufferType = std::variant<MetalRef<MTL::Buffer>, UniformType>;
 
 struct ComputePipelineDescription {
   ShaderDescription shader;
-  std::vector<MetalRef<MTL::Buffer>> buffers;
-  std::vector<UniformType> uniforms;
+  std::vector<BufferType> buffers;
   std::vector<TextureType> textures;
   std::vector<int> threadSize;
 };

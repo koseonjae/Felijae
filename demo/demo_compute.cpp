@@ -27,7 +27,6 @@ std::shared_ptr<ComputePipeline> createBuf2TexturePipeline(MetalDevice* device, 
     },
     .buffers = {inputBuffer},
     .threadSize = {width, height},
-    .uniforms = {width, height},
     .textures = {outputTexture}
   };
   auto pipeline = device->createComputePipeline(std::move(pipelineDesc));
@@ -42,7 +41,6 @@ std::shared_ptr<ComputePipeline> createTexture2TexturePipeline(MetalDevice* devi
     },
     .buffers = {},
     .threadSize = {width, height},
-    .uniforms = {width, height},
     .textures = {inputTexture, outputTexture},
   };
   auto pipeline = device->createComputePipeline(std::move(pipelineDesc));
@@ -57,7 +55,6 @@ std::shared_ptr<ComputePipeline> createTexture2BufferPipeline(MetalDevice* devic
     },
     .buffers = {outputBuffer},
     .threadSize = {width, height},
-    .uniforms = {width, height},
     .textures = {inputTexture}
   };
   auto pipeline = device->createComputePipeline(std::move(pipelineDesc));
@@ -70,9 +67,8 @@ std::shared_ptr<ComputePipeline> createBuffer2BufferPipeline(MetalDevice* device
       .source = File("asset://shader/computePipeline3_buf2buf.msl").read(),
       .type = ShaderType::COMPUTE
     },
-    .buffers = {inputBuffer, outputBuffer},
+    .buffers = {inputBuffer, outputBuffer, width, height},
     .threadSize = {width, height},
-    .uniforms = {width, height},
     .textures = {}
   };
   auto pipeline = device->createComputePipeline(std::move(pipelineDesc));

@@ -27,7 +27,6 @@ void FormatConverter::rgb2bgra(MetalDevice* device, const ImageData& image, MTL:
     },
     .buffers = {inputBuffer},
     .threadSize = {image.width, image.height},
-    .uniforms = {image.width, image.height},
     .textures = {targetTexture}
   };
   auto pipeline = device->createComputePipeline(std::move(pipelineDesc));

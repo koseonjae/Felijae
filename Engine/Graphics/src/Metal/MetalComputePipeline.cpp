@@ -21,14 +21,18 @@ MetalComputePipeline::MetalComputePipeline(MetalDevice* device, ComputePipelineD
 void MetalComputePipeline::encode(MTL::ComputeCommandEncoder* computeEncoder) {
   computeEncoder->setComputePipelineState(m_pipelineState.get());
 
-  int bufIdx = 0;
-
-  for (auto& buffer : m_desc.buffers)
-    computeEncoder->setBuffer(buffer.get(), 0, bufIdx++);
-
-  for (auto& uniform : m_desc.uniforms) {
-    const auto [valuePtr, valueSize] = getUniformAddress(uniform);
-    computeEncoder->setBytes(valuePtr, valueSize, bufIdx++);
+  for (int i = 0; i < m_desc.buffers.size(); i++) {
+    std::visit([&](auto& buffer) {
+      using T = std::decay_t<decltype(buffer)>;
+      if constexpr (std::is_same_v<T, MetalRef<MTL::Buffer>>)
+        computeEncoder->setBuffer(buffer.get(), 0, i);
+      else if constexpr (std::is_same_v<T, UniformType>) {
+        const auto [valuePtr, valueSize] = getUniformAddress(buffer);
+        computeEncoder->setBytes(valuePtr, valueSize, i);
+      }
+      else
+        assert(false && "Unsupported type");
+    }, m_desc.buffers[i]);
   }
 
   auto& textures = m_desc.textures;
