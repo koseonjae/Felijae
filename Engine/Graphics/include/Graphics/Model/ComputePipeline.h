@@ -8,6 +8,7 @@
 
 namespace MTL {
 class Buffer;
+class Texture;
 }
 
 namespace goala {
@@ -15,11 +16,13 @@ struct ComputeBufferDescription {
   std::vector<float> data;
 };
 
+using TextureType = std::variant<MTL::Texture*, std::shared_ptr<Texture>>;
+
 struct ComputePipelineDescription {
   ShaderDescription shader;
   std::vector<MetalRef<MTL::Buffer>> buffers;
   std::vector<UniformType> uniforms;
-  std::vector<std::shared_ptr<Texture>> textures;
+  std::vector<TextureType> textures;
   std::vector<int> threadSize;
 };
 

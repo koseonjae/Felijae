@@ -7,17 +7,18 @@
 #include <cassert>
 
 #include "Base/Utility/ImageUtil.h"
+#include "Graphics/Utility/FormatConverter.h"
 
 using namespace goala;
 
 namespace {
 MTL::TextureUsage getMTLTextureUsage(TextureUsage usage) {
   MTL::TextureUsage result = MTL::TextureUsageUnknown;
-  if ((usage | TextureUsage::READ) == TextureUsage::READ)
+  if ((usage & TextureUsage::READ) == TextureUsage::READ)
     result |= MTL::TextureUsageShaderRead;
-  if ((usage | TextureUsage::WRITE) == TextureUsage::WRITE)
+  if ((usage & TextureUsage::WRITE) == TextureUsage::WRITE)
     result |= MTL::TextureUsageShaderWrite;
-  if ((usage | TextureUsage::RENDER_TARGET) == TextureUsage::RENDER_TARGET)
+  if ((usage & TextureUsage::RENDER_TARGET) == TextureUsage::RENDER_TARGET)
     result |= MTL::TextureUsageRenderTarget;
   return result;
 }
@@ -40,6 +41,9 @@ void MetalTexture::_initIfNeeded() {
   metalDesc->setWidth(m_desc.imageData.width);
   metalDesc->setHeight(m_desc.imageData.height);
 
+  auto textureType = metalDesc->textureType();
+  auto depth = metalDesc->depth();
+
   auto metalImageFormat = getMetalImageFormat(m_desc.textureFormat);
   metalDesc->setPixelFormat(metalImageFormat);
 
@@ -50,19 +54,23 @@ void MetalTexture::_initIfNeeded() {
   auto texture = makeMetalRef(m_device->getMTLDevice()->newTexture(metalDesc.get()));
   assert(texture.get() && "Failed to create Metal texture");
 
-  if (!m_desc.imageData.pixel.empty()) {
-    if (m_desc.imageData.pixelFormat == ImageFormat::BGRA) {}
-    else if (m_desc.imageData.pixelFormat == ImageFormat::RGB)
-      m_desc.imageData = convertRGB2BGRA(m_desc.imageData);
-    else
-      assert(false && "Not supported pixel format. need to implement converting compute shader");
-    MTL::Region region = MTL::Region::Make2D(0, 0, m_desc.imageData.width, m_desc.imageData.height);
-    texture->replaceRegion(region,
-                           0, // mipmap level
-                           m_desc.imageData.pixel.data(),
-                           m_desc.imageData.width * m_desc.imageData.channels);
-    m_desc.imageData.pixel.clear(); // todo: cpu image buffer 유지할지에 대한 옵션 추가
-  }
+  // if (!m_desc.imageData.pixel.empty()) {
+  //   if (m_desc.imageData.pixelFormat == ImageFormat::BGRA) {}
+  //   else if (m_desc.imageData.pixelFormat == ImageFormat::RGB)
+  //     m_desc.imageData = convertRGB2BGRA(m_desc.imageData);
+  //   else
+  //     assert(false && "Not supported pixel format. need to implement converting compute shader");
+  //   MTL::Region region = MTL::Region::Make2D(0, 0, m_desc.imageData.width, m_desc.imageData.height);
+  //   texture->replaceRegion(region,
+  //                          0, // mipmap level
+  //                          m_desc.imageData.pixel.data(),
+  //                          m_desc.imageData.width * m_desc.imageData.channels);
+  //   m_desc.imageData.pixel.clear(); // todo: cpu image buffer 유지할지에 대한 옵션 추가
+  // }
+
+  if (!m_desc.imageData.pixel.empty())
+    FormatConverter::rgb2bgra(m_device, m_desc.imageData, texture.get()); // todo: 일반화
+
   m_texture = std::move(texture);
 
   auto samplerDesc = makeMetalRef(MTL::SamplerDescriptor::alloc()->init());

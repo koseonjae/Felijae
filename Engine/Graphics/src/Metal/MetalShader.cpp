@@ -1,9 +1,11 @@
 #include <Graphics/Metal/MetalShader.h>
 
+#include <iostream>
+
 using namespace goala;
 
 namespace {
-inline NS::String* getNSString(std::string_view str) {
+NS::String* getNSString(std::string_view str) {
   return NS::String::string(str.data(), NS::ASCIIStringEncoding);
 }
 } // namespace
@@ -13,6 +15,8 @@ MetalShader::MetalShader(MetalDevice* device, ShaderDescription desc)
   NS::Error* err = nil;
 
   auto library = makeMetalRef(device->getMTLDevice()->newLibrary(getNSString(desc.source), nullptr, &err));
+  if (err)
+    std::cout << "MetalShader::MetalShader: " << err->description()->utf8String() << "\n";
   assert(library && "Failed to create library");
 
   std::string shaderTypeStr;

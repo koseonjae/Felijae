@@ -1,0 +1,22 @@
+#include <metal_stdlib>
+using namespace metal;
+
+kernel void computeShader(
+    device const uint8_t* inputBuffer [[buffer(0)]], // 입력 버퍼 (1차원 배열로 전달된 RGB 데이터)
+    constant int& width [[buffer(1)]],            // 텍스처 너비
+    constant int& height [[buffer(2)]],           // 텍스처 높이
+    uint2 gid [[thread_position_in_grid]],        // 현재 스레드의 2D 좌표
+    texture2d<float, access::write> outputTexture [[texture(0)]] // 출력 텍스처
+) {
+    if (gid.x >= outputTexture.get_width() || gid.y >= outputTexture.get_height())
+        return;
+
+    int index = int(gid.y) * outputTexture.get_width() + int(gid.x);
+    int rgbIndex = index * 3; // RGB 데이터를 3채널씩 처리
+
+    float R = inputBuffer[rgbIndex + 0] / 255.0f;
+    float G = inputBuffer[rgbIndex + 1] / 255.0f;
+    float B = inputBuffer[rgbIndex + 2] / 255.0f;
+
+    outputTexture.write(float4(R, G, B, 1.0), gid);
+}

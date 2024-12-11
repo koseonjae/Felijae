@@ -30,7 +30,6 @@ private:
   MetalDevice* m_device = nullptr;
   std::shared_ptr<Shader> m_shader;
   MetalRef<MTL::ComputePipelineState> m_pipelineState;
-  std::vector<int> m_threadSize;
 };
 
 }

@@ -32,8 +32,19 @@ void MetalComputePipeline::encode(MTL::ComputeCommandEncoder* computeEncoder) {
   }
 
   auto& textures = m_desc.textures;
-  for (int i = 0; i < textures.size(); i++)
-    computeEncoder->setTexture(SAFE_DOWN_CAST(MetalTexture*, textures[i].get())->getTextureHandle(), i);
+  for (int i = 0; i < textures.size(); i++) {
+    MTL::Texture* handle = nullptr;
+    std::visit([&](auto& texture) {
+      using T = std::decay_t<decltype(texture)>;
+      if constexpr (std::is_same_v<T, MTL::Texture*>)
+        handle = texture;
+      else if constexpr (std::is_same_v<T, std::shared_ptr<Texture>>)
+        handle = SAFE_DOWN_CAST(MetalTexture*, texture.get())->getTextureHandle();
+      else
+        assert(false && "Unsupported type");
+    }, textures[i]);
+    computeEncoder->setTexture(handle, i);
+  }
 
   // todo: research better thread dispatch rule
   // https://developer.apple.com/documentation/metal/compute_passes/calculating_threadgroup_and_grid_sizes
@@ -45,13 +56,11 @@ void MetalComputePipeline::encode(MTL::ComputeCommandEncoder* computeEncoder) {
     assert(false && "Need to support");
   }
   else if (m_desc.threadSize.size() == 2) {
-    int threadWidth = m_desc.threadSize[0];
-    int threadHeight = m_desc.threadSize[1];
-    threadPerGrid = MTL::Size(threadWidth, threadHeight, 1);
-
-    auto threadGroupWidth = m_pipelineState->threadExecutionWidth();
-    auto threadGroupHeight = m_pipelineState->maxTotalThreadsPerThreadgroup() / threadGroupWidth;
-    threadGroups = MTL::Size(threadGroupWidth, threadGroupHeight, 1);
+    threadGroups = MTL::Size(16, 16, 1);                                      // 각 스레드 그룹에 16x16 스레드
+    auto gridSize = MTL::Size(m_desc.threadSize[0], m_desc.threadSize[0], 1); // 전체 데이터 크기 (512x512)
+    threadPerGrid = MTL::Size((gridSize.width + threadGroups.width - 1) / threadGroups.width,
+                              (gridSize.height + threadGroups.height - 1) / threadGroups.height,
+                              1);
   }
   else
     assert(false && "3D thread size is not supported");

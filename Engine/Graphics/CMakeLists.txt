@@ -1,4 +1,5 @@
 add_library(Graphics STATIC
+    src/Utility/FormatConverter.cpp
     src/Utility/ImageFormatUtil.cpp
     src/Utility/MetalBlitCopy.cpp
     src/Utility/OpenGLBlitCopy.cpp
@@ -26,6 +27,7 @@ add_library(Graphics STATIC
     src/Metal/MetalPipeline.cpp
     src/Metal/MetalComputePipeline.cpp
 
+    include/Graphics/Utility/FormatConverter.h
     include/Graphics/Utility/ImageFormatUtil.h
     include/Graphics/Utility/MetalBlitCopy.h
     include/Graphics/Utility/OpenGLBlitCopy.h
