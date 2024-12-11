@@ -8,9 +8,10 @@
 using namespace goala;
 
 MetalRenderPass::MetalRenderPass(MetalDevice* device, RenderPassDescription desc)
-  : m_device(device) // todo: depthTest도 desc로 받아서 depthStencilState도 여기다가 초기화하자
+  : RenderPass(std::move(desc))
+  , m_device(device) // todo: depthTest도 desc로 받아서 depthStencilState도 여기다가 초기화하자
   , m_pass(makeMetalRef(MTL::RenderPassDescriptor::renderPassDescriptor())) {
-  for (const auto& attachment : desc.attachments) {
+  for (const auto& attachment : m_desc.attachments) {
     assert(attachment.type != AttachmentType::Undefined && "AttachmentType is not defined");
     assert(attachment.loadFunc != LoadFunc::Undefined && "LoadFunc is not defined");
     assert(attachment.storeFunc != StoreFunc::Undefined && "StoreFunc is not defined");

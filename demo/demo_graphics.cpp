@@ -38,26 +38,11 @@ Graphics parseGraphicsOption(const std::string& arg) {
 }
 } // namespace
 
-int main(int argc, char** argv) {
-  File::registerPath(DEMO_DIR + std::string("/asset"), "asset://");
-
-  Graphics graphics = argc > 1 ? parseGraphicsOption(argv[1]) : Graphics::Metal;
-
-  int width = 800;
-  int height = 600;
-  std::unique_ptr<Device> device;
-  std::unique_ptr<SDLWrapper> sdl;
-  if (graphics == Graphics::OpenGL3) {
-    device = std::make_unique<OpenGLDevice>();
-    sdl = std::make_unique<OpenGLSDLWrapper>(width, height);
-  }
-  else {
-    device = std::make_unique<MetalDevice>();
-    sdl = std::make_unique<MetalSDLWrapper>(width, height, SAFE_DOWN_CAST(MetalDevice*, device.get())->getMTLDevice());
-  }
-
-  auto drawableSize = sdl->getDrawableSize();
-  assert(width == std::get<0>(drawableSize) && height == std::get<1>(drawableSize) && "Wrong drawable size");
+std::shared_ptr<Renderer> createSuzaneRenderer(Device* device, std::shared_ptr<RenderPass> renderPass) {
+  auto& colorAttachmentDesc = renderPass->getDescription().attachments.at(0).texture->getDescription();
+  auto width = colorAttachmentDesc.imageData.width;
+  auto height = colorAttachmentDesc.imageData.height;
+  auto format = colorAttachmentDesc.textureFormat;
 
   // Rasterizer
   Rasterizer rasterizer = {
@@ -104,7 +89,7 @@ int main(int argc, char** argv) {
     .storage = TextureStorage::SHARED,
     .loadType = TextureLoadType::EAGER,
     .pipeline = TexturePipeline::FRAGMENT,
-    .textureFormat = getImageFormatSDLFormat(sdl->getPixelFormat())
+    .textureFormat = format
   };
   auto uniformTexture = device->createTexture(uniformTextureDesc);
 
@@ -131,14 +116,10 @@ int main(int argc, char** argv) {
     },
     .rasterizer = rasterizer,
     .outputMerger = outputMerger,
-    .format = getImageFormatSDLFormat(sdl->getPixelFormat()),
+    .format = format,
     .uniforms = uniforms,
   };
   auto pipeline = device->createPipeline(pipelineDesc);
-
-  // Queue
-  CommandQueueDescription queueDesc{};
-  auto queue = device->createCommandQueue(queueDesc);
 
   // Model
   auto model = std::make_shared<Model>();
@@ -170,9 +151,34 @@ int main(int argc, char** argv) {
   // Renderer
   auto renderer = std::make_shared<ForwardRenderer>();
   renderer->setScene(std::move(scene));
+  renderer->setRenderPass(std::move(renderPass));
 
-  // Texture
-  TextureDescription textureDesc = {
+  return renderer;
+}
+
+int main(int argc, char** argv) {
+  File::registerPath(DEMO_DIR + std::string("/asset"), "asset://");
+
+  Graphics graphics = argc > 1 ? parseGraphicsOption(argv[1]) : Graphics::Metal;
+
+  int width = 800;
+  int height = 600;
+  std::unique_ptr<Device> device;
+  std::unique_ptr<SDLWrapper> sdl;
+  if (graphics == Graphics::OpenGL3) {
+    device = std::make_unique<OpenGLDevice>();
+    sdl = std::make_unique<OpenGLSDLWrapper>(width, height);
+  }
+  else {
+    device = std::make_unique<MetalDevice>();
+    sdl = std::make_unique<MetalSDLWrapper>(width, height, SAFE_DOWN_CAST(MetalDevice*, device.get())->getMTLDevice());
+  }
+
+  auto drawableSize = sdl->getDrawableSize();
+  assert(width == std::get<0>(drawableSize) && height == std::get<1>(drawableSize) && "Wrong drawable size");
+
+  // Offscreen Texture
+  auto renderTargetTexture = device->createTexture({
     .imageData = {
       .width = width,
       .height = height,
@@ -181,39 +187,43 @@ int main(int argc, char** argv) {
     },
     .loadType = TextureLoadType::EAGER,
     .textureFormat = getImageFormatSDLFormat(sdl->getPixelFormat()),
-  };
-  auto texture = device->createTexture(textureDesc);
+  });
 
   // RenderPass
-  RenderPassDescription renderPassDesc = {
+  auto suzaneRenderPass = device->createRenderPass({
     .attachments = {
       {
         .type = AttachmentType::Color,
         .loadFunc = LoadFunc::Clear,
         .storeFunc = StoreFunc::Store,
         .clear = ClearColor{0.0f, 0.0f, 1.0f, 1.0f},
-        .texture = texture,
+        .texture = renderTargetTexture,
       }
     }
-  };
-  auto renderPass = device->createRenderPass(std::move(renderPassDesc));
-  renderer->setRenderPass(renderPass);
+  });
+
+  // Suzane renderer
+  auto suzaneRenderer = createSuzaneRenderer(device.get(), std::move(suzaneRenderPass));
+
+  // Queue
+  CommandQueueDescription queueDesc{};
+  auto queue = device->createCommandQueue(queueDesc);
 
   sdl->setUpdateCallback([&]() {
-    renderer->update();
+    suzaneRenderer->update();
   });
 
   sdl->setRenderCallback([&]() {
     CommandBufferDescription commandBufferDesc{};
     auto cmdBuf = queue->createCommandBuffer(commandBufferDesc);
-    renderer->render(cmdBuf);
+    suzaneRenderer->render(cmdBuf);
   });
 
   sdl->setBlitCopyCallback([&](void* drawable) {
     if (graphics == Graphics::OpenGL3)
-      blitCopyFrameBufferToScreen(renderer->getRenderPass(), width, height);
+      blitCopyFrameBufferToScreen(suzaneRenderer->getRenderPass(), width, height);
     else
-      blitTextureToDrawable(texture.get(), queue.get(), drawable);
+      blitTextureToDrawable(renderTargetTexture.get(), queue.get(), drawable);
   });
 
   sdl->loop();

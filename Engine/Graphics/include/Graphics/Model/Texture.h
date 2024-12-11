@@ -63,6 +63,9 @@ public:
   virtual ~Texture() = default;
 
   virtual void bind() = 0;
+
+  const TextureDescription& getDescription() const { return m_desc; }
+
 protected:
   TextureDescription m_desc{};
 };

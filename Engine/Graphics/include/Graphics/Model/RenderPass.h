@@ -53,6 +53,11 @@ struct RenderPassDescription {
 
 class RenderPass {
 public:
+  RenderPass(RenderPassDescription desc) : m_desc(std::move(desc)) {}
   virtual ~RenderPass() = default;
+
+  const RenderPassDescription& getDescription() const { return m_desc; }
+protected:
+  RenderPassDescription m_desc{};
 };
 } // namespace goala

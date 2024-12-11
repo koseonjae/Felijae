@@ -17,12 +17,11 @@ public:
   void bind();
 
 private:
-  void _updateFrameBuffers(const RenderPassDescription& desc);
-  void _updateRenderPass(const RenderPassDescription& desc);
+  void _updateFrameBuffers();
+  void _updateRenderPass();
 
 private:
   OpenGLDevice* m_device;
-  RenderPassDescription m_desc{};
   std::vector<OpenGLFrameBuffer> m_frameBuffers;
 };
 } // namespace goala
