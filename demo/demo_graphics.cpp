@@ -178,6 +178,124 @@ std::shared_ptr<Renderer> createSuzaneRenderer(Device* device, std::shared_ptr<R
   return renderer;
 }
 
+std::shared_ptr<Renderer> createAxisRenderer(Device* device, std::shared_ptr<RenderPass> renderPass) {
+  auto& colorAttachmentDesc = renderPass->getDescription().attachments.at(0).texture->getDescription();
+  auto width = colorAttachmentDesc.imageData.width;
+  auto height = colorAttachmentDesc.imageData.height;
+  auto format = colorAttachmentDesc.textureFormat;
+
+  // Rasterizer
+  Rasterizer rasterizer = {
+    .culling = {
+      .enable = true,
+      .frontFace = Culling::FrontFace::CCW,
+      .cullMode = Culling::CullMode::Back,
+    },
+    .viewport = {
+      .minX = 0,
+      .minY = 0,
+      .width = width,
+      .height = height,
+      .minZ = 0.0f,
+      .maxZ = 1.0f,
+    }
+  };
+
+  // OutputMerger
+  OutputMerger outputMerger = {
+    .depthTest = {
+      .enable = false,
+      .depthFunc = DepthTest::DepthTestFunc::Less,
+      .updateDepthMask = true,
+    },
+    .alphaBlend = {
+      .enable = true,
+      .fragmentBlendFunc = AlphaBlend::BlendFunc::SRC_ALPHA,
+      .pixelBlendFunc = AlphaBlend::BlendFunc::ONE_MINUS_SRC_ALPHA,
+      .blendEquation = AlphaBlend::BlendEquation::Add,
+    }
+  };
+
+  TextureDescription uniformTextureDesc = {
+    .imageData = ImageLoader::load(File("asset://model/suzanne/uvmap.jpeg")),
+    .sampler = {
+      .minFilter = TextureFilter::LINEAR,
+      .magFilter = TextureFilter::LINEAR,
+      .mipFilter = TextureFilter::LINEAR,
+      .wrapS = TextureWrap::CLAMP_TO_EDGE,
+      .wrapT = TextureWrap::CLAMP_TO_EDGE,
+    },
+    .usage = TextureUsage::READ | TextureUsage::WRITE,
+    .storage = TextureStorage::SHARED,
+    .loadType = TextureLoadType::EAGER,
+    .pipeline = TexturePipeline::FRAGMENT,
+    .textureFormat = format
+  };
+  auto uniformTexture = device->createTexture(uniformTextureDesc);
+
+  // Uniforms
+  auto uniforms = std::make_shared<Uniforms>();
+  uniforms->setTexture("uTexture", uniformTexture);
+  glm::vec3 emitLight{0.0f, 0.0f, 0.0f};
+  uniforms->setUniform("uEmitLight", emitLight);
+
+  // Pipeline
+  PipelineDescription pipelineDesc = {
+    .shaders = {
+      {
+        .source = File("asset://shader/lighting.vert").read(),
+        .type = ShaderType::VERTEX
+      },
+      {
+        .source = File("asset://shader/lighting.frag").read(),
+        .type = ShaderType::FRAGMENT
+      }
+    },
+    .vertexBuffer = {
+      .object = loadObj(File("asset://model/axis/axis.obj"))
+    },
+    .rasterizer = rasterizer,
+    .outputMerger = outputMerger,
+    .format = format,
+    .uniforms = uniforms,
+  };
+  auto pipeline = device->createPipeline(pipelineDesc);
+
+  // Model
+  auto model = std::make_shared<Model>();
+  model->setPipeline(pipeline);
+
+  // Camera
+  glm::vec3 eye = glm::vec3(3.0, 3.0, 3.0);
+  glm::vec3 at = glm::vec3(0.0, 0.0, 0.0);
+  glm::vec3 up = glm::vec3(0.0, 1.0, 0.0);
+  auto fovy = glm::radians<float>(90);
+  auto aspectRatio = 1.f; // frustum width == height
+  float n = 0.1f;
+  float f = 100.0f;
+  auto camera = std::make_shared<Camera>();
+  camera->setCamera(eye, at, up);
+  camera->setProjection(fovy, aspectRatio, n, f);
+
+  // Light
+  auto light = std::make_shared<Light>();
+  light->setLightColor({1.0f, 1.0f, 1.0f});
+  light->setLightDirection({0.0f, 0.0f, 1.0f});
+
+  // Scene
+  auto scene = std::make_shared<Scene>();
+  scene->addModel(std::move(model));
+  scene->setNode(std::move(camera));
+  scene->setNode(std::move(light));
+
+  // Renderer
+  auto renderer = std::make_shared<ForwardRenderer>();
+  renderer->setScene(std::move(scene));
+  renderer->setRenderPass(std::move(renderPass));
+
+  return renderer;
+}
+
 int main(int argc, char** argv) {
   File::registerPath(DEMO_DIR + std::string("/asset"), "asset://");
 
@@ -241,7 +359,22 @@ int main(int argc, char** argv) {
     }
   );
   auto suzaneRenderer2 = createSuzaneRenderer(device.get(), renderer2);
-  suzaneRenderer2->getScene()->getModels()[0]->translate({1.3f, 0.0f, 0.0f});
+  suzaneRenderer2->getScene()->getModels()[0]->translate({3.0f, 0.0f, 0.0f});
+
+  auto renderer3 = device->createRenderPass({
+      .attachments = {
+        {
+          .type = AttachmentType::Color,
+          .loadFunc = LoadFunc::Load,
+          .storeFunc = StoreFunc::Store,
+          .clear = {},
+          .texture = renderTargetTexture,
+        }
+      }
+    }
+  );
+  auto axisRenderer = createAxisRenderer(device.get(), renderer3);
+  axisRenderer->getScene()->getModels()[0]->scale({0.1f, 0.1f, 0.1f});
 
   // Queue
   CommandQueueDescription queueDesc{};
@@ -250,6 +383,7 @@ int main(int argc, char** argv) {
   sdl->setUpdateCallback([&]() {
     suzaneRenderer1->update();
     suzaneRenderer2->update();
+    axisRenderer->update();
   });
 
   sdl->setRenderCallback([&]() {
@@ -260,6 +394,7 @@ int main(int argc, char** argv) {
       SAFE_DOWN_CAST(MetalComputePipeline*, grayscalePipeline.get())->encode(encoder);
     }
     suzaneRenderer2->render(cmdBuf);
+    axisRenderer->render(cmdBuf);
     cmdBuf->commit();
   });
 

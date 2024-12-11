@@ -25,7 +25,7 @@ public:
   }
 
   void scale(glm::vec3 scale) {
-    // todo: implement
+    m_scale = scale;
     m_dirty = true;
   }
 
@@ -37,6 +37,7 @@ public:
   glm::mat4 calculateWorldMat() {
     if (!m_dirty) return m_worldMat;
 
+    m_worldMat = glm::scale(m_worldMat, m_scale);
     m_worldMat = glm::translate(m_worldMat, m_translate);
 
     m_dirty = false;
