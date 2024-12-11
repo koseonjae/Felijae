@@ -5,15 +5,15 @@
 
 namespace goala {
 enum class TextureLoadType {
-  EAGER, LAZY, UNDEFINED
+  UNDEFINED, EAGER, LAZY
 };
 
 enum class TextureFilter {
-  LINEAR, NEAREST, UNDEFINED
+  UNDEFINED, LINEAR, NEAREST
 };
 
 enum class TextureWrap {
-  CLAMP_TO_EDGE, UNDEFINED
+  UNDEFINED, CLAMP_TO_EDGE
 };
 
 struct TextureSampler {
@@ -54,6 +54,7 @@ struct TextureDescription {
   TextureStorage storage = TextureStorage::UNDEFINED;
   TextureLoadType loadType = TextureLoadType::UNDEFINED;
   TexturePipeline pipeline = TexturePipeline::UNDEFINED;
+  ImageFormat textureFormat = ImageFormat::UNDEFINED;
 };
 
 class Texture {

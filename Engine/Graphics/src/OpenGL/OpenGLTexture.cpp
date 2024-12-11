@@ -27,13 +27,14 @@ void OpenGLTexture::_initIfNeeded() {
 }
 
 void OpenGLTexture::_initialize() {
-  GLuint format = getGLFormat(m_desc.imageData.format);
-  auto data = m_desc.imageData.pixel.empty() ? nullptr : m_desc.imageData.pixel.data();
-
   GLuint textureId = 0;
   glGenTextures(1, &textureId);
   glBindTexture(GL_TEXTURE_2D, textureId);
-  glTexImage2D(GL_TEXTURE_2D, 0, format, m_desc.imageData.width, m_desc.imageData.height, 0, format, GL_UNSIGNED_BYTE, data);
+
+  auto data = m_desc.imageData.pixel.empty() ? nullptr : m_desc.imageData.pixel.data();
+  auto textureFormat = getGLFormat(m_desc.textureFormat);
+  auto pixelFormat = data ? getGLFormat(m_desc.imageData.pixelFormat) : textureFormat;
+  glTexImage2D(GL_TEXTURE_2D, 0, textureFormat, m_desc.imageData.width, m_desc.imageData.height, 0, pixelFormat, GL_UNSIGNED_BYTE, data);
 
   // todo: init parameters from sampler description
 

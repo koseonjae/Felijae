@@ -2,10 +2,10 @@
 
 namespace goala {
 enum class ImageFormat {
+  UNDEFINED,
   Float32,
   RGB,
   RGBA,
   BGRA,
-  UNDEFINED,
 };
 } // namespace goala

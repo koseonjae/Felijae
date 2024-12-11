@@ -21,7 +21,7 @@ ImageData ImageLoader::load(File file) {
   unsigned char* data = stbi_load(path.data(), &imageData.width, &imageData.height, &nChannels, 0);
   assert(data != nullptr && "Failed to load imageData");
   assert(nChannels == 3);
-  imageData.format = ImageFormat::RGB;
+  imageData.pixelFormat = ImageFormat::RGB;
   imageData.channels = nChannels;
 
   auto size = imageData.width * imageData.height * nChannels;

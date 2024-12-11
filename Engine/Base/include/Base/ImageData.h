@@ -7,9 +7,9 @@
 namespace goala {
 struct ImageData {
   std::vector<uint8_t> pixel;
-  int width = -1;
-  int height = -1;
-  int channels = -1;
-  ImageFormat format = ImageFormat::UNDEFINED;
+  int width = 0;
+  int height = 0;
+  int channels = 0;
+  ImageFormat pixelFormat = ImageFormat::UNDEFINED;
 };
 } // namespace goala

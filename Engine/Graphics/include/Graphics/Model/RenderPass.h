@@ -6,22 +6,22 @@
 
 namespace goala {
 enum class AttachmentType {
+  Undefined,
   Color,
   Depth,
   Stencil,
-  Undefined
 };
 
 enum class LoadFunc {
+  Undefined,
   Clear,
   DontCare,
-  Undefined
 };
 
 enum class StoreFunc {
+  Undefined,
   Store,
   DontCare,
-  Undefined
 };
 
 struct ClearColor {

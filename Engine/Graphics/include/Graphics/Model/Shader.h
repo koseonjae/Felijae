@@ -7,10 +7,10 @@
 
 namespace goala {
 enum class ShaderType {
+  UNDEFINED,
   VERTEX,
   FRAGMENT,
   COMPUTE,
-  UNDEFINED
 };
 
 struct ShaderDescription {

@@ -6,6 +6,8 @@
 
 #include <cassert>
 
+#include "Base/Utility/ImageUtil.h"
+
 using namespace goala;
 
 namespace {
@@ -38,7 +40,7 @@ void MetalTexture::_initIfNeeded() {
   metalDesc->setWidth(m_desc.imageData.width);
   metalDesc->setHeight(m_desc.imageData.height);
 
-  auto metalImageFormat = getMetalImageFormat(m_desc.imageData.format);
+  auto metalImageFormat = getMetalImageFormat(m_desc.textureFormat);
   metalDesc->setPixelFormat(metalImageFormat);
 
   // todo: usage, storage parameterize
@@ -49,6 +51,11 @@ void MetalTexture::_initIfNeeded() {
   assert(texture.get() && "Failed to create Metal texture");
 
   if (!m_desc.imageData.pixel.empty()) {
+    if (m_desc.imageData.pixelFormat == ImageFormat::BGRA) {}
+    else if (m_desc.imageData.pixelFormat == ImageFormat::RGB)
+      m_desc.imageData = convertRGB2BGRA(m_desc.imageData);
+    else
+      assert(false && "Not supported pixel format. need to implement converting compute shader");
     MTL::Region region = MTL::Region::Make2D(0, 0, m_desc.imageData.width, m_desc.imageData.height);
     texture->replaceRegion(region,
                            0, // mipmap level

@@ -91,9 +91,8 @@ int main(int argc, char** argv) {
     }
   };
 
-  auto image = ImageLoader::load(File("asset://model/suzanne/uvmap.jpeg"));
   TextureDescription uniformTextureDesc = {
-    .imageData = graphics == Graphics::Metal ? convertRGB2BGRA(image) : image,
+    .imageData = ImageLoader::load(File("asset://model/suzanne/uvmap.jpeg")),
     .sampler = {
       .minFilter = TextureFilter::LINEAR,
       .magFilter = TextureFilter::LINEAR,
@@ -104,7 +103,8 @@ int main(int argc, char** argv) {
     .usage = TextureUsage::READ | TextureUsage::WRITE,
     .storage = TextureStorage::SHARED,
     .loadType = TextureLoadType::EAGER,
-    .pipeline = TexturePipeline::FRAGMENT
+    .pipeline = TexturePipeline::FRAGMENT,
+    .textureFormat = getImageFormatSDLFormat(sdl->getPixelFormat())
   };
   auto uniformTexture = device->createTexture(uniformTextureDesc);
 
@@ -177,9 +177,10 @@ int main(int argc, char** argv) {
       .width = width,
       .height = height,
       .pixel = {},
-      .format = getImageFormatSDLFormat(sdl->getPixelFormat()),
+      .pixelFormat = {}
     },
     .loadType = TextureLoadType::EAGER,
+    .textureFormat = getImageFormatSDLFormat(sdl->getPixelFormat()),
   };
   auto texture = device->createTexture(textureDesc);
 

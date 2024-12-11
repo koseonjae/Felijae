@@ -7,14 +7,14 @@ ImageData convertRGB2BGRA(const ImageData& src) {
   // todo: Apply compute shader
 
   assert(src.channels == 3);
-  assert(src.format == ImageFormat::RGB);
+  assert(src.pixelFormat == ImageFormat::RGB);
 
   ImageData result = {
     .pixel = {},
     .width = src.width,
     .height = src.height,
     .channels = src.channels + 1,
-    .format = ImageFormat::BGRA,
+    .pixelFormat = ImageFormat::BGRA,
   };
 
   const auto& srcPixel = src.pixel;

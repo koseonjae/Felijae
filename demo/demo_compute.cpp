@@ -43,7 +43,7 @@ std::shared_ptr<ComputePipeline> createTexture2TexturePipeline(MetalDevice* devi
     .buffers = {},
     .threadSize = {width, height},
     .uniforms = {width, height},
-    .textures = {inputTexture, outputTexture}
+    .textures = {inputTexture, outputTexture},
   };
   auto pipeline = device->createComputePipeline(std::move(pipelineDesc));
   return pipeline;
@@ -97,14 +97,15 @@ int main() {
       .pixel = {},
       .width = width,
       .height = height,
-      .channels = 1,
-      .format = ImageFormat::Float32
+      .channels = {},
+      .pixelFormat = {}
     },
     .sampler = {},
     .usage = TextureUsage::WRITE | TextureUsage::READ,
     .storage = TextureStorage::SHARED,
     .loadType = TextureLoadType::EAGER,
     .pipeline = TexturePipeline::COMPUTE,
+    .textureFormat = ImageFormat::Float32
   });
   auto pipeline0_buf2tex = createBuf2TexturePipeline(device.get(), pipeline0_inputBuffer, pipeline0outputTexture);
 
@@ -115,14 +116,15 @@ int main() {
       .pixel = {},
       .width = width,
       .height = height,
-      .channels = 1,
-      .format = ImageFormat::Float32
+      .channels = {},
+      .pixelFormat = {}
     },
     .sampler = {},
     .usage = TextureUsage::WRITE,
     .storage = TextureStorage::SHARED,
     .loadType = TextureLoadType::EAGER,
     .pipeline = TexturePipeline::COMPUTE,
+    .textureFormat = ImageFormat::Float32
   });
 
   auto pipeline1_tex2tex = createTexture2TexturePipeline(device.get(), pipeline0outputTexture, pipeline1outputTexture);
