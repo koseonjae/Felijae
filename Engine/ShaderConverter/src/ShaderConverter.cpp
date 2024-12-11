@@ -70,7 +70,7 @@ std::string convertSpirv2glsl(const std::vector<uint32_t>& spirvData) {
     spirv_cross::ShaderResources resources = compiler.get_shader_resources();
 
     for (const auto& uniform_block : resources.uniform_buffers) {
-      std::cout << "Uniform Block: " << uniform_block.name << std::endl;
+      // std::cout << "Uniform Block: " << uniform_block.name << std::endl;
 
       // Uniform block의 type_id를 통해 실제 type 정보 가져오기
       spirv_cross::SPIRType type = compiler.get_type(uniform_block.base_type_id);
@@ -81,7 +81,7 @@ std::string convertSpirv2glsl(const std::vector<uint32_t>& spirvData) {
         std::string uniformName = compiler.get_member_name(type.self, i);
         // Uniform 변수의 location
         uint32_t location = compiler.get_member_decoration(type.self, i, spv::DecorationLocation);
-        std::cout << "  Variable: " << uniformName << " Location: " << location << std::endl;
+        // std::cout << "  Variable: " << uniformName << " Location: " << location << std::endl;
       }
     }
 

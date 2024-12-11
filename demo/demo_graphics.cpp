@@ -92,10 +92,8 @@ int main(int argc, char** argv) {
   };
 
   auto image = ImageLoader::load(File("asset://model/suzanne/uvmap.jpeg"));
-  if (graphics == Graphics::Metal)
-    image = convertRGB2BGRA(image);
   TextureDescription uniformTextureDesc = {
-    .imageData = image,
+    .imageData = graphics == Graphics::Metal ? convertRGB2BGRA(image) : image,
     .sampler = {
       .minFilter = TextureFilter::LINEAR,
       .magFilter = TextureFilter::LINEAR,
