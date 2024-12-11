@@ -67,7 +67,7 @@ std::shared_ptr<ComputePipeline> createBuffer2BufferPipeline(MetalDevice* device
       .source = File("asset://shader/computePipeline3_buf2buf.msl").read(),
       .type = ShaderType::COMPUTE
     },
-    .buffers = {inputBuffer, outputBuffer, width, height},
+    .buffers = {inputBuffer, outputBuffer},
     .threadSize = {width, height},
     .textures = {}
   };

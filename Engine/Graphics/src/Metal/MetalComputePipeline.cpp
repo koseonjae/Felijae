@@ -57,7 +57,8 @@ void MetalComputePipeline::encode(MTL::ComputeCommandEncoder* computeEncoder) {
   MTL::Size threadGroups{};
   assert(!m_desc.threadSize.empty() && "Invalid thread size");
   if (m_desc.threadSize.size() == 1) {
-    assert(false && "Need to support");
+    threadPerGrid = MTL::Size(m_desc.threadSize[0], 1, 1);
+    threadGroups = MTL::Size(std::min(static_cast<int>(m_pipelineState->maxTotalThreadsPerThreadgroup()), m_desc.threadSize[0]), 1, 1);
   }
   else if (m_desc.threadSize.size() == 2) {
     int threadWidth = m_desc.threadSize[0];
