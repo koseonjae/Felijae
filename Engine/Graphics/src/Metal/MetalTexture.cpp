@@ -1,13 +1,12 @@
 #include <Graphics/Metal/MetalTexture.h>
 #include <Graphics/Utility/ImageFormatUtil.h>
 #include <Graphics/Metal/MetalDevice.h>
+#include <Graphics/Utility/FormatConverter.h>
+#include <Base/Utility/ImageUtil.h>
 
 #include <Metal/Metal.hpp>
 
 #include <cassert>
-
-#include "Base/Utility/ImageUtil.h"
-#include "Graphics/Utility/FormatConverter.h"
 
 using namespace goala;
 
@@ -41,9 +40,6 @@ void MetalTexture::_initIfNeeded() {
   metalDesc->setWidth(m_desc.imageData.width);
   metalDesc->setHeight(m_desc.imageData.height);
 
-  auto textureType = metalDesc->textureType();
-  auto depth = metalDesc->depth();
-
   auto metalImageFormat = getMetalImageFormat(m_desc.textureFormat);
   metalDesc->setPixelFormat(metalImageFormat);
 
@@ -54,22 +50,9 @@ void MetalTexture::_initIfNeeded() {
   auto texture = makeMetalRef(m_device->getMTLDevice()->newTexture(metalDesc.get()));
   assert(texture.get() && "Failed to create Metal texture");
 
-  // if (!m_desc.imageData.pixel.empty()) {
-  //   if (m_desc.imageData.pixelFormat == ImageFormat::BGRA) {}
-  //   else if (m_desc.imageData.pixelFormat == ImageFormat::RGB)
-  //     m_desc.imageData = convertRGB2BGRA(m_desc.imageData);
-  //   else
-  //     assert(false && "Not supported pixel format. need to implement converting compute shader");
-  //   MTL::Region region = MTL::Region::Make2D(0, 0, m_desc.imageData.width, m_desc.imageData.height);
-  //   texture->replaceRegion(region,
-  //                          0, // mipmap level
-  //                          m_desc.imageData.pixel.data(),
-  //                          m_desc.imageData.width * m_desc.imageData.channels);
-  //   m_desc.imageData.pixel.clear(); // todo: cpu image buffer 유지할지에 대한 옵션 추가
-  // }
-
+  // todo: 모든 포맷에 대해 converting 되도록
   if (!m_desc.imageData.pixel.empty())
-    FormatConverter::rgb2bgra(m_device, m_desc.imageData, texture.get()); // todo: 일반화
+    FormatConverter::rgb2bgra(m_device, m_desc.imageData, texture.get());
 
   m_texture = std::move(texture);
 

@@ -56,11 +56,13 @@ void MetalComputePipeline::encode(MTL::ComputeCommandEncoder* computeEncoder) {
     assert(false && "Need to support");
   }
   else if (m_desc.threadSize.size() == 2) {
-    threadGroups = MTL::Size(16, 16, 1);                                      // 각 스레드 그룹에 16x16 스레드
-    auto gridSize = MTL::Size(m_desc.threadSize[0], m_desc.threadSize[0], 1); // 전체 데이터 크기 (512x512)
-    threadPerGrid = MTL::Size((gridSize.width + threadGroups.width - 1) / threadGroups.width,
-                              (gridSize.height + threadGroups.height - 1) / threadGroups.height,
-                              1);
+    int threadWidth = m_desc.threadSize[0];
+    int threadHeight = m_desc.threadSize[1];
+    threadPerGrid = MTL::Size(threadWidth, threadHeight, 1);
+
+    auto threadGroupWidth = m_pipelineState->threadExecutionWidth();
+    auto threadGroupHeight = m_pipelineState->maxTotalThreadsPerThreadgroup() / threadGroupWidth;
+    threadGroups = MTL::Size(threadGroupWidth, threadGroupHeight, 1);
   }
   else
     assert(false && "3D thread size is not supported");

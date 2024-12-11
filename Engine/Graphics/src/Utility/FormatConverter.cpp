@@ -1,17 +1,15 @@
-#include <Graphics/Utility/FormatConverter.h>
+#include <Base/File/File.h>
 #include <Base/ImageData.h>
+#include <Base/Utility/TypeCast.h>
+#include <Graphics/Utility/FormatConverter.h>
 #include <Graphics/Utility/MetalRef.h>
 #include <Graphics/Metal/MetalCommandQueue.h>
 #include <Graphics/Metal/MetalCommandBuffer.h>
+#include <Graphics/Metal/MetalComputePipeline.h>
+#include <Graphics/Metal/MetalDevice.h>
+#include <Graphics/Model/ComputePipeline.h>
 
 #include <Metal/Metal.hpp>
-
-#include "Base/File/File.h"
-#include "Base/Utility/ImageUtil.h"
-#include "Base/Utility/TypeCast.h"
-#include "Graphics/Metal/MetalComputePipeline.h"
-#include "Graphics/Metal/MetalDevice.h"
-#include "Graphics/Model/ComputePipeline.h"
 
 using namespace goala;
 

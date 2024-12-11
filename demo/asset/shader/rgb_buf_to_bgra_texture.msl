@@ -11,12 +11,11 @@ kernel void computeShader(
     if (gid.x >= outputTexture.get_width() || gid.y >= outputTexture.get_height())
         return;
 
-    int index = int(gid.y) * outputTexture.get_width() + int(gid.x);
-    int rgbIndex = index * 3; // RGB 데이터를 3채널씩 처리
+    int index = (int(gid.y) * outputTexture.get_width() + int(gid.x)) * 3;
 
-    float R = inputBuffer[rgbIndex + 0] / 255.0f;
-    float G = inputBuffer[rgbIndex + 1] / 255.0f;
-    float B = inputBuffer[rgbIndex + 2] / 255.0f;
+    float R = inputBuffer[index + 0] / 255.0f;
+    float G = inputBuffer[index + 1] / 255.0f;
+    float B = inputBuffer[index + 2] / 255.0f;
 
     outputTexture.write(float4(R, G, B, 1.0), gid);
 }
