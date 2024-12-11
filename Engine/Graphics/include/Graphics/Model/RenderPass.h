@@ -14,6 +14,7 @@ enum class AttachmentType {
 
 enum class LoadFunc {
   Undefined,
+  Load,
   Clear,
   DontCare,
 };

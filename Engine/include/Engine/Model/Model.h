@@ -2,13 +2,14 @@
 
 #include <glm/glm.hpp>
 #include <memory>
+#include <glm/ext/matrix_transform.hpp>
 
 namespace goala {
 class Object;
 class Pipeline;
 class Buffer;
 
-class Model final {
+class Model {
 public:
   void update(); // todo: model이 update만 있다 render는 없다. render는 pipeline 객체를 가져와서 하는중. 구조 정리하자
 
@@ -19,7 +20,7 @@ public:
 
 public:
   void translate(glm::vec3 translate) {
-    // todo: implement
+    m_translate += translate;
     m_dirty = true;
   }
 
@@ -36,7 +37,7 @@ public:
   glm::mat4 calculateWorldMat() {
     if (!m_dirty) return m_worldMat;
 
-    // todo: implement
+    m_worldMat = glm::translate(m_worldMat, m_translate);
 
     m_dirty = false;
     return m_worldMat;
@@ -47,7 +48,7 @@ protected:
 
 private:
   glm::vec3 m_translate{};
-  glm::vec3 m_scale{};
+  glm::vec3 m_scale{1.0f, 1.0f, 1.0f};
   glm::vec4 m_rotate{};
   glm::mat4 m_worldMat = glm::mat4(1.0f);
   bool m_dirty = false;

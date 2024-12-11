@@ -1,0 +1,20 @@
+#include <metal_stdlib>
+using namespace metal;
+
+kernel void computeShader(
+    uint2 gid [[thread_position_in_grid]], // 스레드 위치
+    texture2d<float, access::read_write> texture [[texture(0)]] // 텍스처 읽기/쓰기
+) {
+    // 텍스처에서 (gid.x, gid.y) 위치의 픽셀 색상 읽기
+    float4 color = texture.read(gid);
+
+    // RGB 값에서 그레이스케일 계산 (일반적으로 가중 평균을 사용)
+    float gray = dot(color.rgb, float3(0.299, 0.587, 0.114));
+
+    // 그레이스케일 값으로 색상 업데이트
+    // RGBA의 R, G, B 값에 동일한 그레이스케일 값을 설정하고, 알파값은 그대로 유지
+    color.rgb = float3(gray, gray, gray);
+
+    // 변환된 그레이스케일 값을 텍스처에 다시 쓰기
+    texture.write(color, gid);
+}

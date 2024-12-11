@@ -29,11 +29,22 @@ public:
   }
 
   template <typename T>
+  T* getNode() {
+    auto found = m_nodes.find(typeid(T));
+    if (found == m_nodes.end())
+      return nullptr;
+    T* ptr = dynamic_cast<T*>(found->second.get());
+    assert(ptr && "Failed to cast node type");
+    return ptr;
+  }
+
+  template <typename T>
   const T* getNode() const {
     auto found = m_nodes.find(typeid(T));
     if (found == m_nodes.end())
       return nullptr;
-    const T* ptr = static_cast<T*>(found->second.get());
+    const T* ptr = reinterpret_cast<T*>(found->second.get());
+    assert(ptr && "Failed to cast node type");
     return ptr;
   }
 

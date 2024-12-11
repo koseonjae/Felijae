@@ -7,15 +7,20 @@
 #include <Graphics/Utility/OpenGLBlitCopy.h>
 #include <Graphics/Model/CommandBuffer.h>
 #include <Graphics/Model/Pipeline.h>
+#include <Graphics/Model/ComputePipeline.h>
 #include <Graphics/Model/CommandQueue.h>
 #include <Graphics/Model/Texture.h>
 #include <Graphics/OpenGL/OpenGLDevice.h>
 #include <Graphics/Metal/MetalDevice.h>
+#include <Graphics/Metal/MetalCommandBuffer.h>
+#include <Graphics/Metal/MetalComputePipeline.h>
 #include <Engine/Model/Model.h>
 #include <Engine/Model/Scene.h>
 #include <Engine/Renderer/ForwardRenderer.h>
 #include <SDLWrapper/MetalSDLWrapper.h>
 #include <SDLWrapper/OpenGLSDLWrapper.h>
+
+#include <Metal/Metal.hpp>
 
 using namespace goala;
 
@@ -37,6 +42,23 @@ Graphics parseGraphicsOption(const std::string& arg) {
   assert(false && "Invalid graphics option");
 }
 } // namespace
+
+std::shared_ptr<ComputePipeline> createGrayscalePipeline(Device* device, std::shared_ptr<Texture>& texture) {
+  int width = texture->getDescription().imageData.width;
+  int height = texture->getDescription().imageData.height;
+
+  ComputePipelineDescription pipelineDesc = {
+    .shader = {
+      .source = File("asset://shader/compute_grayscale.msl").read(),
+      .type = ShaderType::COMPUTE
+    },
+    .buffers = {},
+    .threadSize = {width, height},
+    .textures = {texture},
+  };
+  auto pipeline = device->createComputePipeline(std::move(pipelineDesc));
+  return pipeline;
+}
 
 std::shared_ptr<Renderer> createSuzaneRenderer(Device* device, std::shared_ptr<RenderPass> renderPass) {
   auto& colorAttachmentDesc = renderPass->getDescription().attachments.at(0).texture->getDescription();
@@ -189,39 +211,61 @@ int main(int argc, char** argv) {
     .textureFormat = getImageFormatSDLFormat(sdl->getPixelFormat()),
   });
 
-  // RenderPass
-  auto suzaneRenderPass = device->createRenderPass({
+  // suzane renderer 1
+  auto renderPass1 = device->createRenderPass({
     .attachments = {
       {
         .type = AttachmentType::Color,
         .loadFunc = LoadFunc::Clear,
         .storeFunc = StoreFunc::Store,
-        .clear = ClearColor{0.0f, 0.0f, 1.0f, 1.0f},
+        .clear = ClearColor{0.0f, 0.5f, 0.5f, 1.0f},
         .texture = renderTargetTexture,
       }
     }
   });
+  auto suzaneRenderer1 = createSuzaneRenderer(device.get(), renderPass1);
 
-  // Suzane renderer
-  auto suzaneRenderer = createSuzaneRenderer(device.get(), std::move(suzaneRenderPass));
+  // gray scale compute pipeline
+  auto grayscalePipeline = graphics == Graphics::Metal ? createGrayscalePipeline(device.get(), renderTargetTexture) : nullptr;
+
+  auto renderer2 = device->createRenderPass({
+      .attachments = {
+        {
+          .type = AttachmentType::Color,
+          .loadFunc = LoadFunc::Load,
+          .storeFunc = StoreFunc::Store,
+          .clear = {},
+          .texture = renderTargetTexture,
+        }
+      }
+    }
+  );
+  auto suzaneRenderer2 = createSuzaneRenderer(device.get(), renderer2);
+  suzaneRenderer2->getScene()->getModels()[0]->translate({1.3f, 0.0f, 0.0f});
 
   // Queue
   CommandQueueDescription queueDesc{};
   auto queue = device->createCommandQueue(queueDesc);
 
   sdl->setUpdateCallback([&]() {
-    suzaneRenderer->update();
+    suzaneRenderer1->update();
+    suzaneRenderer2->update();
   });
 
   sdl->setRenderCallback([&]() {
-    CommandBufferDescription commandBufferDesc{};
-    auto cmdBuf = queue->createCommandBuffer(commandBufferDesc);
-    suzaneRenderer->render(cmdBuf);
+    auto cmdBuf = queue->createCommandBuffer({});
+    suzaneRenderer1->render(cmdBuf);
+    if (grayscalePipeline) {
+      auto encoder = SAFE_DOWN_CAST(MetalCommandBuffer*, cmdBuf.get())->getCommandBuffer()->computeCommandEncoder();
+      SAFE_DOWN_CAST(MetalComputePipeline*, grayscalePipeline.get())->encode(encoder);
+    }
+    suzaneRenderer2->render(cmdBuf);
+    cmdBuf->commit();
   });
 
   sdl->setBlitCopyCallback([&](void* drawable) {
     if (graphics == Graphics::OpenGL3)
-      blitCopyFrameBufferToScreen(suzaneRenderer->getRenderPass(), width, height);
+      blitCopyFrameBufferToScreen(suzaneRenderer2->getRenderPass(), width, height);
     else
       blitTextureToDrawable(renderTargetTexture.get(), queue.get(), drawable);
   });

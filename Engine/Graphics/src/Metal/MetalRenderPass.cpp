@@ -26,14 +26,30 @@ MetalRenderPass::MetalRenderPass(MetalDevice* device, RenderPassDescription desc
         assert(color.r >= 0.0f && color.g >= 0.0f && color.b >= 0.0f && color.a >= 0.0f && "ClearColor is not defined");
 
         colorAttachment->setLoadAction(MTL::LoadAction::LoadActionClear);
-        colorAttachment->setStoreAction(MTL::StoreAction::StoreActionStore);
         colorAttachment->setClearColor(MTL::ClearColor(color.r, color.g, color.b, color.a));
       }
       else if (attachment.type == AttachmentType::Depth) {
+        assert(false && "Depth attachment is not supported");
         const auto& depth = std::get<ClearDepth>(attachment.clear);
         assert(depth.depth >= 0.0f && "ClearDepth is not defined");
       }
       else if (attachment.type == AttachmentType::Stencil) {
+        assert(false && "Stencil attachment is not supported");
+        const auto& stencil = std::get<ClearStencil>(attachment.clear);
+        assert(stencil.s != INT_MAX && "ClearStencil is not defined");
+      }
+    }
+    else if (attachment.loadFunc == LoadFunc::Load) {
+      if (attachment.type == AttachmentType::Color) {
+        colorAttachment->setLoadAction(MTL::LoadAction::LoadActionLoad);
+      }
+      else if (attachment.type == AttachmentType::Depth) {
+        assert(false && "Depth attachment is not supported");
+        const auto& depth = std::get<ClearDepth>(attachment.clear);
+        assert(depth.depth >= 0.0f && "ClearDepth is not defined");
+      }
+      else if (attachment.type == AttachmentType::Stencil) {
+        assert(false && "Stencil attachment is not supported");
         const auto& stencil = std::get<ClearStencil>(attachment.clear);
         assert(stencil.s != INT_MAX && "ClearStencil is not defined");
       }
