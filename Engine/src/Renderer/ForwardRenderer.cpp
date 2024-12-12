@@ -37,13 +37,11 @@ void ForwardRenderer::update() {
 
 void ForwardRenderer::render(std::shared_ptr<CommandBuffer> cmdBuf) {
   auto& models = m_scene->getModels();
-  for (auto& model : models) {
-    CommandEncoderDescription encoderDesc{};
-    auto encoder = cmdBuf->createCommandEncoder(getRenderPass(), encoderDesc);
+  CommandEncoderDescription encoderDesc{};
+  auto encoder = cmdBuf->createCommandEncoder(getRenderPass(), encoderDesc);
+  for (auto& model : models)
     encoder->encodeDraw(model->getPipeline());
-    encoder->endEncoding();
-  }
-
+  encoder->endEncoding();
   // offscreen 렌더링하면서 present 호출하지 않도록 변경
   // cmdBuf->present(m_renderPass->getAttachments()[0].texture.get());
 }
