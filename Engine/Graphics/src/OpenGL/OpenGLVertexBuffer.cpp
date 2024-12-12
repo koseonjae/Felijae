@@ -47,7 +47,7 @@ OpenGLVertexBuffer::~OpenGLVertexBuffer() {
 
 void OpenGLVertexBuffer::bind() {
   assert(m_initialized && "OpenGLBuffer is not initialized");
-  glBindVertexArray(m_abo);
+  glBindVertexArray(m_vao);
 }
 
 void OpenGLVertexBuffer::draw() {
