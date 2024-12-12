@@ -1,12 +1,13 @@
-#include <Metal/Metal.hpp>
 #include <Base/Utility/FileReader.h>
 #include <Base/File/File.h>
 #include <Base/Utility/TypeCast.h>
 #include <Graphics/Metal/MetalDevice.h>
 #include <Graphics/Metal/MetalCommandQueue.h>
 #include <Graphics/Metal/MetalCommandBuffer.h>
-#include <Graphics/Metal/MetalTexture.h>
 #include <Graphics/Metal/MetalComputePipeline.h>
+#include <Engine/Renderer/ComputeRenderer.h>
+
+#include <Metal/Metal.hpp>
 
 #include <iostream>
 #include <vector>
@@ -137,17 +138,20 @@ int main() {
 
   // Pipeline vector
 
-  std::vector pipelines = {pipeline0_buf2tex, pipeline1_tex2tex, pipeline2_tex2buf, pipeline3_buf2buf};
+  auto computeRenderer = std::make_shared<ComputeRenderer>();
+  computeRenderer->addPipeline(pipeline0_buf2tex);
+  computeRenderer->addPipeline(pipeline1_tex2tex);
+  computeRenderer->addPipeline(pipeline2_tex2buf);
+  computeRenderer->addPipeline(pipeline3_buf2buf);
 
   // Encoding
 
   auto commandQueue = device->createCommandQueue({});
   auto commandBuffer = commandQueue->createCommandBuffer({});
-  auto mtlCmdBuffer = SAFE_DOWN_CAST(MetalCommandBuffer*, commandBuffer.get());
-  for (auto& pipeline : pipelines) {
-    auto computeEncoder = mtlCmdBuffer->getCommandBuffer()->computeCommandEncoder();
-    SAFE_DOWN_CAST(MetalComputePipeline*, pipeline.get())->encode(computeEncoder);
-  }
+
+  computeRenderer->update();
+  computeRenderer->render(commandBuffer);
+
   commandBuffer->commit();
   commandBuffer->waitUntilCompleted();
 

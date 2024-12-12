@@ -11,7 +11,7 @@ class ComputeRenderer : public Renderer {
 public:
   void update() override;
 
-  void render(std::shared_ptr<CommandBuffer> cmdBuf) override;
+  void render(std::shared_ptr<CommandBuffer>& cmdBuf) override;
 
   void addPipeline(std::shared_ptr<ComputePipeline> pipeline);
 

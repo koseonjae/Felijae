@@ -10,7 +10,7 @@ void ComputeRenderer::update() {
     return;
 }
 
-void ComputeRenderer::render(std::shared_ptr<CommandBuffer> cmdBuf) {
+void ComputeRenderer::render(std::shared_ptr<CommandBuffer>& cmdBuf) {
   if (m_pipelines.empty())
     return;
   auto encoder = cmdBuf->createComputeCommandEncoder({});

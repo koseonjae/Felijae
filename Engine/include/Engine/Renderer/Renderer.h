@@ -11,6 +11,6 @@ public:
 
   virtual void update() = 0;
 
-  virtual void render(std::shared_ptr<CommandBuffer> cmdBuf) = 0;
+  virtual void render(std::shared_ptr<CommandBuffer>& cmdBuf) = 0;
 };
 } // namespace goala

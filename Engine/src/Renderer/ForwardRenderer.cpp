@@ -34,7 +34,7 @@ void ForwardRenderer::update() {
   // m_renderPass->update();
 }
 
-void ForwardRenderer::render(std::shared_ptr<CommandBuffer> cmdBuf) {
+void ForwardRenderer::render(std::shared_ptr<CommandBuffer>& cmdBuf) {
   auto& models = m_scene->getModels();
   CommandEncoderDescription encoderDesc{};
   auto encoder = cmdBuf->createCommandEncoder(getRenderPass(), encoderDesc);

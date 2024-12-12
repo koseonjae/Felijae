@@ -59,7 +59,7 @@ std::shared_ptr<ComputePipeline> createGrayscalePipeline(Device* device, std::sh
   return pipeline;
 }
 
-std::shared_ptr<Model> createSuzaneModel(Device* device, std::shared_ptr<RenderPass> renderPass) {
+std::shared_ptr<Model> createSuzaneModel(Device* device, const std::shared_ptr<RenderPass>& renderPass) {
   auto& colorAttachmentDesc = renderPass->getDescription().attachments.at(0).texture->getDescription();
   auto width = colorAttachmentDesc.imageData.width;
   auto height = colorAttachmentDesc.imageData.height;
@@ -149,7 +149,7 @@ std::shared_ptr<Model> createSuzaneModel(Device* device, std::shared_ptr<RenderP
   return model;
 }
 
-std::shared_ptr<Model> createAxisModel(Device* device, std::shared_ptr<RenderPass> renderPass) {
+std::shared_ptr<Model> createAxisModel(Device* device, const std::shared_ptr<RenderPass>& renderPass) {
   auto& colorAttachmentDesc = renderPass->getDescription().attachments.at(0).texture->getDescription();
   auto width = colorAttachmentDesc.imageData.width;
   auto height = colorAttachmentDesc.imageData.height;
