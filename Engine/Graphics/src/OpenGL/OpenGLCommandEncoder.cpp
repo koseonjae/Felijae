@@ -20,12 +20,17 @@ void OpenGLCommandEncoder::setEncodedCallback(std::function<void(std::function<v
 void OpenGLCommandEncoder::endEncoding() {
   assert(m_isEnd == false && "endEncoding can not be called twice");
   m_isEnd = true;
-  m_encodedCallback(std::move(m_encoded));
+
+  m_encodedCallback([commands = std::move(m_commands), renderPass = m_renderPass]() {
+    assert(renderPass && "Render pass can not be null");
+    renderPass->bind();
+    for (auto& command : commands)
+      command();
+  });
 }
 
 void OpenGLCommandEncoder::encodeDraw(Pipeline* pipeline) {
-  m_encoded = [renderPass = m_renderPass, pipeline]() {
-    renderPass->bind();
+  m_commands.emplace_back([pipeline]() {
     SAFE_DOWN_CAST(OpenGLPipeline*, pipeline)->render();
-  };
+  });
 }

@@ -60,7 +60,7 @@ std::shared_ptr<ComputePipeline> createGrayscalePipeline(Device* device, std::sh
   return pipeline;
 }
 
-std::shared_ptr<Renderer> createSuzaneRenderer(Device* device, std::shared_ptr<RenderPass> renderPass) {
+std::shared_ptr<Model> createSuzaneModel(Device* device, std::shared_ptr<RenderPass> renderPass) {
   auto& colorAttachmentDesc = renderPass->getDescription().attachments.at(0).texture->getDescription();
   auto width = colorAttachmentDesc.imageData.width;
   auto height = colorAttachmentDesc.imageData.height;
@@ -147,38 +147,10 @@ std::shared_ptr<Renderer> createSuzaneRenderer(Device* device, std::shared_ptr<R
   auto model = std::make_shared<Model>();
   model->setPipeline(pipeline);
 
-  // Camera
-  glm::vec3 eye = glm::vec3(3.0, 3.0, 3.0);
-  glm::vec3 at = glm::vec3(0.0, 0.0, 0.0);
-  glm::vec3 up = glm::vec3(0.0, 1.0, 0.0);
-  auto fovy = glm::radians<float>(90);
-  auto aspectRatio = 1.f; // frustum width == height
-  float n = 0.1f;
-  float f = 100.0f;
-  auto camera = std::make_shared<Camera>();
-  camera->setCamera(eye, at, up);
-  camera->setProjection(fovy, aspectRatio, n, f);
-
-  // Light
-  auto light = std::make_shared<Light>();
-  light->setLightColor({1.0f, 1.0f, 1.0f});
-  light->setLightDirection({0.0f, 0.0f, 1.0f});
-
-  // Scene
-  auto scene = std::make_shared<Scene>();
-  scene->addModel(std::move(model));
-  scene->setNode(std::move(camera));
-  scene->setNode(std::move(light));
-
-  // Renderer
-  auto renderer = std::make_shared<ForwardRenderer>();
-  renderer->setScene(std::move(scene));
-  renderer->setRenderPass(std::move(renderPass));
-
-  return renderer;
+  return model;
 }
 
-std::shared_ptr<Renderer> createAxisRenderer(Device* device, std::shared_ptr<RenderPass> renderPass) {
+std::shared_ptr<Model> createAxisModel(Device* device, std::shared_ptr<RenderPass> renderPass) {
   auto& colorAttachmentDesc = renderPass->getDescription().attachments.at(0).texture->getDescription();
   auto width = colorAttachmentDesc.imageData.width;
   auto height = colorAttachmentDesc.imageData.height;
@@ -247,35 +219,7 @@ std::shared_ptr<Renderer> createAxisRenderer(Device* device, std::shared_ptr<Ren
   auto model = std::make_shared<Model>();
   model->setPipeline(pipeline);
 
-  // Camera
-  glm::vec3 eye = glm::vec3(3.0, 3.0, 3.0);
-  glm::vec3 at = glm::vec3(0.0, 0.0, 0.0);
-  glm::vec3 up = glm::vec3(0.0, 1.0, 0.0);
-  auto fovy = glm::radians<float>(90);
-  auto aspectRatio = 1.f; // frustum width == height
-  float n = 0.1f;
-  float f = 100.0f;
-  auto camera = std::make_shared<Camera>();
-  camera->setCamera(eye, at, up);
-  camera->setProjection(fovy, aspectRatio, n, f);
-
-  // Light
-  auto light = std::make_shared<Light>();
-  light->setLightColor({1.0f, 1.0f, 1.0f});
-  light->setLightDirection({0.0f, 0.0f, 1.0f});
-
-  // Scene
-  auto scene = std::make_shared<Scene>();
-  scene->addModel(std::move(model));
-  scene->setNode(std::move(camera));
-  scene->setNode(std::move(light));
-
-  // Renderer
-  auto renderer = std::make_shared<ForwardRenderer>();
-  renderer->setScene(std::move(scene));
-  renderer->setRenderPass(std::move(renderPass));
-
-  return renderer;
+  return model;
 }
 
 int main(int argc, char** argv) {
@@ -312,7 +256,7 @@ int main(int argc, char** argv) {
   });
 
   // suzane renderer 1
-  auto renderPass1 = device->createRenderPass({
+  auto suzaneRenderPass = device->createRenderPass({
     .attachments = {
       {
         .type = AttachmentType::Color,
@@ -323,66 +267,88 @@ int main(int argc, char** argv) {
       }
     }
   });
-  auto suzaneRenderer1 = createSuzaneRenderer(device.get(), renderPass1);
+
+  auto axisRenderPass = device->createRenderPass({
+    .attachments = {
+      {
+        .type = AttachmentType::Color,
+        .loadFunc = LoadFunc::Load,
+        .storeFunc = StoreFunc::Store,
+        .clear = {},
+        .texture = renderTargetTexture,
+      }
+    }
+  });
+
+  auto suzaneModel1 = createSuzaneModel(device.get(), suzaneRenderPass);
+  auto suzaneModel2 = createSuzaneModel(device.get(), suzaneRenderPass);
+  suzaneModel2->translate({3.0f, 0.0f, 0.0f});
 
   // gray scale compute pipeline
   auto grayscalePipeline = graphics == Graphics::Metal ? createGrayscalePipeline(device.get(), renderTargetTexture) : nullptr;
 
-  auto renderer2 = device->createRenderPass({
-      .attachments = {
-        {
-          .type = AttachmentType::Color,
-          .loadFunc = LoadFunc::Load,
-          .storeFunc = StoreFunc::Store,
-          .clear = {},
-          .texture = renderTargetTexture,
-        }
-      }
-    }
-  );
-  auto suzaneRenderer2 = createSuzaneRenderer(device.get(), renderer2);
-  suzaneRenderer2->getScene()->getModels()[0]->translate({3.0f, 0.0f, 0.0f});
+  auto axisModel = createAxisModel(device.get(), axisRenderPass);
+  axisModel->scale({0.1f, 0.1f, 0.1f});
 
-  auto renderer3 = device->createRenderPass({
-      .attachments = {
-        {
-          .type = AttachmentType::Color,
-          .loadFunc = LoadFunc::Load,
-          .storeFunc = StoreFunc::Store,
-          .clear = {},
-          .texture = renderTargetTexture,
-        }
-      }
-    }
-  );
-  auto axisRenderer = createAxisRenderer(device.get(), renderer3);
-  axisRenderer->getScene()->getModels()[0]->scale({0.1f, 0.1f, 0.1f});
+  // Camera
+  glm::vec3 eye = glm::vec3(3.0, 3.0, 3.0);
+  glm::vec3 at = glm::vec3(0.0, 0.0, 0.0);
+  glm::vec3 up = glm::vec3(0.0, 1.0, 0.0);
+  auto fovy = glm::radians<float>(90);
+  auto aspectRatio = 1.f; // frustum width == height
+  float n = 0.1f;
+  float f = 100.0f;
+  auto camera = std::make_shared<Camera>();
+  camera->setCamera(eye, at, up);
+  camera->setProjection(fovy, aspectRatio, n, f);
+
+  // Light
+  auto light = std::make_shared<Light>();
+  light->setLightColor({1.0f, 1.0f, 1.0f});
+  light->setLightDirection({0.0f, 0.0f, 1.0f});
+
+  // Suzane
+  auto suzaneScene = std::make_shared<Scene>();
+  suzaneScene->addModel(suzaneModel1);
+  suzaneScene->addModel(suzaneModel2);
+  suzaneScene->setNode(camera);
+  suzaneScene->setNode(light);
+  auto suzaneRenderer = std::make_shared<ForwardRenderer>();
+  suzaneRenderer->setScene(std::move(suzaneScene));
+  suzaneRenderer->setRenderPass(std::move(suzaneRenderPass));
+
+  // Axis
+  auto axisScene = std::make_shared<Scene>();
+  axisScene->addModel(axisModel);
+  axisScene->setNode(camera);
+  axisScene->setNode(light);
+  auto axisRenderer = std::make_shared<ForwardRenderer>();
+  axisRenderer->setScene(std::move(axisScene));
+  axisRenderer->setRenderPass(std::move(axisRenderPass));
 
   // Queue
   CommandQueueDescription queueDesc{};
   auto queue = device->createCommandQueue(queueDesc);
 
   sdl->setUpdateCallback([&]() {
-    suzaneRenderer1->update();
-    suzaneRenderer2->update();
+    suzaneRenderer->update();
     axisRenderer->update();
   });
 
   sdl->setRenderCallback([&]() {
     auto cmdBuf = queue->createCommandBuffer({});
-    suzaneRenderer1->render(cmdBuf);
-    if (grayscalePipeline) {
+    suzaneRenderer->render(cmdBuf);
+    if (grayscalePipeline) { // metal only
       auto encoder = SAFE_DOWN_CAST(MetalCommandBuffer*, cmdBuf.get())->getCommandBuffer()->computeCommandEncoder();
       SAFE_DOWN_CAST(MetalComputePipeline*, grayscalePipeline.get())->encode(encoder);
     }
-    suzaneRenderer2->render(cmdBuf);
     axisRenderer->render(cmdBuf);
     cmdBuf->commit();
   });
 
   sdl->setBlitCopyCallback([&](void* drawable) {
     if (graphics == Graphics::OpenGL3)
-      blitCopyFrameBufferToScreen(suzaneRenderer2->getRenderPass(), width, height);
+      blitCopyFrameBufferToScreen(axisRenderer->getRenderPass(), width, height);
     else
       blitTextureToDrawable(renderTargetTexture.get(), queue.get(), drawable);
   });

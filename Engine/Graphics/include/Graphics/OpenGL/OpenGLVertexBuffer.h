@@ -12,8 +12,6 @@ public:
 
   ~OpenGLVertexBuffer() override;
 
-  void bind();
-
   void draw();
 
 private:

@@ -3,6 +3,7 @@
 #include <Graphics/Model/CommandEncoder.h>
 
 #include <functional>
+#include <vector>
 
 namespace goala {
 class OpenGLRenderPass;
@@ -21,7 +22,7 @@ public:
 private:
   OpenGLRenderPass* m_renderPass = nullptr;
   std::function<void(std::function<void()>)> m_encodedCallback;
-  std::function<void()> m_encoded;
+  std::vector<std::function<void()>> m_commands;
   bool m_isEnd = false;
 };
 } // namespace goala
