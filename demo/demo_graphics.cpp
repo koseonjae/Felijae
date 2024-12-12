@@ -12,17 +12,14 @@
 #include <Graphics/Model/Texture.h>
 #include <Graphics/OpenGL/OpenGLDevice.h>
 #include <Graphics/Metal/MetalDevice.h>
-#include <Graphics/Metal/MetalCommandBuffer.h>
-#include <Graphics/Metal/MetalComputePipeline.h>
 #include <Engine/Model/Model.h>
 #include <Engine/Model/Scene.h>
 #include <Engine/Renderer/ForwardRenderer.h>
 #include <SDLWrapper/MetalSDLWrapper.h>
 #include <SDLWrapper/OpenGLSDLWrapper.h>
+#include <Engine/Renderer/ComputeRenderer.h>
 
 #include <Metal/Metal.hpp>
-
-#include "Engine/Renderer/ComputeRenderer.h"
 
 using namespace goala;
 

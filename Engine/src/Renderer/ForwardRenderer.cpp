@@ -1,10 +1,9 @@
-#include <Engine/Renderer/ForwardRenderer.h>
 #include <Graphics/Model/Pipeline.h>
+#include <Graphics/Model/CommandEncoder.h>
 #include <Graphics/Model/CommandBuffer.h>
+#include <Engine/Renderer/ForwardRenderer.h>
 #include <Engine/Model/Model.h>
 #include <Engine/Model/Scene.h>
-
-#include "Graphics/Model/CommandEncoder.h"
 
 using namespace goala;
 

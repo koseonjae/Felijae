@@ -1,11 +1,10 @@
 #include <Graphics/OpenGL/OpenGLCommandEncoder.h>
 #include <Graphics/OpenGL/OpenGLRenderPass.h>
 #include <Graphics/Model/Pipeline.h>
+#include <Graphics/OpenGL/OpenGLPipeline.h>
+#include <Base/Utility/TypeCast.h>
 
 #include <cassert>
-
-#include "Base/Utility/TypeCast.h"
-#include "Graphics/OpenGL/OpenGLPipeline.h"
 
 using namespace goala;
 
