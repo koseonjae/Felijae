@@ -31,6 +31,8 @@ OpenGLVertexBuffer::OpenGLVertexBuffer(OpenGLDevice* device, VertexBufferDescrip
   glEnableVertexAttribArray(2);
   glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texCoord));
 
+  glBindVertexArray(0);
+
   m_indicesSize = static_cast<int>(obj.indices.size());
 
   m_initialized = true;
@@ -45,12 +47,9 @@ OpenGLVertexBuffer::~OpenGLVertexBuffer() {
   m_initialized = false;
 }
 
-void OpenGLVertexBuffer::bind() {
-  assert(m_initialized && "OpenGLBuffer is not initialized");
-  glBindVertexArray(m_vao);
-}
-
 void OpenGLVertexBuffer::draw() {
   assert(m_initialized && "OpenGLBuffer is not initialized");
+  glBindVertexArray(m_vao);
   glDrawElements(GL_TRIANGLES, m_indicesSize, GL_UNSIGNED_INT, nullptr);
+  glBindVertexArray(0);
 }

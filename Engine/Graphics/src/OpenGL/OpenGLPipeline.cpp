@@ -18,14 +18,12 @@ OpenGLPipeline::OpenGLPipeline(OpenGLDevice* device, PipelineDescription desc)
 
 void OpenGLPipeline::render() {
   assert(m_program && m_vertexBuffer && "There is empty pipeline");
+  m_program->bind(m_desc.uniforms.get());
   _bindViewport();
   _bindCulling();
   _bindDepthTest();
   _bindAlphaBlending();
-  m_program->bind(m_desc.uniforms.get());
-  auto glVertexBuffer = SAFE_DOWN_CAST(OpenGLVertexBuffer*, m_vertexBuffer.get());
-  glVertexBuffer->bind();
-  glVertexBuffer->draw();
+  SAFE_DOWN_CAST(OpenGLVertexBuffer*, m_vertexBuffer.get())->draw();
 }
 
 void OpenGLPipeline::_bindCulling() {
