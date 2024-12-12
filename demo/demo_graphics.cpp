@@ -216,26 +216,8 @@ std::shared_ptr<Renderer> createAxisRenderer(Device* device, std::shared_ptr<Ren
     }
   };
 
-  TextureDescription uniformTextureDesc = {
-    .imageData = ImageLoader::load(File("asset://model/suzanne/uvmap.jpeg")),
-    .sampler = {
-      .minFilter = TextureFilter::LINEAR,
-      .magFilter = TextureFilter::LINEAR,
-      .mipFilter = TextureFilter::LINEAR,
-      .wrapS = TextureWrap::CLAMP_TO_EDGE,
-      .wrapT = TextureWrap::CLAMP_TO_EDGE,
-    },
-    .usage = TextureUsage::READ | TextureUsage::WRITE,
-    .storage = TextureStorage::SHARED,
-    .loadType = TextureLoadType::EAGER,
-    .pipeline = TexturePipeline::FRAGMENT,
-    .textureFormat = format
-  };
-  auto uniformTexture = device->createTexture(uniformTextureDesc);
-
   // Uniforms
   auto uniforms = std::make_shared<Uniforms>();
-  uniforms->setTexture("uTexture", uniformTexture);
   glm::vec3 emitLight{0.0f, 0.0f, 0.0f};
   uniforms->setUniform("uEmitLight", emitLight);
 
@@ -243,11 +225,11 @@ std::shared_ptr<Renderer> createAxisRenderer(Device* device, std::shared_ptr<Ren
   PipelineDescription pipelineDesc = {
     .shaders = {
       {
-        .source = File("asset://shader/lighting.vert").read(),
+        .source = File("asset://shader/axis.vert").read(),
         .type = ShaderType::VERTEX
       },
       {
-        .source = File("asset://shader/lighting.frag").read(),
+        .source = File("asset://shader/axis.frag").read(),
         .type = ShaderType::FRAGMENT
       }
     },
