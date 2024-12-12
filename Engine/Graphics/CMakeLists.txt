@@ -15,6 +15,7 @@ add_library(Graphics STATIC
     src/OpenGL/OpenGLFrameBuffer.cpp
     src/OpenGL/OpenGLRenderPass.cpp
     src/OpenGL/OpenGLUtils.cpp
+    src/Metal/MetalComputeCommandEncoder.cpp
     src/Metal/MetalCommandEncoder.cpp
     src/Metal/MetalCommandQueue.cpp
     src/Metal/MetalCommandBuffer.cpp
@@ -32,6 +33,7 @@ add_library(Graphics STATIC
     include/Graphics/Utility/MetalBlitCopy.h
     include/Graphics/Utility/OpenGLBlitCopy.h
     include/Graphics/Utility/MetalRef.h
+    include/Graphics/Model/ComputeCommandEncoder.h
     include/Graphics/Model/CommandEncoder.h
     include/Graphics/Model/CommandQueue.h
     include/Graphics/Model/CommandBuffer.h
@@ -58,6 +60,7 @@ add_library(Graphics STATIC
     include/Graphics/OpenGL/OpenGLFrameBuffer.h
     include/Graphics/OpenGL/OpenGLRenderPass.h
     include/Graphics/OpenGL/OpenGLUtils.h
+    include/Graphics/Metal/MetalComputeCommandEncoder.h
     include/Graphics/Metal/MetalCommandEncoder.h
     include/Graphics/Metal/MetalCommandQueue.h
     include/Graphics/Metal/MetalCommandBuffer.h

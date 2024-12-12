@@ -37,6 +37,7 @@ void FormatConverter::rgb2bgra(MetalDevice* device, const ImageData& image, MTL:
 
   auto computeEncoder = mtlCmdBuffer->getCommandBuffer()->computeCommandEncoder();
   SAFE_DOWN_CAST(MetalComputePipeline*, pipeline.get())->encode(computeEncoder);
+  computeEncoder->endEncoding();
 
   commandBuffer->commit();
   commandBuffer->waitUntilCompleted();

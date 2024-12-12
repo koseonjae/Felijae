@@ -1,9 +1,9 @@
 #pragma once
 
-#include <Engine/Renderer/Renderer.h>
+#include <Engine/Renderer/GraphicsRenderer.h>
 
 namespace goala {
-class ForwardRenderer : public Renderer {
+class ForwardRenderer : public GraphicsRenderer {
 public:
   void update() override;
 

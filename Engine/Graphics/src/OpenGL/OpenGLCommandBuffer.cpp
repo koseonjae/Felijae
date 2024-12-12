@@ -1,5 +1,6 @@
 #include <Graphics/OpenGL/OpenGLCommandBuffer.h>
 #include <Graphics/Model/Pipeline.h>
+#include <Graphics/Model/ComputeCommandEncoder.h>
 #include <Graphics/OpenGL/OpenGLCommandEncoder.h>
 #include <Graphics/OpenGL/OpenGLRenderPass.h>
 
@@ -44,6 +45,10 @@ std::shared_ptr<CommandEncoder> OpenGLCommandBuffer::createCommandEncoder(Render
   });
   ++m_encoderCnt;
   return encoder;
+}
+
+std::shared_ptr<ComputeCommandEncoder> OpenGLCommandBuffer::createComputeCommandEncoder(ComputeCommandEncoderDescription desc) {
+  assert(false && "Not implemented");
 }
 
 void OpenGLCommandBuffer::waitUntilCompleted() {

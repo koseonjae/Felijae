@@ -5,6 +5,8 @@ add_library(Engine STATIC
     include/Engine/Model/Scene.h
     Graphics/include/Graphics/Model/Uniforms.h
     include/Engine/Renderer/Renderer.h
+    include/Engine/Renderer/ComputeRenderer.h
+    include/Engine/Renderer/GraphicsRenderer.h
     include/Engine/Renderer/ForwardRenderer.h
     include/Engine/Engine.h
 
@@ -12,7 +14,8 @@ add_library(Engine STATIC
     src/Model/Model.cpp
     src/Model/Scene.cpp
     Graphics/src/Model/Uniforms.cpp
-    src/Renderer/Renderer.cpp
+    src/Renderer/ComputeRenderer.cpp
+    src/Renderer/GraphicsRenderer.cpp
     src/Renderer/ForwardRenderer.cpp
     src/Engine.cpp)
 

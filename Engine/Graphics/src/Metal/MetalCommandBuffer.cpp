@@ -1,5 +1,6 @@
 #include <Graphics/Metal/MetalCommandBuffer.h>
 #include <Graphics/Metal/MetalCommandEncoder.h>
+#include <Graphics/Metal/MetalComputeCommandEncoder.h>
 #include <Graphics/Metal/MetalCommandQueue.h>
 #include <Graphics/Metal/MetalPipeline.h>
 #include <Graphics/Metal/MetalRenderPass.h>
@@ -26,6 +27,11 @@ std::shared_ptr<CommandEncoder> MetalCommandBuffer::createCommandEncoder(RenderP
   auto metalRenderPass = SAFE_DOWN_CAST(MetalRenderPass*, renderPass);
   auto commandEncoder = std::make_shared<MetalCommandEncoder>(this, metalRenderPass, std::move(desc));
   return commandEncoder;
+}
+
+std::shared_ptr<ComputeCommandEncoder> MetalCommandBuffer::createComputeCommandEncoder(ComputeCommandEncoderDescription desc) {
+  auto computeCommandEncoder = std::make_shared<MetalComputeCommandEncoder>(this, std::move(desc));
+  return computeCommandEncoder;
 }
 
 void MetalCommandBuffer::waitUntilCompleted() {

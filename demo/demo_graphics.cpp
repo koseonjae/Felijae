@@ -22,6 +22,8 @@
 
 #include <Metal/Metal.hpp>
 
+#include "Engine/Renderer/ComputeRenderer.h"
+
 using namespace goala;
 
 namespace {
@@ -285,7 +287,9 @@ int main(int argc, char** argv) {
   suzaneModel2->translate({3.0f, 0.0f, 0.0f});
 
   // gray scale compute pipeline
-  auto grayscalePipeline = graphics == Graphics::Metal ? createGrayscalePipeline(device.get(), renderTargetTexture) : nullptr;
+  auto computeRenderer = std::make_shared<ComputeRenderer>();
+  if (graphics == Graphics::Metal)
+    computeRenderer->addPipeline(createGrayscalePipeline(device.get(), renderTargetTexture));
 
   auto axisModel = createAxisModel(device.get(), axisRenderPass);
   axisModel->scale({0.1f, 0.1f, 0.1f});
@@ -326,23 +330,21 @@ int main(int argc, char** argv) {
   axisRenderer->setScene(std::move(axisScene));
   axisRenderer->setRenderPass(std::move(axisRenderPass));
 
+  std::vector<std::shared_ptr<Renderer>> renderers = {suzaneRenderer, computeRenderer, axisRenderer};
+
   // Queue
   CommandQueueDescription queueDesc{};
   auto queue = device->createCommandQueue(queueDesc);
 
   sdl->setUpdateCallback([&]() {
-    suzaneRenderer->update();
-    axisRenderer->update();
+    for (auto& renderer : renderers)
+      renderer->update();
   });
 
   sdl->setRenderCallback([&]() {
     auto cmdBuf = queue->createCommandBuffer({});
-    suzaneRenderer->render(cmdBuf);
-    if (grayscalePipeline) { // metal only
-      auto encoder = SAFE_DOWN_CAST(MetalCommandBuffer*, cmdBuf.get())->getCommandBuffer()->computeCommandEncoder();
-      SAFE_DOWN_CAST(MetalComputePipeline*, grayscalePipeline.get())->encode(encoder);
-    }
-    axisRenderer->render(cmdBuf);
+    for (auto& renderer : renderers)
+      renderer->render(cmdBuf);
     cmdBuf->commit();
   });
 

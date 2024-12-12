@@ -24,6 +24,8 @@ public:
 
   std::shared_ptr<CommandEncoder> createCommandEncoder(RenderPass* renderPass, CommandEncoderDescription desc) override;
 
+  std::shared_ptr<ComputeCommandEncoder> createComputeCommandEncoder(ComputeCommandEncoderDescription desc) override;
+
   void waitUntilCompleted() override;
 
   void waitUntilScheduled() override;

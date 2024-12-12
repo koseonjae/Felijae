@@ -73,8 +73,6 @@ void MetalComputePipeline::encode(MTL::ComputeCommandEncoder* computeEncoder) {
     assert(false && "3D thread size is not supported");
 
   computeEncoder->dispatchThreadgroups(threadPerGrid, threadGroups);
-
-  computeEncoder->endEncoding();
 }
 
 void MetalComputePipeline::_initializeShader(MTL::ComputePipelineDescriptor* pipelineDesc) {
