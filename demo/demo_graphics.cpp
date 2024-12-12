@@ -289,7 +289,7 @@ int main(int argc, char** argv) {
     computeRenderer->addPipeline(createGrayscalePipeline(device.get(), renderTargetTexture));
 
   auto axisModel = createAxisModel(device.get(), axisRenderPass);
-  axisModel->scale({0.1f, 0.1f, 0.1f});
+  axisModel->scale({0.05f, 0.05f, 0.05f});
 
   // Camera
   glm::vec3 eye = glm::vec3(3.0, 3.0, 3.0);

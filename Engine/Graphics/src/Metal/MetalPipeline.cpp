@@ -9,6 +9,8 @@
 
 #include <Metal/Metal.hpp>
 
+#include <iostream>
+
 namespace {
 uint32_t getTypeSize(MTL::DataType dataType) {
   switch (dataType) {
@@ -185,25 +187,30 @@ void MetalPipeline::_encodeUniformVariables(MetalCommandEncoder* encoder) {
 
   // todo: use Device::createDevice
 
-  auto findReflection = [&reflectionsMap](const std::string& name) -> const UniformReflection& {
+  auto findReflection = [&reflectionsMap](const std::string& name) -> const UniformReflection* {
     for (const auto& [blockName, reflections] : reflectionsMap) {
       auto found = std::ranges::find_if(reflections, [&name](const auto& reflection) {
         return reflection.name == name;
       });
       if (found != reflections.end())
-        return *found;
+        return &(*found);
     }
-    assert(false && "Reflection not found");
+    // note: shader에 정의하지 않은 uniform을 세팅해주는 경우 assert를 해주었었는데, 이 부분을 비활성화했음
+    // 이후에 의도하지 않은 uniform이 계속 설정되면서 overhead를 일으키지 않도록 하는 방어로직이 필요
+    // assert(false && "Reflection not found");
+    return nullptr;
   };
 
   for (const auto& [name, variable] : variables) {
     const auto& reflection = findReflection(name);
-    assert(uniformBlockBuffers.contains(reflection.blockName) && "Uniform block not found");
-    auto& uniformBlock = uniformBlockBuffers[reflection.blockName];
+    if (!reflection)
+      continue;
+    assert(uniformBlockBuffers.contains(reflection->blockName) && "Uniform block not found");
+    auto& uniformBlock = uniformBlockBuffers[reflection->blockName];
 
     const auto [valuePtr, valueSize] = getUniformAddress(variable);
-    assert(valueSize == reflection.size);
-    std::memcpy(uniformBlock.data() + reflection.offset, valuePtr, reflection.size);
+    assert(valueSize == reflection->size);
+    std::memcpy(uniformBlock.data() + reflection->offset, valuePtr, reflection->size);
   }
 
   for (auto& [uniformBlockName, uniformBlock] : uniformBlockBuffers) {
@@ -306,6 +313,8 @@ void MetalPipeline::_initializePipeline(MTL::RenderPipelineDescriptor* pipelineD
   MTL::RenderPipelineReflection* reflection = nil;
   auto option = MTL::PipelineOptionArgumentInfo | MTL::PipelineOptionBufferTypeInfo;
   m_pipeline = makeMetalRef(m_device->getMTLDevice()->newRenderPipelineState(pipelineDesc, option, &reflection, &err));
+  if (err)
+    std::cout << err->description()->utf8String() << std::endl;
   assert(m_pipeline && "Failed to create pipeline");
 
   _initializeReflection(reflection);

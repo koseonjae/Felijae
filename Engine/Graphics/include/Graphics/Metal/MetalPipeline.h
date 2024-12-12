@@ -21,10 +21,6 @@ class MetalDevice;
 class MetalCommandEncoder;
 
 struct UniformReflection {
-  // UniformReflection(const UniformReflection&) = delete;
-  // UniformReflection(UniformReflection&&) = delete;
-  // UniformReflection& operator=(const UniformReflection&) = delete;
-  // UniformReflection& operator=(UniformReflection&&) = delete;
   std::string blockName;
   std::string name;
   uint32_t type = 0; // todo: remove

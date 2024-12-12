@@ -88,7 +88,9 @@ void OpenGLProgram::bind(Uniforms* uniformVariables) {
 void OpenGLProgram::_updateUniforms(const UniformVariables& uniforms) {
   for (const auto& [name, variable] : uniforms) {
     auto found = m_uniformVariablesName.find(name);
-    assert(found != m_uniformVariablesName.end() && "Invalid uniform name.");
+    // assert(found != m_uniformVariablesName.end() && "Invalid uniform name.");
+    if (found == m_uniformVariablesName.end())
+      continue;
     auto& modified = found->second;
     GLint loc = glGetUniformLocation(m_program, modified.c_str());
     assert(loc != -1 && "Invalid uniform location");
