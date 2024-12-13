@@ -19,8 +19,6 @@
 #include <SDLWrapper/OpenGLSDLWrapper.h>
 #include <Engine/Renderer/ComputeRenderer.h>
 
-#include <Metal/Metal.hpp>
-
 using namespace goala;
 
 namespace {
