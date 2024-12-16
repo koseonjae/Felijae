@@ -4,6 +4,8 @@ set(SHADER_DEMO demo_shader_converter)
 
 set(EXECUTABLE_INTERFACE executable_interface)
 
+set(CMAKE_MACOSX_BUNDLE YES)
+
 add_executable(${GRAPHICS_DEMO} demo_graphics.cpp)
 add_executable(${COMPUTE_DEMO} demo_compute.cpp)
 add_executable(${SHADER_DEMO} demo_shader_converter.cpp)

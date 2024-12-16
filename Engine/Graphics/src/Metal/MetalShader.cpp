@@ -30,7 +30,7 @@ MetalShader::MetalShader(MetalDevice* device, ShaderDescription desc)
   else
     assert(false && "undefined shader type");
 
-  auto funcName = makeMetalRef(NS::String::string(shaderTypeStr.data(), NS::ASCIIStringEncoding));
+  auto funcName = getNSString(shaderTypeStr);
   m_func = makeMetalRef(library->newFunction(funcName.get()));
 }
 
