@@ -9,15 +9,13 @@ void SDLWrapper::loop() {
   assert(m_renderCallback != nullptr);
   assert(m_blitCopyCallback != nullptr);
 
-  bool quit = false;
   SDL_Event e;
 
-  while (!quit) {
+  while (true) {
     while (SDL_PollEvent(&e) != 0) {
       switch (e.type) {
         case SDL_QUIT: {
-          quit = true;
-          break;
+          return;
         }
       }
     }

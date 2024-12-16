@@ -12,9 +12,9 @@ using namespace goala;
 MetalComputePipeline::MetalComputePipeline(MetalDevice* device, ComputePipelineDescription desc)
   : ComputePipeline(std::move(desc))
   , m_device(device) {
-  auto pipelineDesc = MTL::ComputePipelineDescriptor::alloc()->init(); // 기존 demo에선 이걸 안쓰고 metal shader function만을 넘겼음
-  _initializeShader(pipelineDesc);
-  _initializePipeline(pipelineDesc);
+  auto pipelineDesc = makeMetalRef(MTL::ComputePipelineDescriptor::alloc()->init()); // 기존 demo에선 이걸 안쓰고 metal shader function만을 넘겼음
+  _initializeShader(pipelineDesc.get());
+  _initializePipeline(pipelineDesc.get());
 }
 
 // todo: output texture를 받는 방법 정리

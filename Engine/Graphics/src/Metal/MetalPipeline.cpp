@@ -40,13 +40,13 @@ namespace goala {
 MetalPipeline::MetalPipeline(MetalDevice* device, PipelineDescription desc)
   : Pipeline(std::move(desc))
   , m_device(device) {
-  auto pipelineDesc = MTL::RenderPipelineDescriptor::alloc()->init();
-  _initializeAttachments(pipelineDesc);
-  _initializeVertexBuffer(pipelineDesc);
+  auto pipelineDesc = makeMetalRef(MTL::RenderPipelineDescriptor::alloc()->init());
+  _initializeAttachments(pipelineDesc.get());
+  _initializeVertexBuffer(pipelineDesc.get());
   _initializeDepthStencilState();
-  _initializeAlphaBlend(pipelineDesc);
-  _initializeShaders(pipelineDesc);
-  _initializePipeline(pipelineDesc);
+  _initializeAlphaBlend(pipelineDesc.get());
+  _initializeShaders(pipelineDesc.get());
+  _initializePipeline(pipelineDesc.get());
 }
 
 MTL::RenderPipelineState* MetalPipeline::getPipeline() {
@@ -225,7 +225,7 @@ void MetalPipeline::_initializeDepthStencilState() {
   if (!depthTest.enable)
     return;
 
-  auto descriptor = MTL::DepthStencilDescriptor::alloc()->init();
+  auto descriptor = makeMetalRef(MTL::DepthStencilDescriptor::alloc()->init());
 
   if (depthTest.depthFunc == DepthTest::DepthTestFunc::Less)
     descriptor->setDepthCompareFunction(MTL::CompareFunctionLess);
@@ -234,7 +234,7 @@ void MetalPipeline::_initializeDepthStencilState() {
 
   descriptor->setDepthWriteEnabled(depthTest.updateDepthMask);
 
-  m_depthStencilState = makeMetalRef(m_device->getMTLDevice()->newDepthStencilState(descriptor));
+  m_depthStencilState = makeMetalRef(m_device->getMTLDevice()->newDepthStencilState(descriptor.get()));
 }
 
 void MetalPipeline::_initializeAlphaBlend(MTL::RenderPipelineDescriptor* descriptor) {
