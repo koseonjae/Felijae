@@ -5,6 +5,7 @@
 #include <Graphics/Utility/ImageFormatUtil.h>
 #include <Graphics/Utility/MetalBlitCopy.h>
 #include <Graphics/Utility/OpenGLBlitCopy.h>
+#include <Graphics/Utility/ARCManager.h>
 #include <Graphics/Model/CommandBuffer.h>
 #include <Graphics/Model/Pipeline.h>
 #include <Graphics/Model/ComputePipeline.h>
@@ -220,6 +221,8 @@ std::shared_ptr<Model> createAxisModel(Device* device, const std::shared_ptr<Ren
 }
 
 int main(int argc, char** argv) {
+  ARCManager arcManager;
+
   File::registerPath(DEMO_DIR + std::string("/asset"), "asset://");
 
   Graphics graphics = argc > 1 ? parseGraphicsOption(argv[1]) : Graphics::Metal;

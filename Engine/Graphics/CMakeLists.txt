@@ -33,6 +33,7 @@ add_library(Graphics STATIC
     include/Graphics/Utility/MetalBlitCopy.h
     include/Graphics/Utility/OpenGLBlitCopy.h
     include/Graphics/Utility/MetalRef.h
+    include/Graphics/Utility/ARCManager.h
     include/Graphics/Model/ComputeCommandEncoder.h
     include/Graphics/Model/CommandEncoder.h
     include/Graphics/Model/CommandQueue.h

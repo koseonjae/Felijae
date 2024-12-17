@@ -1,5 +1,6 @@
 #include <SDLWrapper/SDLWrapper.h>
 
+#include <Foundation/NSAutoreleasePool.hpp>
 #include <SDL2/SDL.h>
 
 #include <cassert>
@@ -20,11 +21,15 @@ void SDLWrapper::loop() {
       }
     }
 
+    auto pool = NS::AutoreleasePool::alloc()->init();
+
     m_updateCallback();
 
     m_renderCallback();
 
     onBlitCopyAndSwapBuffer();
+
+    pool->release();
   }
 }
 
