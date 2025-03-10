@@ -16,7 +16,7 @@ class RenderPipelineReflection;
 class Buffer;
 }
 
-namespace goala {
+namespace larco {
 class MetalDevice;
 class MetalCommandEncoder;
 
@@ -62,4 +62,4 @@ private:
   std::unordered_map<std::string, int> m_uniformBlockIdx;
   std::unordered_map<std::string, std::vector<UniformReflection>> m_uniformReflectionMap;
 };
-} // namespace goala
+} // namespace larco

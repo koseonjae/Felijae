@@ -2,7 +2,7 @@
 
 #include <Foundation/Foundation.hpp>
 
-namespace goala {
+namespace larco {
 class ARCManager final {
 public:
   ARCManager() : pPool(NS::AutoreleasePool::alloc()->init()) {};
@@ -14,4 +14,4 @@ public:
 private:
   NS::AutoreleasePool* pPool = nullptr;
 };
-} // namespace goala
+} // namespace larco

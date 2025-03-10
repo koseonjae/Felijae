@@ -10,7 +10,7 @@ class Texture;
 class SamplerState;
 }
 
-namespace goala {
+namespace larco {
 class MetalDevice;
 
 class MetalTexture : public Texture, public std::enable_shared_from_this<MetalTexture> {
@@ -35,4 +35,4 @@ private:
   MetalRef<MTL::SamplerState> m_sampler;
   bool m_initialized = false;
 };
-} // namespace goala
+} // namespace larco

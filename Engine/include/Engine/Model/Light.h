@@ -4,7 +4,7 @@
 
 #include <glm/glm.hpp>
 
-namespace goala {
+namespace larco {
 class Light : public Node {
 public:
   void setLightColor(const glm::vec3& color) { m_lightColor = color; }
@@ -16,4 +16,4 @@ private:
   glm::vec3 m_lightColor{};
   glm::vec3 m_lightDir{};
 };
-} // namespace goala
+} // namespace larco

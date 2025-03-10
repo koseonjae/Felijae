@@ -2,7 +2,7 @@
 
 #include <Graphics/Model/Pipeline.h>
 
-namespace goala {
+namespace larco {
 class OpenGLDevice;
 class OpenGLProgram;
 
@@ -25,4 +25,4 @@ private:
   OpenGLDevice* m_device = nullptr;
   std::shared_ptr<OpenGLProgram> m_program;
 };
-} // namespace goala
+} // namespace larco

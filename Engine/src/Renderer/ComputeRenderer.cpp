@@ -3,7 +3,7 @@
 #include <Graphics/Model/ComputeCommandEncoder.h>
 #include <Graphics/Model/CommandBuffer.h>
 
-using namespace goala;
+using namespace larco;
 
 void ComputeRenderer::update() {
   if (m_pipelines.empty())

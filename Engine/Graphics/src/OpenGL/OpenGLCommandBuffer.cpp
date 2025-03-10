@@ -8,7 +8,7 @@
 
 #include <thread>
 
-using namespace goala;
+using namespace larco;
 
 OpenGLCommandBuffer::OpenGLCommandBuffer(OpenGLDevice* device, OpenGLCommandQueue* queue, CommandBufferDescription desc)
   : m_device(device)

@@ -14,13 +14,13 @@
 #include <vector>
 
 namespace {
-std::vector<uint32_t> compileVulkanGlsl2Spirv(const std::string& glslShaderCode, goala::ShaderConverterStage shaderType) {
+std::vector<uint32_t> compileVulkanGlsl2Spirv(const std::string& glslShaderCode, larco::ShaderConverterStage shaderType) {
   std::vector<uint32_t> spirvData;
 
   EShLanguage stage = EShLangVertex;
-  if (shaderType == goala::ShaderConverterStage::VERTEX)
+  if (shaderType == larco::ShaderConverterStage::VERTEX)
     stage = EShLangVertex;
-  else if (shaderType == goala::ShaderConverterStage::FRAGMENT)
+  else if (shaderType == larco::ShaderConverterStage::FRAGMENT)
     stage = EShLangFragment;
   else
     assert(false && "not supported");
@@ -104,7 +104,7 @@ std::string convertSpirv2glsl(const std::vector<uint32_t>& spirvData) {
   }
 }
 
-std::string convertSpirv2msl(const std::vector<uint32_t>& spirvData, goala::ShaderConverterStage shaderType) {
+std::string convertSpirv2msl(const std::vector<uint32_t>& spirvData, larco::ShaderConverterStage shaderType) {
   try {
     spirv_cross::CompilerMSL compiler(spirvData);
 
@@ -112,10 +112,10 @@ std::string convertSpirv2msl(const std::vector<uint32_t>& spirvData, goala::Shad
       .platform = spirv_cross::CompilerMSL::Options::Platform::macOS,
     };
     compiler.set_msl_options(options);
-    if (shaderType == goala::ShaderConverterStage::VERTEX) {
+    if (shaderType == larco::ShaderConverterStage::VERTEX) {
       compiler.rename_entry_point("main", "vertexShader", spv::ExecutionModelVertex);
     }
-    else if (shaderType == goala::ShaderConverterStage::FRAGMENT)
+    else if (shaderType == larco::ShaderConverterStage::FRAGMENT)
       compiler.rename_entry_point("main", "fragmentShader", spv::ExecutionModelFragment);
     else
       assert(false && "not supported");
@@ -131,7 +131,7 @@ std::string convertSpirv2msl(const std::vector<uint32_t>& spirvData, goala::Shad
 }
 } // namespace
 
-namespace goala {
+namespace larco {
 std::string convertShader(const ShaderConverterDesc& shaderConverterDesc) {
   static std::atomic<bool> initialized = false;
   bool expected = false;
@@ -148,4 +148,4 @@ std::string convertShader(const ShaderConverterDesc& shaderConverterDesc) {
     assert(false && "Unsupported shader converter");
   return converted;
 }
-} // namespace goala
+} // namespace larco

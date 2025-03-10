@@ -9,7 +9,7 @@ namespace MTL {
 class CommandBuffer;
 }
 
-namespace goala {
+namespace larco {
 class MetalDevice;
 class MetalCommandQueue;
 class RenderPass;
@@ -39,4 +39,4 @@ private:
   MetalCommandQueue* m_queue = nullptr;
   MetalRef<MTL::CommandBuffer> m_cmdBuf;
 };
-} // namespace goala
+} // namespace larco

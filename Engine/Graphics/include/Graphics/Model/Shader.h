@@ -5,7 +5,7 @@
 #include <string>
 #include <cassert>
 
-namespace goala {
+namespace larco {
 enum class ShaderType {
   UNDEFINED,
   VERTEX,
@@ -41,4 +41,4 @@ public:
 protected:
   ShaderType m_type = ShaderType::UNDEFINED;
 };
-} // namespace goala
+} // namespace larco

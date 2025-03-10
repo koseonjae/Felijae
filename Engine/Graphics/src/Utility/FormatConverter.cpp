@@ -11,7 +11,7 @@
 
 #include <Metal/Metal.hpp>
 
-using namespace goala;
+using namespace larco;
 
 void FormatConverter::rgb2bgra(MetalDevice* device, const ImageData& image, MTL::Texture* targetTexture) {
   if (image.pixel.empty())

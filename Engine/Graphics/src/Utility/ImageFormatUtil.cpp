@@ -1,6 +1,6 @@
 #include <Graphics/Utility/ImageFormatUtil.h>
 
-namespace goala {
+namespace larco {
 MTL::PixelFormat getMetalImageFormat(ImageFormat format) {
   switch (format) {
     case ImageFormat::Float32:
@@ -29,4 +29,4 @@ ImageFormat getImageFormat(MTL::PixelFormat format) {
   }
   assert(false && "Undefined Image Format");
 }
-} // namespace goala
+} // namespace larco

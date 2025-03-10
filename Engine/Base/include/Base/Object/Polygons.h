@@ -2,10 +2,10 @@
 
 #include <Base/Object/Object.h>
 
-namespace goala {
+namespace larco {
 class Polygons final {
 public:
   static Object triangle();
   static Object square();
 };
-} // namespace goala
+} // namespace larco

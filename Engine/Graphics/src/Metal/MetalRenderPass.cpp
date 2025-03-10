@@ -5,7 +5,7 @@
 #include <Metal/Metal.hpp>
 #include <QuartzCore/CAMetalDrawable.hpp>
 
-using namespace goala;
+using namespace larco;
 
 MetalRenderPass::MetalRenderPass(MetalDevice* device, RenderPassDescription desc)
   : RenderPass(std::move(desc))

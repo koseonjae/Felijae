@@ -2,7 +2,7 @@
 
 #include <Graphics/Model/CommandQueue.h>
 
-namespace goala {
+namespace larco {
 class OpenGLDevice;
 
 class OpenGLCommandQueue : public CommandQueue {
@@ -13,4 +13,4 @@ public:
 private:
   OpenGLDevice* m_device = nullptr;
 };
-} // namespace goala
+} // namespace larco

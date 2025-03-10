@@ -1,6 +1,6 @@
 #pragma once
 
-namespace goala {
+namespace larco {
 class ComputePipeline;
 struct ComputeCommandEncoderDescription {};
 
@@ -12,4 +12,4 @@ public:
 
   virtual void endEncoding() = 0;
 };
-} // namespace goala
+} // namespace larco

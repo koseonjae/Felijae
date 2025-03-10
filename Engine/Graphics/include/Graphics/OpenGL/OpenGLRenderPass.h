@@ -3,7 +3,7 @@
 #include <Graphics/Model/RenderPass.h>
 #include <Graphics/OpenGL/OpenGLFrameBuffer.h>
 
-namespace goala {
+namespace larco {
 class OpenGLDevice;
 
 class OpenGLRenderPass : public RenderPass {
@@ -24,4 +24,4 @@ private:
   OpenGLDevice* m_device;
   std::vector<OpenGLFrameBuffer> m_frameBuffers;
 };
-} // namespace goala
+} // namespace larco

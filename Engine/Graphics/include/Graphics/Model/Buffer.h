@@ -1,10 +1,10 @@
 #pragma once
 
-namespace goala {
+namespace larco {
 
 class Buffer {
  public:
   virtual ~Buffer() = default;
 };
 
-} // namespace goala
+} // namespace larco

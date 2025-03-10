@@ -5,7 +5,7 @@
 #include <Engine/Model/Model.h>
 #include <Engine/Model/Scene.h>
 
-using namespace goala;
+using namespace larco;
 
 void ForwardRenderer::update() {
   auto updateNodes = [self = shared_from_this()](Uniforms* uniforms) {

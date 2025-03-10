@@ -2,7 +2,7 @@
 
 #include <Graphics/Model/Device.h>
 
-namespace goala {
+namespace larco {
 class OpenGLDevice : public Device {
 public:
   OpenGLDevice() = default;
@@ -23,4 +23,4 @@ public:
 
   std::shared_ptr<RenderPass> createRenderPass(RenderPassDescription desc) override;
 };
-} // namespace goala
+} // namespace larco

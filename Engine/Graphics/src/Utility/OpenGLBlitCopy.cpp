@@ -4,7 +4,7 @@
 
 #include <OpenGL/gl3.h>
 
-namespace goala {
+namespace larco {
 void blitCopyFrameBufferToScreen(RenderPass* renderPass, int width, int height) {
   auto openGLRenderPass = SAFE_DOWN_CAST(OpenGLRenderPass*, renderPass);
   glBindFramebuffer(GL_READ_FRAMEBUFFER, openGLRenderPass->getFrameBuffer(0).getHandle());

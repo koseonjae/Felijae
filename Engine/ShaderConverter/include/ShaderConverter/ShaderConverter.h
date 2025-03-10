@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace goala {
+namespace larco {
 enum class ShaderConverterStage {
   VERTEX, FRAGMENT, COMPUTE, UNDEFINED
 };

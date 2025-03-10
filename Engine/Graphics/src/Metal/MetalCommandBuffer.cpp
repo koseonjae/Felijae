@@ -8,7 +8,7 @@
 
 #include <Metal/Metal.hpp>
 
-using namespace goala;
+using namespace larco;
 
 MetalCommandBuffer::MetalCommandBuffer(MetalDevice* device, MetalCommandQueue* queue, CommandBufferDescription cmdBuf)
   : m_device(device)

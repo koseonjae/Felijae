@@ -3,6 +3,6 @@
 #include <Base/ImageFormat.h>
 #include <OpenGL/gl3.h>
 
-namespace goala {
+namespace larco {
 GLuint getGLFormat(ImageFormat format);
-} // namespace goala
+} // namespace larco

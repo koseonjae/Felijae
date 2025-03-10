@@ -11,7 +11,7 @@ class Buffer;
 class Texture;
 }
 
-namespace goala {
+namespace larco {
 struct ComputeBufferDescription {
   std::vector<float> data;
 };
@@ -34,4 +34,4 @@ public:
 protected:
   ComputePipelineDescription m_desc{};
 };
-} // namespace goala
+} // namespace larco

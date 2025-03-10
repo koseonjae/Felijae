@@ -4,7 +4,7 @@
 #include <cassert>
 #include <filesystem>
 
-using namespace goala;
+using namespace larco;
 
 std::unordered_map<std::string, std::string> File::m_assetPaths{};
 

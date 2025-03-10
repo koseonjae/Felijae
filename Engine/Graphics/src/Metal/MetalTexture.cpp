@@ -8,7 +8,7 @@
 
 #include <cassert>
 
-using namespace goala;
+using namespace larco;
 
 namespace {
 MTL::TextureUsage getMTLTextureUsage(TextureUsage usage) {

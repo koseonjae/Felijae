@@ -4,8 +4,8 @@
 
 #include <QuartzCore/CAMetalLayer.hpp>
 
-namespace goala {
+namespace larco {
 MTL::PixelFormat getMetalImageFormat(ImageFormat format);
 
 ImageFormat getImageFormat(MTL::PixelFormat format);
-} // namespace goala
+} // namespace larco

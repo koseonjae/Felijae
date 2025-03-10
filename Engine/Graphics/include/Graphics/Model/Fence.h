@@ -1,6 +1,6 @@
 #pragma once
 
-namespace goala {
+namespace larco {
 struct FenceDescription {};
 
 class Fence {

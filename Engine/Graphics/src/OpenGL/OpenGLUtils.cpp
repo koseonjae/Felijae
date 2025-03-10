@@ -2,7 +2,7 @@
 
 #include <cassert>
 
-namespace goala {
+namespace larco {
 GLuint getGLFormat(ImageFormat format) {
   switch (format) {
     case ImageFormat::RGB:
@@ -16,4 +16,4 @@ GLuint getGLFormat(ImageFormat format) {
   assert(false && "Undefined format");
   return GL_RGB;
 }
-} // namespace goala
+} // namespace larco

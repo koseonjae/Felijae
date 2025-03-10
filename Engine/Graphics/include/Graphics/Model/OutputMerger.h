@@ -2,7 +2,7 @@
 
 #include <tuple>
 
-namespace goala {
+namespace larco {
 class CommandEncoder;
 
 struct DepthTest {
@@ -39,4 +39,4 @@ struct OutputMerger {
   DepthTest depthTest{};
   AlphaBlend alphaBlend{};
 };
-} // namespace goala
+} // namespace larco

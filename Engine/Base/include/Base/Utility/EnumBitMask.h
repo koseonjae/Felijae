@@ -2,7 +2,7 @@
 
 #include <type_traits>
 
-namespace goala {
+namespace larco {
 template <typename Enum>
 struct EnableBitMaskOperators {
   static constexpr bool enable = false;

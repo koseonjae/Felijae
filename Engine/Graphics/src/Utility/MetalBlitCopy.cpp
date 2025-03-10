@@ -6,7 +6,7 @@
 #include <Metal/Metal.hpp>
 #include <QuartzCore/QuartzCore.hpp>
 
-namespace goala {
+namespace larco {
 void blitTextureToDrawable(Texture* mlttexture, CommandQueue* commandQueue, void* drawable) {
   auto mtlDrawable = static_cast<CA::MetalDrawable*>(drawable);
   MTL::Texture* drawableTexture = mtlDrawable->texture();

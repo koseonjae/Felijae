@@ -2,7 +2,7 @@
 
 #include <memory>
 
-namespace goala {
+namespace larco {
 class CommandBuffer;
 struct CommandBufferDescription;
 
@@ -14,4 +14,4 @@ public:
 
   virtual std::shared_ptr<CommandBuffer> createCommandBuffer(CommandBufferDescription desc) = 0;
 };
-} // namespace goala
+} // namespace larco

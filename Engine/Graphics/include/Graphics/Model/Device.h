@@ -2,7 +2,7 @@
 
 #include <memory>
 
-namespace goala {
+namespace larco {
 class VertexBuffer;
 class Fence;
 class Pipeline;
@@ -41,4 +41,4 @@ public:
 
   virtual std::shared_ptr<RenderPass> createRenderPass(RenderPassDescription desc) = 0;
 };
-} // namespace goala
+} // namespace larco

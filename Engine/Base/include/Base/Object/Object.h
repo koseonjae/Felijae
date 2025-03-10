@@ -6,7 +6,7 @@
 
 #include <vector>
 
-namespace goala {
+namespace larco {
 struct Vertex {
   glm::vec3 pos{};
   glm::vec3 nor{};
@@ -19,4 +19,4 @@ struct Object {
 };
 
 Object loadObj(const File& file);
-} // namespace goala
+} // namespace larco

@@ -1,6 +1,6 @@
 #include <Base/Object/Polygons.h>
 
-using namespace goala;
+using namespace larco;
 
 Object Polygons::triangle() {
   Object obj{};

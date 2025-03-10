@@ -12,7 +12,7 @@
 #include <iostream>
 #include <vector>
 
-using namespace goala;
+using namespace larco;
 
 namespace {
 constexpr int width = 4;

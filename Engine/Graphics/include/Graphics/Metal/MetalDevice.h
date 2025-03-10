@@ -5,7 +5,7 @@
 
 #include <Metal/MTLDevice.hpp>
 
-namespace goala {
+namespace larco {
 class MetalDevice : public Device {
 public:
   MetalDevice();
@@ -33,4 +33,4 @@ public:
 private:
   MetalRef<MTL::Device> m_device;
 };
-} // namespace goala
+} // namespace larco

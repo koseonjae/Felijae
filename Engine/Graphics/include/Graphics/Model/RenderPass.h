@@ -4,7 +4,7 @@
 
 #include <vector>
 
-namespace goala {
+namespace larco {
 enum class AttachmentType {
   Undefined,
   Color,
@@ -61,4 +61,4 @@ public:
 protected:
   RenderPassDescription m_desc{};
 };
-} // namespace goala
+} // namespace larco

@@ -7,7 +7,7 @@ namespace MTL {
 class Fence;
 }
 
-namespace goala {
+namespace larco {
 class MetalDevice;
 
 class MetalFence : public Fence {
@@ -21,4 +21,4 @@ public:
 private:
   MetalRef<MTL::Fence> m_fence;
 };
-} // namespace goala
+} // namespace larco

@@ -4,7 +4,7 @@
 #include <memory>
 #include <glm/ext/matrix_transform.hpp>
 
-namespace goala {
+namespace larco {
 class Object;
 class Pipeline;
 class Buffer;
@@ -54,4 +54,4 @@ private:
   glm::mat4 m_worldMat = glm::mat4(1.0f);
   bool m_dirty = false;
 };
-} // namespace goala
+} // namespace larco

@@ -6,7 +6,7 @@
 #include "Graphics/Metal/MetalCommandBuffer.h"
 #include "Graphics/Metal/MetalComputePipeline.h"
 
-using namespace goala;
+using namespace larco;
 
 MetalComputeCommandEncoder::MetalComputeCommandEncoder(MetalCommandBuffer* commandBuffer, ComputeCommandEncoderDescription description) {
   m_encoder = makeMetalRef(commandBuffer->getCommandBuffer()->computeCommandEncoder());

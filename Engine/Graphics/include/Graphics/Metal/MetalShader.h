@@ -5,7 +5,7 @@
 
 #include <Metal/MTLLibrary.hpp>
 
-namespace goala {
+namespace larco {
 class MetalShader : public Shader {
 public:
   MetalShader(MetalDevice* device, ShaderDescription desc);
@@ -15,4 +15,4 @@ public:
 private:
   MetalRef<MTL::Function> m_func;
 };
-} // namespace goala
+} // namespace larco

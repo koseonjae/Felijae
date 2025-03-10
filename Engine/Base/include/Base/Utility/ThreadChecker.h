@@ -2,7 +2,7 @@
 
 #include <thread>
 
-namespace goala {
+namespace larco {
 class ThreadChecker final {
 public:
   ThreadChecker();
@@ -12,4 +12,4 @@ public:
 private:
   std::thread::id m_threadId; // 생성자 쓰레드 ID
 };
-} // namespace goala
+} // namespace larco

@@ -7,7 +7,7 @@
 
 #include <OpenGL/gl3.h>
 
-using namespace goala;
+using namespace larco;
 
 OpenGLPipeline::OpenGLPipeline(OpenGLDevice* device, PipelineDescription desc)
   : Pipeline(std::move(desc))

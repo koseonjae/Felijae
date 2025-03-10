@@ -1,6 +1,6 @@
 #include <Engine/Renderer/GraphicsRenderer.h>
 
-namespace goala {
+namespace larco {
 void GraphicsRenderer::setScene(std::shared_ptr<Scene> scene) {
   m_scene = std::move(scene);
 }
@@ -24,4 +24,4 @@ RenderPass* GraphicsRenderer::getRenderPass() {
 const RenderPass* GraphicsRenderer::getRenderPass() const {
   return m_renderPass.get();
 }
-} // namespace goala
+} // namespace larco

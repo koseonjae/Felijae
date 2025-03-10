@@ -4,7 +4,7 @@
 #include <string_view>
 #include <unordered_map>
 
-namespace goala {
+namespace larco {
 class File {
 public:
   static void registerPath(const std::string& assetPath, std::string prefix);
@@ -19,4 +19,4 @@ private:
   static std::unordered_map<std::string, std::string> m_assetPaths;
   std::string m_path;
 };
-} // namespace goala
+} // namespace larco

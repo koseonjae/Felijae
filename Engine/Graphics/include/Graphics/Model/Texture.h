@@ -3,7 +3,7 @@
 #include <Base/ImageData.h>
 #include <Base/Utility/EnumBitMask.h>
 
-namespace goala {
+namespace larco {
 enum class TextureLoadType {
   UNDEFINED, EAGER, LAZY
 };
@@ -69,4 +69,4 @@ public:
 protected:
   TextureDescription m_desc{};
 };
-} // namespace goala
+} // namespace larco

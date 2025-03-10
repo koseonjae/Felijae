@@ -8,7 +8,7 @@
 #include <Graphics/Metal/MetalTexture.h>
 #include <Graphics/Metal/MetalComputePipeline.h>
 
-using namespace goala;
+using namespace larco;
 
 MetalDevice::MetalDevice(): m_device(makeMetalRef(MTL::CreateSystemDefaultDevice())) {}
 

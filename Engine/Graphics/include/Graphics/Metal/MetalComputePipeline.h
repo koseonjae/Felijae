@@ -10,7 +10,7 @@ class ComputeCommandEncoder;
 class Buffer;
 }
 
-namespace goala {
+namespace larco {
 class MetalDevice;
 class MetalCommandEncoder;
 class MetalShader;

@@ -4,7 +4,7 @@
 
 #include <functional>
 
-namespace goala {
+namespace larco {
 class OpenGLDevice;
 class OpenGLCommandQueue;
 
@@ -32,4 +32,4 @@ private:
   std::atomic<int> m_encoderCnt = 0;
   std::atomic<bool> m_commandComitted = false;
 };
-} // namespace goala
+} // namespace larco

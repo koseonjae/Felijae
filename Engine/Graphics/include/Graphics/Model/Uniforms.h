@@ -10,7 +10,7 @@
 #include <functional>
 #include <tuple>
 
-namespace goala {
+namespace larco {
 using UniformType = std::variant<int, float, glm::vec3, glm::mat4>;
 using UniformVariables = std::unordered_map<std::string, UniformType>;
 using TextureVariables = std::unordered_map<std::string, std::shared_ptr<Texture>>;
@@ -37,4 +37,4 @@ private:
   UniformVariables m_uniforms;
   TextureVariables m_textures;
 };
-} // namespace goala
+} // namespace larco

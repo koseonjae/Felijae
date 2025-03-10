@@ -2,7 +2,7 @@
 
 #include <tuple>
 
-namespace goala {
+namespace larco {
 class CommandEncoder;
 
 struct Culling {
@@ -44,4 +44,4 @@ struct Rasterizer {
   Culling culling{};
   Viewport viewport{};
 };
-} // namespace goala
+} // namespace larco

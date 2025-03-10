@@ -3,7 +3,7 @@
 
 #include <cassert>
 
-using namespace goala;
+using namespace larco;
 
 OpenGLRenderPass::OpenGLRenderPass(OpenGLDevice* device, RenderPassDescription desc)
   : RenderPass(std::move(desc))

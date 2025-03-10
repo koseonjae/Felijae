@@ -4,7 +4,7 @@
 #include <Graphics/Model/Texture.h>
 #include <OpenGL/gl3.h>
 
-namespace goala {
+namespace larco {
 class OpenGLFrameBuffer {
 public:
   ~OpenGLFrameBuffer();
@@ -16,4 +16,4 @@ private:
   GLuint m_handle = 0;
   bool m_initialized = false;
 };
-} // namespace goala
+} // namespace larco

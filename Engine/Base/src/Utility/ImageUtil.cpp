@@ -2,7 +2,7 @@
 
 #include <cassert>
 
-namespace goala {
+namespace larco {
 ImageData convertRGB2BGRA(const ImageData& src) {
   // todo: Apply compute shader
 
@@ -29,4 +29,4 @@ ImageData convertRGB2BGRA(const ImageData& src) {
 
   return result;
 }
-} // namespace goala
+} // namespace larco

@@ -11,7 +11,7 @@
 #include <utility>
 #include <vector>
 
-namespace goala {
+namespace larco {
 class Model;
 
 class Scene final {
@@ -52,4 +52,4 @@ private:
   std::unordered_map<std::type_index, std::shared_ptr<Node>> m_nodes;
   std::vector<std::shared_ptr<Model>> m_models;
 };
-} // namespace goala
+} // namespace larco

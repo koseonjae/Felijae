@@ -3,7 +3,7 @@
 #include <Graphics/Model/Buffer.h>
 #include <Base/Object/Object.h>
 
-namespace goala {
+namespace larco {
 
 struct VertexBufferDescription {
   Object object;
@@ -12,4 +12,4 @@ struct VertexBufferDescription {
 class VertexBuffer : public Buffer {
 };
 
-} // namespace goala
+} // namespace larco

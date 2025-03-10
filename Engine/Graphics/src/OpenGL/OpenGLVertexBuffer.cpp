@@ -1,7 +1,7 @@
 #include <Graphics/OpenGL/OpenGLVertexBuffer.h>
 #include <Base/Object/Object.h>
 
-using namespace goala;
+using namespace larco;
 
 OpenGLVertexBuffer::OpenGLVertexBuffer(OpenGLDevice* device, VertexBufferDescription desc) {
   auto& obj = desc.object;

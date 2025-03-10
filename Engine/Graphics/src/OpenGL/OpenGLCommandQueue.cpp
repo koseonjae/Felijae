@@ -1,7 +1,7 @@
 #include <Graphics/OpenGL/OpenGLCommandQueue.h>
 #include <Graphics/OpenGL/OpenGLCommandBuffer.h>
 
-using namespace goala;
+using namespace larco;
 
 OpenGLCommandQueue::OpenGLCommandQueue(OpenGLDevice* device, CommandQueueDescription desc)
   : m_device(device) {}

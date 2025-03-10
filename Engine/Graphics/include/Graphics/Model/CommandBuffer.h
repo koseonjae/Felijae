@@ -2,7 +2,7 @@
 
 #include <memory>
 
-namespace goala {
+namespace larco {
 class RenderPass;
 class Pipeline;
 class Texture;
@@ -30,4 +30,4 @@ public:
 
   virtual void waitUntilCompleted() = 0;
 };
-} // namespace goala
+} // namespace larco

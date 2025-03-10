@@ -3,7 +3,7 @@
 #include <vector>
 #include <functional>
 
-namespace goala {
+namespace larco {
 class Pipeline;
 class Fence;
 
@@ -17,4 +17,4 @@ public:
 
   virtual void encodeDraw(Pipeline* pipeline) = 0;
 };
-} // namespace goala
+} // namespace larco

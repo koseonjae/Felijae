@@ -4,7 +4,7 @@
 
 #include <memory>
 
-namespace goala {
+namespace larco {
 class Scene;
 class RenderPass;
 
@@ -26,4 +26,4 @@ protected:
   std::shared_ptr<Scene> m_scene;
   std::shared_ptr<RenderPass> m_renderPass;
 };
-} // namespace goala
+} // namespace larco

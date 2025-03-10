@@ -2,7 +2,7 @@
 #include <Graphics/Metal/MetalCommandBuffer.h>
 #include <Graphics/Metal/MetalDevice.h>
 
-using namespace goala;
+using namespace larco;
 
 MetalCommandQueue::MetalCommandQueue(MetalDevice* device, CommandQueueDescription desc)
   : m_device(device)

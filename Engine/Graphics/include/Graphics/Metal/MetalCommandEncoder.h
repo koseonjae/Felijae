@@ -8,7 +8,7 @@ class RenderCommandEncoder;
 class Buffer;
 }
 
-namespace goala {
+namespace larco {
 class MetalCommandBuffer;
 class MetalRenderPass;
 
@@ -30,4 +30,4 @@ private:
   MetalRef<MTL::RenderCommandEncoder> m_encoder;
   std::unordered_map<int, MetalRef<MTL::Buffer>> m_mtlUniformBlocks;
 };
-} // namespace goala
+} // namespace larco

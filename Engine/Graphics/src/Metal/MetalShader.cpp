@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-using namespace goala;
+using namespace larco;
 
 namespace {
 auto getNSString(std::string_view str) {

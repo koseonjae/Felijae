@@ -5,7 +5,7 @@
 #include <functional>
 #include <vector>
 
-namespace goala {
+namespace larco {
 class OpenGLRenderPass;
 class OpenGLCommandBuffer;
 
@@ -25,4 +25,4 @@ private:
   std::vector<std::function<void()>> m_commands;
   bool m_isEnd = false;
 };
-} // namespace goala
+} // namespace larco

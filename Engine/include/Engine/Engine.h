@@ -1,5 +1,5 @@
 #pragma once
 
-namespace goala {
+namespace larco {
 class Engine {};
-} // namespace goala
+} // namespace larco

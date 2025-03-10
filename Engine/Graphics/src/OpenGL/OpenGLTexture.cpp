@@ -4,7 +4,7 @@
 
 #include <cassert>
 
-using namespace goala;
+using namespace larco;
 
 OpenGLTexture::OpenGLTexture(OpenGLDevice* device, TextureDescription desc)
   : Texture(std::move(desc)) {

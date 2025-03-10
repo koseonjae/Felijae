@@ -9,7 +9,7 @@
 
 #include <vector>
 
-namespace goala {
+namespace larco {
 
 struct PipelineDescription {
  VertexBufferDescription vertexBuffer;
@@ -35,4 +35,4 @@ protected:
  PipelineDescription m_desc{};
  std::shared_ptr<Buffer> m_vertexBuffer;
 };
-} // namespace goala
+} // namespace larco

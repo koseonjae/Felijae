@@ -5,7 +5,7 @@
 #include <Metal/MTLBuffer.hpp>
 #include <Metal/MTLVertexDescriptor.hpp>
 
-using namespace goala;
+using namespace larco;
 
 MetalVertexBuffer::MetalVertexBuffer(MetalDevice* device, VertexBufferDescription desc) {
   auto resourceOption = MTL::ResourceCPUCacheModeDefaultCache;

@@ -7,7 +7,7 @@ namespace MTL {
 class RenderPassDescriptor;
 }
 
-namespace goala {
+namespace larco {
 class MetalDevice;
 
 class MetalRenderPass : public RenderPass {
@@ -21,4 +21,4 @@ private:
   MetalDevice* m_device = nullptr;
   MetalRef<MTL::RenderPassDescriptor> m_pass;
 };
-} // namespace goala
+} // namespace larco

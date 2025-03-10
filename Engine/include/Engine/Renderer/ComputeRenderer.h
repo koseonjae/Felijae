@@ -4,7 +4,7 @@
 
 #include <vector>
 
-namespace goala {
+namespace larco {
 class ComputePipeline;
 
 class ComputeRenderer : public Renderer {
@@ -18,4 +18,4 @@ public:
 protected:
   std::vector<std::shared_ptr<ComputePipeline>> m_pipelines;
 };
-} // namespace goala
+} // namespace larco

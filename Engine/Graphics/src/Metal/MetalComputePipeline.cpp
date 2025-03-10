@@ -7,7 +7,7 @@
 
 #include <Metal/Metal.hpp>
 
-using namespace goala;
+using namespace larco;
 
 MetalComputePipeline::MetalComputePipeline(MetalDevice* device, ComputePipelineDescription desc)
   : ComputePipeline(std::move(desc))

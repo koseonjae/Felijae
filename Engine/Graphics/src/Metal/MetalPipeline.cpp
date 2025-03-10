@@ -36,7 +36,7 @@ uint32_t getTypeSize(MTL::DataType dataType) {
 }
 }
 
-namespace goala {
+namespace larco {
 MetalPipeline::MetalPipeline(MetalDevice* device, PipelineDescription desc)
   : Pipeline(std::move(desc))
   , m_device(device) {
@@ -319,4 +319,4 @@ void MetalPipeline::_initializePipeline(MTL::RenderPipelineDescriptor* pipelineD
 
   _initializeReflection(reflection);
 }
-} // namespace goala
+} // namespace larco

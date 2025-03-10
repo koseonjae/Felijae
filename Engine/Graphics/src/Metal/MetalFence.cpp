@@ -3,7 +3,7 @@
 
 #include <Metal/Metal.hpp>
 
-using namespace goala;
+using namespace larco;
 
 MetalFence::MetalFence(MetalDevice* device, FenceDescription desc)
   : m_fence(makeMetalRef(device->getMTLDevice()->newFence())) {}

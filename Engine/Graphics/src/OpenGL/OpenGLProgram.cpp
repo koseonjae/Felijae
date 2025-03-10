@@ -7,7 +7,7 @@
 #include <iostream>
 #include <string_view>
 
-using namespace goala;
+using namespace larco;
 
 void checkCompileErrors(GLuint shader, std::string_view type) {
   GLint success;

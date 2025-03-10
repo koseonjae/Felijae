@@ -4,7 +4,7 @@
 
 #include <vector>
 
-namespace goala {
+namespace larco {
 struct ImageData {
   std::vector<uint8_t> pixel;
   int width = 0;
@@ -12,4 +12,4 @@ struct ImageData {
   int channels = 0;
   ImageFormat pixelFormat = ImageFormat::UNDEFINED;
 };
-} // namespace goala
+} // namespace larco

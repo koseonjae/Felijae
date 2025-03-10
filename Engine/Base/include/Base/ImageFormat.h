@@ -1,6 +1,6 @@
 #pragma once
 
-namespace goala {
+namespace larco {
 enum class ImageFormat {
   UNDEFINED,
   Float32,
@@ -8,4 +8,4 @@ enum class ImageFormat {
   RGBA,
   BGRA,
 };
-} // namespace goala
+} // namespace larco

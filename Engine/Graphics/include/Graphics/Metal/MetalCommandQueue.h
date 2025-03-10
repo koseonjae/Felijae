@@ -4,7 +4,7 @@
 #include <Graphics/Utility/MetalRef.h>
 #include <Metal/MTLCommandQueue.hpp>
 
-namespace goala {
+namespace larco {
 class MetalDevice;
 
 class MetalCommandQueue : public CommandQueue {
@@ -21,4 +21,4 @@ private:
   MetalDevice* m_device = nullptr;
   MetalRef<MTL::CommandQueue> m_commandQueue;
 };
-} // namespace goala
+} // namespace larco

@@ -3,6 +3,6 @@
 #include <filesystem>
 #include <string>
 
-namespace goala {
+namespace larco {
 std::string readFile(const std::filesystem::path& filePath);
-} // namespace goala
+} // namespace larco

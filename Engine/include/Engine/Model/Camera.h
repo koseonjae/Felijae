@@ -4,7 +4,7 @@
 
 #include <glm/glm.hpp>
 
-namespace goala {
+namespace larco {
 class Camera : public Node {
 public:
   void setCamera(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& up);
@@ -23,4 +23,4 @@ private:
   glm::vec3 m_at{};
   glm::vec3 m_up{};
 };
-} // namespace goala
+} // namespace larco

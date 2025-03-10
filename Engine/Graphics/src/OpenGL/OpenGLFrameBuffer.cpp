@@ -3,7 +3,7 @@
 
 #include <cassert>
 
-using namespace goala;
+using namespace larco;
 
 OpenGLFrameBuffer::~OpenGLFrameBuffer() {
   if (!m_initialized) return;

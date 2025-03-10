@@ -4,7 +4,7 @@
 #include <ostream>
 #include <iostream>
 
-using namespace goala;
+using namespace larco;
 
 int main() {
     File::registerPath(DEMO_DIR + std::string("/asset"), "asset://");

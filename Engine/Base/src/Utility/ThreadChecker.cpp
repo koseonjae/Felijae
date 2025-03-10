@@ -2,7 +2,7 @@
 
 #include <cassert>
 
-using namespace goala;
+using namespace larco;
 
 ThreadChecker::ThreadChecker() : m_threadId(std::this_thread::get_id()) {}
 

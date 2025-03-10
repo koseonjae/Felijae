@@ -7,7 +7,7 @@ namespace MTL {
 class ComputeCommandEncoder;
 }
 
-namespace goala {
+namespace larco {
 class MetalCommandBuffer;
 class ComputePipeline;
 

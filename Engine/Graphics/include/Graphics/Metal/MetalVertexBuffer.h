@@ -8,7 +8,7 @@ class Buffer;
 class VertexDescriptor;
 }
 
-namespace goala {
+namespace larco {
 constexpr int VERTEX_BUFFER_INDEX = 10;
 
 class MetalDevice;
@@ -34,4 +34,4 @@ private:
 
   int m_indicesSize = 0;
 };
-} // namespace goala
+} // namespace larco

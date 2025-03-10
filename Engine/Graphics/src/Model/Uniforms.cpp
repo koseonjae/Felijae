@@ -2,9 +2,9 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
-using namespace goala;
+using namespace larco;
 
-namespace goala {
+namespace larco {
 std::tuple<const void*, int> getUniformAddress(const UniformType& variable) {
   const void* valuePtr = nullptr;
   int size = 0;

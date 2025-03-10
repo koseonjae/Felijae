@@ -2,7 +2,7 @@
 
 #include <memory>
 
-namespace goala {
+namespace larco {
 class CommandBuffer;
 
 class Renderer {
@@ -13,4 +13,4 @@ public:
 
   virtual void render(std::shared_ptr<CommandBuffer>& cmdBuf) = 0;
 };
-} // namespace goala
+} // namespace larco

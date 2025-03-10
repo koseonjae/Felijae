@@ -6,7 +6,7 @@
 
 #include <Metal/Metal.hpp>
 
-using namespace goala;
+using namespace larco;
 
 MetalCommandEncoder::MetalCommandEncoder(MetalCommandBuffer* commandBuffer, MetalRenderPass* renderPass, CommandEncoderDescription desc) {
   auto encoder = commandBuffer->getCommandBuffer()->renderCommandEncoder(renderPass->getPass());

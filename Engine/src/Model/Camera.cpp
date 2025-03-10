@@ -2,7 +2,7 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
-using namespace goala;
+using namespace larco;
 
 void Camera::setCamera(const glm::vec3& eye, const glm::vec3& at,
                        const glm::vec3& up) {

@@ -7,7 +7,7 @@
 #include <Graphics/Model/Fence.h>
 #include <Graphics/Model/ComputePipeline.h>
 
-using namespace goala;
+using namespace larco;
 
 std::shared_ptr<Pipeline> OpenGLDevice::createPipeline(PipelineDescription desc) {
   auto pipeline = std::make_shared<OpenGLPipeline>(this, std::move(desc));

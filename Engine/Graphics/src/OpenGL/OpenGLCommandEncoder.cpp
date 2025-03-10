@@ -6,7 +6,7 @@
 
 #include <cassert>
 
-using namespace goala;
+using namespace larco;
 
 OpenGLCommandEncoder::OpenGLCommandEncoder(OpenGLCommandBuffer* commandBuffer, OpenGLRenderPass* renderPass, CommandEncoderDescription desc)
   : m_renderPass(renderPass) {}

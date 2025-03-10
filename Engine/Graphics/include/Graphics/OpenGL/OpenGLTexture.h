@@ -6,7 +6,7 @@
 #include <functional>
 #include <string_view>
 
-namespace goala {
+namespace larco {
 class OpenGLDevice;
 
 class OpenGLTexture final : public Texture, public std::enable_shared_from_this<OpenGLTexture> {
@@ -28,4 +28,4 @@ private:
   GLuint m_handle = 0;
   bool m_initialized = false;
 };
-} // namespace goala
+} // namespace larco

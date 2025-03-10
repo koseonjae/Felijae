@@ -3,7 +3,7 @@
 #include <Graphics/Model/VertexBuffer.h>
 #include <OpenGL/gl3.h>
 
-namespace goala {
+namespace larco {
 class OpenGLDevice;
 
 class OpenGLVertexBuffer final : public VertexBuffer {
@@ -21,4 +21,4 @@ private:
   GLuint m_eabo = 0;
   int m_indicesSize = 0;
 };
-} // namespace goala
+} // namespace larco

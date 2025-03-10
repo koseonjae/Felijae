@@ -7,7 +7,7 @@
 #include <string_view>
 #include <unordered_map>
 
-namespace goala {
+namespace larco {
 class OpenGLProgram final {
 public:
   OpenGLProgram(std::string_view vsPath, std::string_view fsPath);
@@ -34,4 +34,4 @@ private:
   TextureVariables m_textureVariables;
   std::unordered_map<std::string, std::string> m_uniformVariablesName;
 };
-} // namespace goala
+} // namespace larco

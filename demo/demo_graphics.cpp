@@ -20,7 +20,7 @@
 #include <SDLWrapper/OpenGLSDLWrapper.h>
 #include <Engine/Renderer/ComputeRenderer.h>
 
-using namespace goala;
+using namespace larco;
 
 namespace {
 ImageFormat getImageFormatSDLFormat(SDL_PixelFormatEnum pixelFormat) {

@@ -1,6 +1,6 @@
 #pragma once
 
-namespace goala {
+namespace larco {
 class RenderPass;
 void blitCopyFrameBufferToScreen(RenderPass* renderPass, int width, int height);
-} // namespace goala
+} // namespace larco

@@ -2,6 +2,6 @@
 
 #include <Base/ImageData.h>
 
-namespace goala {
+namespace larco {
 ImageData convertRGB2BGRA(const ImageData& src);
-} // namespace goala
+} // namespace larco
